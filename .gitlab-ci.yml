@@ -1,4 +1,4 @@
-image: registry.gitlab.com/marciovmartins/docker-images/maven:3.8.1-openjdk-16-slim
+image: maven:3.8.1-openjdk-16-slim
 
 variables:
   MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
