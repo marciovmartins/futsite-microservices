@@ -7,7 +7,7 @@ Date: 2021-10-16
 Initial setup for the futsite pelada publisher & organizer application. It is necessary to set up the initial project
 and deploy of the core domain.
 
-## Amateur Soccer Game Core Domain
+## Amateur Soccer Match Core Domain
 
 In this domain will be possible:
 
@@ -20,7 +20,7 @@ In this domain will be possible:
 ## DECISION
 
 We will use kotlin 1.5 jvm 16 as main programming language. Spring Boot with Maven as main framework. Junit and AssertJ
-as test suite. Gitlab as VCS, each domain or subdomain are going to be a maven module.
+as test suite. Gitlab as VCS with Trunk-base development¹, each domain or subdomain are going to be a maven module.
 
 We will deploy the application using the gitlab pipelines on Heroku.
 
@@ -31,3 +31,7 @@ Accepted.
 ## CONSEQUENCES
 
 The kotlin stack is define, also the test suite, the pipeline configuration for development and production.
+
+### Links
+
+[1] [https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development](https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development)
