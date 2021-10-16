@@ -10,9 +10,6 @@ cache:
   paths:
     - .m2/repository
 
-before_script:
-  - '/prepare-for-gitlab.sh'
-
 stages:
   - test
   - deploy-to-registry
