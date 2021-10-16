@@ -1,0 +1,30 @@
+image: registry.gitlab.com/marciovmartins/docker-images/maven:3.8.1-openjdk-16-slim
+
+variables:
+  MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true -s settings-ci.xml"
+  MYSQL_DATABASE: test
+  MYSQL_ROOT_PASSWORD: root
+
+cache:
+  paths:
+    - .m2/repository
+
+before_script:
+  - '/prepare-for-gitlab.sh'
+
+stages:
+  - test
+  - deploy-to-registry
+
+asm-all:
+  stage: test
+  script:
+    - 'mvn $MAVEN_CLI_OPTS verify -pl asm -Dspring.profiles.active=ci'
+
+deploy-to-registry:
+  stage: deploy-to-registry
+  only:
+    - main
+  script:
+    - 'mvn $MAVEN_CLI_OPTS $MAVEN_OPTS deploy -DskipTests'
