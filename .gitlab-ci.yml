@@ -24,4 +24,5 @@ deploy-to-registry:
   only:
     - main
   script:
+    - 'mvn release:prepare'
     - 'mvn $MAVEN_CLI_OPTS $MAVEN_OPTS deploy -DskipTests'

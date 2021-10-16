@@ -72,6 +72,7 @@
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
+            <!--suppress KotlinMavenPluginPhase -->
             <artifactId>kotlin-stdlib-jdk8</artifactId>
         </dependency>
 
@@ -88,6 +89,20 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <preparationGoals>pl.project13.maven:git-commit-id-plugin:revision</preparationGoals>
+                    <updateVersionsToSnapshot>false</updateVersionsToSnapshot>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <distributionManagement>
         <repository>
             <id>gitlab-maven</id>
@@ -98,5 +113,9 @@
             <url>https://gitlab.com/api/v4/projects/30509565/packages/maven</url>
         </snapshotRepository>
     </distributionManagement>
+
+    <scm>
+        <developerConnection>scm:git:git@gitlab.com:marciovmartins/futsite-v3.git</developerConnection>
+    </scm>
 
 </project>
