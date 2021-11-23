@@ -24,7 +24,7 @@ framework. Junit 5.8.1 and AssertJ 3.21.0 as test suite for unit tests and integ
 development¹, each domain or subdomain are going to be a maven module.
 
 We will deploy the application on my personal kubernetes cluster. Expose one Hello World resource, with a client using
-Swagger SDK and a kubernetes sidecar to provide the documentation.
+Swagger Core 2.1.11 and a kubernetes sidecar to provide the documentation.
 
 ## STATUS
 

@@ -7,10 +7,11 @@ class HelloWorldServiceTest {
     @Test
     fun `is called should return hello world string`() {
         // setup
-        val expected = "Hello World!"
+        val name = "Marcio"
+        val expected = "Hello World, $name!"
         val helloWorldService = HelloWorldService()
         // execution
-        val result = helloWorldService.call()
+        val result = helloWorldService.call(name)
         // assertions
         assertThat(result).isEqualTo(expected)
     }
