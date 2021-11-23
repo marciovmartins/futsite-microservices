@@ -2,11 +2,14 @@ package com.github.marciovmartins.futsitev3
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @SpringBootApplication
@@ -17,10 +20,12 @@ fun main(args: Array<String>) {
 }
 
 @RestController
+@RequestMapping("/", produces = [MediaType.APPLICATION_JSON_VALUE])
 class HelloWorldController(
     private val helloWorldService: HelloWorldService
 ) {
-    @GetMapping("/", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     fun helloWorld(
         @RequestParam name: String?
     ) = ResponseEntity.ok(helloWorldService.call(name))
