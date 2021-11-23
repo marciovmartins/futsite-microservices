@@ -13,11 +13,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>futsite-amateur-soccer-match</name>
 
-    <properties>
-        <java.version>16</java.version>
-        <kotlin.version>1.5.31</kotlin.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -41,6 +36,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
