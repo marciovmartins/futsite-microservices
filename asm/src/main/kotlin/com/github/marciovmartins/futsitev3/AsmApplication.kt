@@ -18,3 +18,7 @@ class HelloWorldController {
     @GetMapping("/")
     fun helloWorld(): ResponseEntity<String> = ResponseEntity.ok("Hello World")
 }
+
+class HelloWorldService {
+    fun call() = "Hello World!"
+}
