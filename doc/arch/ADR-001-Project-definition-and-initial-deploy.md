@@ -1,11 +1,11 @@
 # ADR-001: Project Definition and Initial Deploy
 
-Date: 2021-10-16
+Date: 2021-11-23
 
 # CONTEXT
 
-Initial setup for the futsite pelada publisher & organizer application. It is necessary to set up the initial project
-and deploy of the core domain.
+Initial setup for the futsite pelada publisher & organizer application. It is necessary to set up the initial project,
+base for documentation, base for client sdk and deploy of the core domain.
 
 ## Amateur Soccer Match Core Domain
 
@@ -19,10 +19,12 @@ In this domain will be possible:
 
 ## DECISION
 
-We will use kotlin 1.5 jvm 16 as main programming language. Spring Boot with Maven as main framework. Junit and AssertJ
-as test suite. Gitlab as VCS with Trunk-base development¹, each domain or subdomain are going to be a maven module.
+We will use kotlin 1.5 jvm 16 (or earlier) as main programming language. Spring Boot 2.6.0 with Maven 3.8.4 as main
+framework. Junit 5.8.1 and AssertJ 3.21.0 as test suite for unit tests and integration tests. Git as VCS with Trunk-base
+development¹, each domain or subdomain are going to be a maven module.
 
-We will deploy the application using the gitlab pipelines on Heroku.
+We will deploy the application on my personal kubernetes cluster. Expose one Hello World resource, with a client using
+Swagger SDK and a kubernetes sidecar to provide the documentation.
 
 ## STATUS
 
@@ -30,7 +32,7 @@ Accepted.
 
 ## CONSEQUENCES
 
-The kotlin stack is define, also the test suite, the pipeline configuration for development and production.
+The kotlin stack is define, also the test suite, the pipeline configuration for production.
 
 ### Links
 
