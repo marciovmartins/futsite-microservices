@@ -33,7 +33,7 @@ class HelloWorldController(
 
 @Service
 class HelloWorldService {
-    fun call(name: String? = "John Doe"): HelloWorld {
+    fun call(name: String? = null): HelloWorld {
         val s = name ?: "John Doe"
         return HelloWorld("Hello World, $s!", s)
     }

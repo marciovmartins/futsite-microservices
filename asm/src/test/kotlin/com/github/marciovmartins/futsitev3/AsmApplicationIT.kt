@@ -12,12 +12,10 @@ import org.springframework.http.HttpStatus
 class AsmApplicationIT(
     @Autowired val restTemplate: TestRestTemplate
 ) {
-
     @Test
     fun `hello world`() {
         val entity = restTemplate.getForEntity<String>("/")
         assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(entity.body).contains("Hello World")
     }
-
 }
