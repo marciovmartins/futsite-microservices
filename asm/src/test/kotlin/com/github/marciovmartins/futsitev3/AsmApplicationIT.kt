@@ -13,9 +13,12 @@ class AsmApplicationIT(
     @Autowired val restTemplate: TestRestTemplate
 ) {
     @Test
-    fun `hello world`() {
-        val entity = restTemplate.getForEntity<String>("/")
+    fun `hello world with name`() {
+        val name = "Marcio"
+        val entity = restTemplate.getForEntity<HelloWorld>("/?name=$name")
         assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(entity.body).contains("Hello World")
+        assertThat(entity.body)
+            .hasFieldOrPropertyWithValue("message", "Hello World, $name!")
+            .hasFieldOrPropertyWithValue("name", name)
     }
 }
