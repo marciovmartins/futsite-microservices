@@ -19,12 +19,12 @@ In this domain will be possible:
 
 ## DECISION
 
-We will use kotlin 1.5 jvm 16 (or earlier) as main programming language. Spring Boot 2.6.0 with Maven 3.8.4 as main
+We will use kotlin 1.5 jvm 17 (or earlier) as main programming language. Spring Boot 2.6.0 with Maven 3.8.4 as main
 framework. Junit 5.8.1 and AssertJ 3.21.0 as test suite for unit tests and integration tests. Git as VCS with Trunk-base
 development¹, each domain or subdomain are going to be a maven module.
 
-We will deploy the application on my personal kubernetes cluster. Expose one Hello World resource, with a client using
-Swagger Core 2.1.11 and a kubernetes sidecar to provide the documentation.
+We will deploy the application on my personal kubernetes cluster. Expose one Hello World resource, with a documentation
+using Spring doc open api plugin.
 
 ## STATUS
 
