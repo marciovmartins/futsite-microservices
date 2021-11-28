@@ -8,4 +8,7 @@ class Match(
     val author: String?,
     val description: String?
 ) {
+    init {
+        require(date.isBefore(LocalDate.now().plusDays(1))) { "Date must be today or in the past" }
+    }
 }
