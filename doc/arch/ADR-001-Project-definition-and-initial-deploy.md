@@ -23,8 +23,7 @@ We will use kotlin 1.5 jvm 17 (or earlier) as main programming language. Spring 
 framework. Junit 5.8.1 and AssertJ 3.21.0 as test suite for unit tests and integration tests. Git as VCS with Trunk-base
 development¹, each domain or subdomain are going to be a maven module.
 
-We will deploy the application on my personal kubernetes cluster. Expose one Hello World resource, with a documentation
-using Spring doc open api plugin.
+We will expose one Hello World resource, with a documentation using Spring doc open api plugin.
 
 ## STATUS
 
