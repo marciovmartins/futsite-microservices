@@ -1,4 +1,4 @@
-# ADR-002: Initial Model-View-Controller to Register a Match
+# ADR-002: Initial architecture setup with Spring Boot HATEOAS
 
 Date: 2021-11-28
 
@@ -29,5 +29,5 @@ Accepted.
 The future feature are going to follow this folder structure and the separation of concerns. For future developers it is
 going to be easier to rapidly start to develop new features or even improve or fix old one.
 
-The idea is to stress and test the beneficial usage for MVC pattern and learn where should we use this pattern or where
-we should use some more complex strategy when creating APIs.
+The idea is to stress and test the beneficial usage for Spring Boot HATEOAS and learn where should we use this pattern
+or where we should use some more complex strategy when creating APIs.
