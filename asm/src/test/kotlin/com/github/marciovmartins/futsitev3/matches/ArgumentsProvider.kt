@@ -38,6 +38,14 @@ object ValidMatchArgumentsProvider : ArgumentsProvider {
             description = "valid match with author with maximum of 50 character",
             matchAuthor = faker.lorem().characters(50),
         ),
+        argument(
+            description = "valid match with description with minimum of 1 character",
+            matchDescription = faker.lorem().characters(1),
+        ),
+        argument(
+            description = "valid match with description with maximum of 50 character",
+            matchDescription = faker.lorem().characters(2048),
+        ),
     )
 }
 
@@ -66,6 +74,12 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             matchAuthor = faker.lorem().characters(51),
             exceptionMessage = "size must be between 0 and 50",
             exceptionField = "author",
+        ),
+        argument(
+            description = "invalid match with description with more than 2048 characters",
+            matchDescription = faker.lorem().characters(2049),
+            exceptionMessage = "size must be between 0 and 2048",
+            exceptionField = "description",
         ),
     )
 }

@@ -26,5 +26,6 @@ class Match(
     @field:Size(max = 50)
     val author: String?,
 
+    @field:Size(max = 2048)
     val description: String?,
 )
