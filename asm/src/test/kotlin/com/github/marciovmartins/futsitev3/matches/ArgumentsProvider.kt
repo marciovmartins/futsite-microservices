@@ -11,18 +11,16 @@ object ValidMatchArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         argument(
             description = "valid match with minimum data",
-            matchDate = LocalDate.now()
         ),
         argument(
             description = "valid match with all data",
-            matchDate = LocalDate.now(),
             matchQuote = faker.gameOfThrones().quote(),
             matchAuthor = faker.gameOfThrones().character(),
-            matchDescription = faker.lorem().sentence()
+            matchDescription = faker.lorem().sentence(),
         ),
         argument(
             description = "valid match with date in the past",
-            matchDate = LocalDate.now().minusDays(1)
+            matchDate = LocalDate.now().minusDays(1),
         ),
     )
 }
@@ -32,16 +30,24 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         argument(
             description = "invalid match with date in the future",
             matchDate = LocalDate.now().plusDays(1),
-            exceptionMessage = "Date must be today or in the past"
+            exceptionMessage = "must be a date in the past or in the present",
+            exceptionField = "date",
+        ),
+        argument(
+            description = "invalid match with null date",
+            matchDate = null,
+            exceptionMessage = "cannot be null",
+            exceptionField = "date",
         ),
     )
 }
 
 private fun argument(
     description: String,
-    matchDate: LocalDate,
+    matchDate: LocalDate? = LocalDate.now(),
     matchQuote: String? = null,
     matchAuthor: String? = null,
     matchDescription: String? = null,
     exceptionMessage: String? = null,
-) = Arguments.of(description, matchDate, matchQuote, matchAuthor, matchDescription, exceptionMessage)!!
+    exceptionField: String? = null,
+) = Arguments.of(description, matchDate, matchQuote, matchAuthor, matchDescription, exceptionMessage, exceptionField)!!
