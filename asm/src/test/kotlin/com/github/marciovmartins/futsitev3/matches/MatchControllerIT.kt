@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import reactor.core.publisher.Mono
 
 class MatchControllerIT : BaseIT() {
     @Test
@@ -13,18 +12,19 @@ class MatchControllerIT : BaseIT() {
         // setup
         val matchToCreate = MatchFixture.match()
         // execution
-        val matchesUrl = traverson.follow("matches").asLink().href
-        val matchLocationUrl = webClient.post()
-            .uri(matchesUrl)
+        val matchLocationUrl = webTestClient.post()
+            .uri(traverson.follow("matches").asLink().href)
             .bodyValue(matchToCreate)
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .exchangeToMono { response -> Mono.just(response.headers().header("Location").first()) }
-            .block() ?: throw IllegalStateException()
-        val match = webClient.get()
+            .exchange().expectStatus().isCreated
+            .returnResult(Unit::class.java)
+            .responseHeaders.location.toString()
+        val match = webTestClient.get()
             .uri(matchLocationUrl)
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .retrieve().bodyToMono(Match::class.java)
-            .block() ?: throw IllegalStateException()
+            .exchange().expectStatus().isOk
+            .returnResult(Match::class.java)
+            .responseBody.blockFirst()
         // assertion
         assertThat(matchToCreate)
             .usingRecursiveComparison()
