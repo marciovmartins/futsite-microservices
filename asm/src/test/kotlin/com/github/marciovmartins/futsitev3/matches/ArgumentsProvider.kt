@@ -22,6 +22,14 @@ object ValidMatchArgumentsProvider : ArgumentsProvider {
             description = "valid match with date in the past",
             matchDate = LocalDate.now().minusDays(1),
         ),
+        argument(
+            description = "valid match with quote with minimum of 1 character",
+            matchQuote = faker.lorem().character().toString(),
+        ),
+        argument(
+            description = "valid match with quote with maximum of 255 character",
+            matchQuote = faker.lorem().characters(255),
+        ),
     )
 }
 
@@ -38,6 +46,12 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             matchDate = null,
             exceptionMessage = "cannot be null",
             exceptionField = "date",
+        ),
+        argument(
+            description = "invalid match with quote with more than 255 characters",
+            matchQuote = faker.lorem().characters(256),
+            exceptionMessage = "size must be between 0 and 255",
+            exceptionField = "quote",
         ),
     )
 }

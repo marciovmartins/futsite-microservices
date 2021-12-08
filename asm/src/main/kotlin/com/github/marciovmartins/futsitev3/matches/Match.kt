@@ -7,10 +7,12 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.validation.constraints.PastOrPresent
+import javax.validation.constraints.Size
 
 @Entity(name = "matches")
 class Match(
     @Id
+    @Suppress("unused")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
@@ -18,6 +20,7 @@ class Match(
     @Column(nullable = false)
     val date: LocalDate,
 
+    @field:Size(max = 255)
     val quote: String?,
 
     val author: String?,
