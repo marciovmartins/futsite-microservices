@@ -1,34 +1,25 @@
 package com.github.marciovmartins.futsitev3
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
-import retrofit2.Retrofit
-import retrofit2.converter.jackson.JacksonConverterFactory
+import org.springframework.hateoas.MediaTypes
+import org.springframework.hateoas.client.Traverson
+import org.springframework.web.reactive.function.client.WebClient
+import java.net.URI
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 abstract class BaseIT {
     @LocalServerPort
     protected var port = 0
 
-    protected lateinit var retrofit: Retrofit
+    protected lateinit var webClient: WebClient
 
-    private val objectMapper = ObjectMapper()
-        .registerKotlinModule()
-        .registerModule(ParameterNamesModule())
-        .registerModule(Jdk8Module())
-        .registerModule(JavaTimeModule());
+    protected lateinit var traverson: Traverson
 
     @BeforeEach
     internal fun setUpBase() {
-        retrofit = Retrofit.Builder()
-            .baseUrl("http://localhost:$port")
-            .addConverterFactory(JacksonConverterFactory.create(objectMapper))
-            .build()
+        webClient = WebClient.create("http://localhost:$port")
+        traverson = Traverson(URI.create("http://localhost:$port"), MediaTypes.HAL_JSON)
     }
 }

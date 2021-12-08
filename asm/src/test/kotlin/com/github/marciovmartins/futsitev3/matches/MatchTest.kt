@@ -20,7 +20,6 @@ class MatchTest {
     ) {
         // execution
         val match = Match(
-            id = id,
             date = date,
             quote = quote,
             author = author,
@@ -39,7 +38,6 @@ class MatchTest {
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
     fun `should fail with invalid data`(
         @Suppress("UNUSED_PARAMETER") description: String,
-        id: UUID,
         date: LocalDate,
         quote: String?,
         author: String?,
@@ -47,13 +45,14 @@ class MatchTest {
         exceptionMessage: String,
     ) {
         // execution && assertion
-        assertThatThrownBy { Match(
-            id = id,
-            date = date,
-            quote = quote,
-            author = author,
-            description = matchDescription
-        ) }
+        assertThatThrownBy {
+            Match(
+                date = date,
+                quote = quote,
+                author = author,
+                description = matchDescription
+            )
+        }
             .isInstanceOf(IllegalArgumentException::class.java)
             .hasMessage(exceptionMessage)
     }

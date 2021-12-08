@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import java.time.LocalDate
-import java.util.UUID
 import java.util.stream.Stream
 
 object ValidMatchArgumentsProvider : ArgumentsProvider {
@@ -40,10 +39,9 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
 
 fun argument(
     description: String,
-    id: UUID = UUID.randomUUID(),
     date: LocalDate,
     quote: String? = null,
     author: String? = null,
     matchDescription: String? = null,
     exceptionMessage: String? = null,
-) = Arguments.of(description, id, date, quote, author, matchDescription, exceptionMessage)!!
+) = Arguments.of(description, date, quote, author, matchDescription, exceptionMessage)!!
