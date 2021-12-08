@@ -6,6 +6,7 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.validation.constraints.PastOrPresent
 
 @Entity(name = "matches")
 class Match(
@@ -13,6 +14,7 @@ class Match(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
+    @field:PastOrPresent
     @Column(nullable = false)
     val date: LocalDate,
 

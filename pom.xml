@@ -29,7 +29,6 @@
         <maven-failsafe-plugin.version>${maven-plugin.version}</maven-failsafe-plugin.version>
         <swagger.version>2.1.11</swagger.version>
         <springdoc.version>1.5.12</springdoc.version>
-        <retrofit.version>2.9.0</retrofit.version>
     </properties>
 
     <repositories>

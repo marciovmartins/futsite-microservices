@@ -11,18 +11,18 @@ object ValidMatchArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         argument(
             description = "valid match with minimum data",
-            date = LocalDate.now()
+            matchDate = LocalDate.now()
         ),
         argument(
             description = "valid match with all data",
-            date = LocalDate.now(),
-            quote = faker.gameOfThrones().quote(),
-            author = faker.gameOfThrones().character(),
+            matchDate = LocalDate.now(),
+            matchQuote = faker.gameOfThrones().quote(),
+            matchAuthor = faker.gameOfThrones().character(),
             matchDescription = faker.lorem().sentence()
         ),
         argument(
             description = "valid match with date in the past",
-            date = LocalDate.now().minusDays(1)
+            matchDate = LocalDate.now().minusDays(1)
         ),
     )
 }
@@ -31,17 +31,17 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         argument(
             description = "invalid match with date in the future",
-            date = LocalDate.now().plusDays(1),
+            matchDate = LocalDate.now().plusDays(1),
             exceptionMessage = "Date must be today or in the past"
         ),
     )
 }
 
-fun argument(
+private fun argument(
     description: String,
-    date: LocalDate,
-    quote: String? = null,
-    author: String? = null,
+    matchDate: LocalDate,
+    matchQuote: String? = null,
+    matchAuthor: String? = null,
     matchDescription: String? = null,
     exceptionMessage: String? = null,
-) = Arguments.of(description, date, quote, author, matchDescription, exceptionMessage)!!
+) = Arguments.of(description, matchDate, matchQuote, matchAuthor, matchDescription, exceptionMessage)!!
