@@ -2,15 +2,29 @@ package com.github.marciovmartins.futsitev3.matches
 
 import com.github.marciovmartins.futsitev3.BaseIT
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ArgumentsSource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import java.time.LocalDate
 
 class MatchControllerIT : BaseIT() {
-    @Test
-    fun `should succeed to create and retrieve a match`() {
+    @ParameterizedTest(name = "{0}")
+    @ArgumentsSource(ValidMatchArgumentsProvider::class)
+    fun `should succeed to create and retrieve a match`(
+        @Suppress("UNUSED_PARAMETER") description: String,
+        date: LocalDate,
+        quote: String?,
+        author: String?,
+        matchDescription: String?,
+    ) {
         // setup
-        val matchToCreate = MatchFixture.match()
+        val matchToCreate = Match(
+            date = date,
+            quote = quote,
+            author = author,
+            description = matchDescription
+        )
         // execution
         val matchLocationUrl = webTestClient.post()
             .uri(traverson.follow("matches").asLink().href)
@@ -26,9 +40,10 @@ class MatchControllerIT : BaseIT() {
             .returnResult(Match::class.java)
             .responseBody.blockFirst()
         // assertion
-        assertThat(matchToCreate)
-            .usingRecursiveComparison()
-            .ignoringFields("internalId")
-            .isEqualTo(match)
+        assertThat(match).isNotNull
+        assertThat(match!!.date).isEqualTo(date)
+        assertThat(match.quote).isEqualTo(quote)
+        assertThat(match.author).isEqualTo(author)
+        assertThat(match.description).isEqualTo(matchDescription)
     }
 }
