@@ -24,11 +24,19 @@ object ValidMatchArgumentsProvider : ArgumentsProvider {
         ),
         argument(
             description = "valid match with quote with minimum of 1 character",
-            matchQuote = faker.lorem().character().toString(),
+            matchQuote = faker.lorem().characters(1),
         ),
         argument(
             description = "valid match with quote with maximum of 255 character",
             matchQuote = faker.lorem().characters(255),
+        ),
+        argument(
+            description = "valid match with author with minimum of 1 character",
+            matchAuthor = faker.lorem().characters(1),
+        ),
+        argument(
+            description = "valid match with author with maximum of 50 character",
+            matchAuthor = faker.lorem().characters(50),
         ),
     )
 }
@@ -52,6 +60,12 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             matchQuote = faker.lorem().characters(256),
             exceptionMessage = "size must be between 0 and 255",
             exceptionField = "quote",
+        ),
+        argument(
+            description = "invalid match with author with more than 50 characters",
+            matchAuthor = faker.lorem().characters(51),
+            exceptionMessage = "size must be between 0 and 50",
+            exceptionField = "author",
         ),
     )
 }

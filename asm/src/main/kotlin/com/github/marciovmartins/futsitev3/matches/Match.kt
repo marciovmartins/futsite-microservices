@@ -23,6 +23,7 @@ class Match(
     @field:Size(max = 255)
     val quote: String?,
 
+    @field:Size(max = 50)
     val author: String?,
 
     val description: String?,
