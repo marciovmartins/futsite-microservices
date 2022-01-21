@@ -92,4 +92,16 @@ private fun argument(
     matchDescription: String? = null,
     exceptionMessage: String? = null,
     exceptionField: String? = null,
-) = Arguments.of(description, matchDate, matchQuote, matchAuthor, matchDescription, exceptionMessage, exceptionField)!!
+) = Arguments.of(
+    description,
+    MatchDTO(matchDate, matchQuote, matchAuthor, matchDescription),
+    exceptionMessage,
+    exceptionField
+)!!
+
+data class MatchDTO(
+    val date: LocalDate?,
+    val quote: String?,
+    val author: String?,
+    val description: String?,
+)

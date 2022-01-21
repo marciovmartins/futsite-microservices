@@ -4,20 +4,14 @@ import com.github.marciovmartins.futsitev3.BaseIT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
-import java.time.LocalDate
 
 class MatchControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(ValidMatchArgumentsProvider::class)
     fun `should succeed to create and retrieve a match`(
         @Suppress("UNUSED_PARAMETER") description: String,
-        matchDate: LocalDate,
-        matchQuote: String?,
-        matchAuthor: String?,
-        matchDescription: String?,
+        matchToCreate: MatchDTO,
     ) {
-        // setup
-        val matchToCreate = MatchDTO(matchDate, matchQuote, matchAuthor, matchDescription)
         // execution
         val matchLocationUrl = webTestClient.post()
             .uri(traverson.follow("matches").asLink().href)
@@ -30,27 +24,23 @@ class MatchControllerIT : BaseIT() {
             .exchange().expectStatus().isOk
             .returnResult(Match::class.java)
             .responseBody.blockFirst()
+
         // assertion
-        assertThat(match).isNotNull
-        assertThat(match!!.date).isEqualTo(matchDate)
-        assertThat(match.quote).isEqualTo(matchQuote)
-        assertThat(match.author).isEqualTo(matchAuthor)
-        assertThat(match.description).isEqualTo(matchDescription)
+        assertThat(match)
+            .isNotNull
+            .usingRecursiveComparison()
+            .ignoringFields("id")
+            .isEqualTo(matchToCreate)
     }
 
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
     fun `should fail with invalid data`(
         @Suppress("UNUSED_PARAMETER") description: String,
-        matchDate: LocalDate?,
-        matchQuote: String?,
-        matchAuthor: String?,
-        matchDescription: String?,
+        matchToCreate: MatchDTO,
         exceptionMessage: String,
         exceptionField: String,
     ) {
-        // setup
-        val matchToCreate = MatchDTO(matchDate, matchQuote, matchAuthor, matchDescription)
         // execution && assertion
         webTestClient.post()
             .uri(traverson.follow("matches").asLink().href)
@@ -61,10 +51,3 @@ class MatchControllerIT : BaseIT() {
             .jsonPath("$[0].field").isEqualTo(exceptionField)
     }
 }
-
-private data class MatchDTO(
-    val date: LocalDate?,
-    val quote: String?,
-    val author: String?,
-    val description: String?,
-)

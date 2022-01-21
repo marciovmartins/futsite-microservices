@@ -4,13 +4,15 @@ Date: 2021-11-28
 
 # CONTEXT
 
-It is necessary to expose the first api endpoint to be consumed by some other system. This is going to be the initial
-setup of the project that will be followed for the rest of this project.
+Expose the first api endpoint to be consumed by some other system. This is going to be the initial setup of the project
+that will be followed for the rest of this project.
 
 ## DECISION
 
 We will use the [Spring Data REST](https://docs.spring.io/spring-data/rest/docs/current/reference/html/#reference) and
 each bounded context are going to be on their own folder.
+
+The first bounded context is going to be Matches.
 
 We will split the responsibilities in sub-folders by Model. Inside this model folders there will be entities, inbound
 controller resources and supporting libraries as database implementation or external services.
