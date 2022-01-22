@@ -135,6 +135,14 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             exceptionMessage = "must be one of the values accepted: [A, B]",
             exceptionField = "matchPlayers.0.team",
         ),
+        matchArgument(
+            description = "invalid match with null match player nickname",
+            matchPlayers = setOf(
+                matchPlayerArgument(nickname = null),
+            ),
+            exceptionMessage = "cannot be null",
+            exceptionField = "matchPlayers.0.nickname",
+        ),
     )
 }
 
@@ -158,7 +166,7 @@ private fun matchArgument(
 )!!
 
 private fun matchPlayerArgument(
-    team: String?,
+    team: String? = MatchPlayer.Team.values()[faker.random().nextInt(0, MatchPlayer.Team.values().size - 1)].name,
     nickname: String? = faker.superhero().name(),
     goalsInFavor: Int? = faker.random().nextInt(0, 5),
     goalsAgainst: Int? = faker.random().nextInt(0, 1),

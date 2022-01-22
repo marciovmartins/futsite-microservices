@@ -35,7 +35,7 @@ class ExceptionHandlingController {
         ex: HttpMessageNotReadableException
     ): List<ResponseError> = when (val cause = ex.cause) {
         is MissingKotlinParameterException -> {
-            val field = cause.path.joinToString(separator = ".") { it.fieldName }
+            val field = cause.path.mapFieldsPath()
             listOf(ResponseError(message = "cannot be null", field = field))
         }
         is ValueInstantiationException -> {
