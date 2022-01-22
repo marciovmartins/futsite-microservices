@@ -22,14 +22,14 @@ class MatchControllerIT : BaseIT() {
         val match = webTestClient.get()
             .uri(matchLocationUrl)
             .exchange().expectStatus().isOk
-            .returnResult(Match::class.java)
+            .returnResult(MatchDTO::class.java)
             .responseBody.blockFirst()
 
         // assertion
         assertThat(match)
             .isNotNull
             .usingRecursiveComparison()
-            .ignoringFields("id")
+            .ignoringCollectionOrder()
             .isEqualTo(matchToCreate)
     }
 
