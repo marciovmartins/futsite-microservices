@@ -90,5 +90,14 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             exceptionMessage = "size must be between 1 and 50",
             exceptionField = "nickname",
         ),
+        matchArgument(
+            description = "invalid match with null match player goals in favor",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, goalsInFavor = null),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "cannot be null",
+            exceptionField = "matchPlayers.0.goalsInFavor",
+        ),
     )
 }

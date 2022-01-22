@@ -24,7 +24,7 @@ class MatchPlayer(
     @field:Size(min = 1, max = 50)
     val nickname: String,
 
-    val goalsInFavor: Short,
+    val goalsInFavor: java.lang.Short, // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
 
     val goalsAgainst: Short,
 
