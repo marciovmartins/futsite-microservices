@@ -21,7 +21,7 @@
 
     <properties>
         <java.version>16</java.version>
-        <kotlin.version>1.6.0</kotlin.version>
+        <kotlin.version>1.6.10</kotlin.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven-plugin.version>3.0.0-M5</maven-plugin.version>

@@ -93,7 +93,14 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             exceptionMessage = "must not be empty",
             exceptionField = "matchPlayers",
         ),
-        // TODO: only one match player of team A
+        matchArgument(
+            description = "invalid match with only one match player of team A",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = MatchPlayer.Team.A.name)
+            ),
+            exceptionMessage = "must have one player for team A and one player for team B",
+            exceptionField = "matchPlayers",
+        ),
         // TODO: only one match player of team B
         // TODO: only players of team A
         // TODO: only players of team B

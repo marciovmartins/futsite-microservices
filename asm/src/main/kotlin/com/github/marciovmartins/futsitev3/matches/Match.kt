@@ -33,6 +33,7 @@ class Match(
     val description: String?,
 
     @field:NotEmpty
+    @field:BothTeams
     @JoinColumn(name = "match_id", nullable = false)
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     val matchPlayers: Set<MatchPlayer>
