@@ -99,5 +99,14 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             exceptionMessage = "cannot be null",
             exceptionField = "matchPlayers.0.goalsInFavor",
         ),
+        matchArgument(
+            description = "invalid match with negative match player goals in favor",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, goalsInFavor = -1),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "must be greater than or equal to 0",
+            exceptionField = "goalsInFavor",
+        ),
     )
 }
