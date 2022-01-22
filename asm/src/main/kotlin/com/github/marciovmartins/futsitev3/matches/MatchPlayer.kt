@@ -8,6 +8,7 @@ import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.validation.constraints.NotBlank
 
 @Entity(name = "match_players")
 class MatchPlayer(
@@ -18,6 +19,7 @@ class MatchPlayer(
     @Enumerated(EnumType.STRING)
     val team: Team,
 
+    @field:NotBlank
     val nickname: String,
 
     val goalsInFavor: Short,

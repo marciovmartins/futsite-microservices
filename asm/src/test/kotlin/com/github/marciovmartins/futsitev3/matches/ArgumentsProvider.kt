@@ -96,7 +96,7 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with exactly only one match player of team A",
             matchPlayers = setOf(
-                matchPlayerArgument(team = MatchPlayer.Team.A.name),
+                matchPlayerArgument(team = A),
             ),
             exceptionMessage = "must have at least one player for team A and one player for team B",
             exceptionField = "matchPlayers",
@@ -104,7 +104,7 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with exactly only one match player of team A",
             matchPlayers = setOf(
-                matchPlayerArgument(team = MatchPlayer.Team.B.name),
+                matchPlayerArgument(team = B),
             ),
             exceptionMessage = "must have at least one player for team A and one player for team B",
             exceptionField = "matchPlayers",
@@ -112,8 +112,8 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with only match players from team A",
             matchPlayers = setOf(
-                matchPlayerArgument(team = MatchPlayer.Team.A.name),
-                matchPlayerArgument(team = MatchPlayer.Team.A.name),
+                matchPlayerArgument(team = A),
+                matchPlayerArgument(team = A),
             ),
             exceptionMessage = "must have at least one player for team A and one player for team B",
             exceptionField = "matchPlayers",
@@ -121,8 +121,8 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with only match players from team A",
             matchPlayers = setOf(
-                matchPlayerArgument(team = MatchPlayer.Team.B.name),
-                matchPlayerArgument(team = MatchPlayer.Team.B.name),
+                matchPlayerArgument(team = B),
+                matchPlayerArgument(team = B),
             ),
             exceptionMessage = "must have at least one player for team A and one player for team B",
             exceptionField = "matchPlayers",
@@ -142,6 +142,15 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             ),
             exceptionMessage = "cannot be null",
             exceptionField = "matchPlayers.0.nickname",
+        ),
+        matchArgument(
+            description = "invalid match with blank match player nickname",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, nickname = "     "),
+                matchPlayerArgument(team = B)
+            ),
+            exceptionMessage = "must not be blank",
+            exceptionField = "nickname",
         ),
     )
 }
@@ -192,3 +201,6 @@ data class MatchPlayerDTO(
     val blueCards: Int?,
     val redCards: Int?,
 )
+
+private val A = MatchPlayer.Team.A.name
+private val B = MatchPlayer.Team.B.name
