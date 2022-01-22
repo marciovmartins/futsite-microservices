@@ -94,22 +94,30 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             exceptionField = "matchPlayers",
         ),
         matchArgument(
-            description = "invalid match with only one match player of team A",
+            description = "invalid match with exactly only one match player of team A",
             matchPlayers = setOf(
-                matchPlayerArgument(team = MatchPlayer.Team.A.name)
+                matchPlayerArgument(team = MatchPlayer.Team.A.name),
             ),
-            exceptionMessage = "must have one player for team A and one player for team B",
+            exceptionMessage = "must have at least one player for team A and one player for team B",
             exceptionField = "matchPlayers",
         ),
         matchArgument(
-            description = "invalid match with only one match player of team A",
+            description = "invalid match with exactly only one match player of team A",
             matchPlayers = setOf(
-                matchPlayerArgument(team = MatchPlayer.Team.B.name)
+                matchPlayerArgument(team = MatchPlayer.Team.B.name),
             ),
-            exceptionMessage = "must have one player for team A and one player for team B",
+            exceptionMessage = "must have at least one player for team A and one player for team B",
             exceptionField = "matchPlayers",
         ),
-        // TODO: only players of team A
+        matchArgument(
+            description = "invalid match with only match players from team A",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = MatchPlayer.Team.A.name),
+                matchPlayerArgument(team = MatchPlayer.Team.A.name),
+            ),
+            exceptionMessage = "must have at least one player for team A and one player for team B",
+            exceptionField = "matchPlayers",
+        ),
         // TODO: only players of team B
         // TODO: invalid team option
     )
