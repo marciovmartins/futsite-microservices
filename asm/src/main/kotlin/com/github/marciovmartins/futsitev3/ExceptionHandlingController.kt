@@ -1,5 +1,7 @@
 package com.github.marciovmartins.futsitev3
 
+import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.exc.ValueInstantiationException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import org.springframework.data.rest.core.RepositoryConstraintViolationException
 import org.springframework.http.HttpStatus
@@ -21,12 +23,8 @@ class ExceptionHandlingController {
     fun handleConstraintViolation(
         req: HttpServletRequest,
         ex: ConstraintViolationException
-    ) = ex.constraintViolations.map {
-        ResponseError(
-            message = it.message,
-            field = it.propertyPath.toString(),
-            invalidValue = it.invalidValue,
-        )
+    ): List<ResponseError> = ex.constraintViolations.map {
+        ResponseError(message = it.message, field = it.propertyPath.toString(), invalidValue = it.invalidValue)
     }
 
     @ResponseBody
@@ -35,15 +33,17 @@ class ExceptionHandlingController {
     fun handleMessageNotReadableException(
         req: HttpServletRequest,
         ex: HttpMessageNotReadableException
-    ): List<ResponseError> {
-        val cause = ex.cause
-        if (cause is MissingKotlinParameterException) {
-            return listOf(ResponseError(
-                message = "cannot be null",
-                field = cause.path.joinToString(separator = ".") { it.fieldName }
-            ))
+    ): List<ResponseError> = when (val cause = ex.cause) {
+        is MissingKotlinParameterException -> {
+            val field = cause.path.joinToString(separator = ".") { it.fieldName }
+            listOf(ResponseError(message = "cannot be null", field = field))
         }
-        return listOf(ResponseError(message = ex.message!!))
+        is ValueInstantiationException -> {
+            val field = cause.path.mapFieldsPath()
+            val invalidValue = cause.invalidValue()
+            listOf(ResponseError(message = cause.cause!!.message!!, field = field, invalidValue = invalidValue))
+        }
+        else -> listOf(ResponseError(message = ex.message!!))
     }
 
     @ResponseBody
@@ -52,19 +52,26 @@ class ExceptionHandlingController {
     fun handleRepositoryConstraintViolationException(
         req: HttpServletRequest,
         ex: RepositoryConstraintViolationException
-    ) = ex.errors.allErrors
+    ): List<ResponseError> = ex.errors.allErrors
         .map { FieldError::class.cast(it) }
-        .map {
-            ResponseError(
-                message = it.defaultMessage!!,
-                field = it.field,
-                invalidValue = it.rejectedValue
-            )
-        }
+        .map { ResponseError(message = it.defaultMessage!!, field = it.field, invalidValue = it.rejectedValue) }
 
     data class ResponseError(
         val message: String,
         val field: String? = null,
         val invalidValue: Any? = null
     )
+}
+
+private fun Collection<JsonMappingException.Reference>.mapFieldsPath() =
+    this.joinToString(separator = ".") { mapPath(it) }
+
+private fun ValueInstantiationException.invalidValue() = when (val cause = this.cause) {
+    is IllegalEnumArgumentException -> cause.invalidValue
+    else -> null
+}
+
+private fun mapPath(it: JsonMappingException.Reference): String = when (it.from) {
+    is Collection<*> -> it.index.toString()
+    else -> it.fieldName
 }

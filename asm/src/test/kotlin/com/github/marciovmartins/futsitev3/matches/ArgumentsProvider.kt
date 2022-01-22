@@ -127,7 +127,14 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             exceptionMessage = "must have at least one player for team A and one player for team B",
             exceptionField = "matchPlayers",
         ),
-        // TODO: invalid team option
+        matchArgument(
+            description = "invalid match with invalid match player team value",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = "C"),
+            ),
+            exceptionMessage = "must be one of the values accepted: [A, B]",
+            exceptionField = "matchPlayers.0.team",
+        ),
     )
 }
 
