@@ -11,13 +11,27 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "valid match with match player nickname with minimum of 1 character",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, faker.lorem().characters(1)),
+                matchPlayerArgument(team = A, nickname = faker.lorem().characters(1)),
                 matchPlayerArgument(team = B)
-            )
+            ),
         ),
         matchArgument(
             description = "valid match with match player nickname with maximum of 50 character",
             matchDescription = faker.lorem().characters(50),
+        ),
+        matchArgument(
+            description = "valid match with match player goals in favor with minimum amount of 1",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, goalsInFavor = 1),
+                matchPlayerArgument(team = B)
+            ),
+        ),
+        matchArgument(
+            description = "valid match with match player goals in favor with maximum amount of 255",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, goalsInFavor = 255),
+                matchPlayerArgument(team = B)
+            ),
         ),
     )
 }
