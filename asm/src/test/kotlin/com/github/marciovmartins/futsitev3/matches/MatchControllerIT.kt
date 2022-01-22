@@ -1,6 +1,11 @@
 package com.github.marciovmartins.futsitev3.matches
 
 import com.github.marciovmartins.futsitev3.BaseIT
+import com.github.marciovmartins.futsitev3.matches.argumentsprovider.InvalidMatchArgumentsProvider
+import com.github.marciovmartins.futsitev3.matches.argumentsprovider.InvalidMatchPlayerArgumentsProvider
+import com.github.marciovmartins.futsitev3.matches.argumentsprovider.MatchDTO
+import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ValidMatchArgumentsProvider
+import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ValidMatchPlayerArgumentsProvider
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
@@ -8,6 +13,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource
 class MatchControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(ValidMatchArgumentsProvider::class)
+    @ArgumentsSource(ValidMatchPlayerArgumentsProvider::class)
     fun `should succeed to create and retrieve a match`(
         @Suppress("UNUSED_PARAMETER") description: String,
         matchToCreate: MatchDTO,
@@ -35,6 +41,7 @@ class MatchControllerIT : BaseIT() {
 
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
+    @ArgumentsSource(InvalidMatchPlayerArgumentsProvider::class)
     fun `should fail with invalid data`(
         @Suppress("UNUSED_PARAMETER") description: String,
         matchToCreate: MatchDTO,
