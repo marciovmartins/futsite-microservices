@@ -108,5 +108,14 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             exceptionMessage = "must be greater than or equal to 0",
             exceptionField = "goalsInFavor",
         ),
+        matchArgument(
+            description = "invalid match with match player goals in favor value exceeding 255",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, goalsInFavor = 256),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "must be less than or equal to 255",
+            exceptionField = "goalsInFavor",
+        ),
     )
 }

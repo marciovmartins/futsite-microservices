@@ -8,6 +8,7 @@ import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.validation.constraints.Max
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.PositiveOrZero
 import javax.validation.constraints.Size
@@ -25,6 +26,7 @@ class MatchPlayer(
     @field:Size(min = 1, max = 50)
     val nickname: String,
 
+    @field:Max(255)
     @field:PositiveOrZero
     val goalsInFavor: java.lang.Short, // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
 
