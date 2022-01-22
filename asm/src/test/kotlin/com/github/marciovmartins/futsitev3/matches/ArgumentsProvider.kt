@@ -43,8 +43,19 @@ object ValidMatchArgumentsProvider : ArgumentsProvider {
             matchDescription = faker.lorem().characters(1),
         ),
         matchArgument(
-            description = "valid match with description with maximum of 50 character",
+            description = "valid match with description with maximum of 2048 character",
             matchDescription = faker.lorem().characters(2048),
+        ),
+        matchArgument(
+            description = "valid match with match player nickname with minimum of 1 character",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, faker.lorem().characters(1)),
+                matchPlayerArgument(team = B)
+            )
+        ),
+        matchArgument(
+            description = "valid match with match player nickname with maximum of 50 character",
+            matchDescription = faker.lorem().characters(50),
         ),
     )
 }
@@ -64,19 +75,19 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             exceptionField = "date",
         ),
         matchArgument(
-            description = "invalid match with quote with more than 255 characters",
+            description = "invalid match with quote exceeding 255 characters",
             matchQuote = faker.lorem().characters(256),
             exceptionMessage = "size must be between 0 and 255",
             exceptionField = "quote",
         ),
         matchArgument(
-            description = "invalid match with author with more than 50 characters",
+            description = "invalid match with author exceeding 50 characters",
             matchAuthor = faker.lorem().characters(51),
             exceptionMessage = "size must be between 0 and 50",
             exceptionField = "author",
         ),
         matchArgument(
-            description = "invalid match with description with more than 2048 characters",
+            description = "invalid match with description exceeding 2048 characters",
             matchDescription = faker.lorem().characters(2049),
             exceptionMessage = "size must be between 0 and 2048",
             exceptionField = "description",
@@ -130,15 +141,17 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with invalid match player team value",
             matchPlayers = setOf(
+                matchPlayerArgument(team = A),
                 matchPlayerArgument(team = "C"),
             ),
             exceptionMessage = "must be one of the values accepted: [A, B]",
-            exceptionField = "matchPlayers.0.team",
+            exceptionField = "matchPlayers.1.team",
         ),
         matchArgument(
             description = "invalid match with null match player nickname",
             matchPlayers = setOf(
-                matchPlayerArgument(nickname = null),
+                matchPlayerArgument(team = A, nickname = null),
+                matchPlayerArgument(team = B),
             ),
             exceptionMessage = "cannot be null",
             exceptionField = "matchPlayers.0.nickname",
@@ -147,9 +160,18 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             description = "invalid match with blank match player nickname",
             matchPlayers = setOf(
                 matchPlayerArgument(team = A, nickname = "     "),
-                matchPlayerArgument(team = B)
+                matchPlayerArgument(team = B),
             ),
             exceptionMessage = "must not be blank",
+            exceptionField = "nickname",
+        ),
+        matchArgument(
+            description = "invalid match with match player nickname exceeding 50 characters",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, nickname = faker.lorem().characters(51)),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "size must be between 1 and 50",
             exceptionField = "nickname",
         ),
     )
@@ -175,7 +197,7 @@ private fun matchArgument(
 )!!
 
 private fun matchPlayerArgument(
-    team: String? = MatchPlayer.Team.values()[faker.random().nextInt(0, MatchPlayer.Team.values().size - 1)].name,
+    team: String?,
     nickname: String? = faker.superhero().name(),
     goalsInFavor: Int? = faker.random().nextInt(0, 5),
     goalsAgainst: Int? = faker.random().nextInt(0, 1),
