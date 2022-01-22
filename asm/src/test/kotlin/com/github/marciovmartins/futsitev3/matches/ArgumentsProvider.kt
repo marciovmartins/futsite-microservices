@@ -81,7 +81,20 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             exceptionMessage = "size must be between 0 and 2048",
             exceptionField = "description",
         ),
-        // TODO: only one match player
+        matchArgument(
+            description = "invalid match with null match players",
+            matchPlayers = null,
+            exceptionMessage = "cannot be null",
+            exceptionField = "matchPlayers",
+        ),
+        matchArgument(
+            description = "invalid match with empty match players",
+            matchPlayers = emptySet(),
+            exceptionMessage = "must not be empty",
+            exceptionField = "matchPlayers",
+        ),
+        // TODO: only one match player of team A
+        // TODO: only one match player of team B
         // TODO: only players of team A
         // TODO: only players of team B
         // TODO: invalid team option
@@ -94,7 +107,7 @@ private fun matchArgument(
     matchQuote: String? = null,
     matchAuthor: String? = null,
     matchDescription: String? = null,
-    matchPlayers: Set<MatchPlayerDTO> = setOf(
+    matchPlayers: Set<MatchPlayerDTO>? = setOf(
         matchPlayerArgument(MatchPlayer.Team.A.name),
         matchPlayerArgument(MatchPlayer.Team.B.name),
     ),

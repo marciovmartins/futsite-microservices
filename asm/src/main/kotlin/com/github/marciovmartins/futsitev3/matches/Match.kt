@@ -9,6 +9,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
+import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.PastOrPresent
 import javax.validation.constraints.Size
 
@@ -31,6 +32,7 @@ class Match(
     @field:Size(max = 2048)
     val description: String?,
 
+    @field:NotEmpty
     @JoinColumn(name = "match_id", nullable = false)
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     val matchPlayers: Set<MatchPlayer>
