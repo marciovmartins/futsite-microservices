@@ -64,6 +64,15 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             exceptionField = "matchPlayers.1.team",
         ),
         matchArgument(
+            description = "invalid match with match player team value in small case",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = "a"),
+                matchPlayerArgument(team = B)
+            ),
+            exceptionMessage = "must be one of the values accepted: [A, B]",
+            exceptionField = "matchPlayers.0.team",
+        ),
+        matchArgument(
             description = "invalid match with null match player nickname",
             matchPlayers = setOf(
                 matchPlayerArgument(team = A, nickname = null),

@@ -9,6 +9,13 @@ import java.util.stream.Stream
 object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         matchArgument(
+            description = "valid match with team in upper case",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = "A"),
+                matchPlayerArgument(team = B)
+            ),
+        ),
+        matchArgument(
             description = "valid match with match player nickname with minimum of 1 character",
             matchPlayers = setOf(
                 matchPlayerArgument(team = A, nickname = faker.lorem().characters(1)),
