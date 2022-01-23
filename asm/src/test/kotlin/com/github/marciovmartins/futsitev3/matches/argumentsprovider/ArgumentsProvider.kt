@@ -29,7 +29,7 @@ fun matchPlayerArgument(
     nickname: String? = faker.superhero().name(),
     goalsInFavor: Int? = faker.random().nextInt(0, 5),
     goalsAgainst: Int? = faker.random().nextInt(0, 1),
-    yellowCards: Int? = faker.random().nextInt(0, 2),
+    yellowCards: Any? = faker.random().nextInt(0, 2),
     blueCards: Int? = faker.random().nextInt(0, 3),
     redCards: Int? = faker.random().nextInt(0, 1),
 ) = MatchPlayerDTO(team, nickname, goalsInFavor, goalsAgainst, yellowCards, blueCards, redCards)
@@ -47,7 +47,7 @@ data class MatchPlayerDTO(
     val nickname: String?,
     val goalsInFavor: Int?,
     val goalsAgainst: Int?,
-    val yellowCards: Int?,
+    val yellowCards: Any?,
     val blueCards: Int?,
     val redCards: Int?,
 )

@@ -34,6 +34,8 @@ class MatchPlayer(
     @field:PositiveOrZero
     val goalsAgainst: Short,
 
+    @field:Max(9)
+    @field:PositiveOrZero
     val yellowCards: Short,
 
     val blueCards: Short,

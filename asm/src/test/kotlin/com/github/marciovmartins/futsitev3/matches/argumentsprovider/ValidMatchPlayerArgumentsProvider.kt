@@ -20,9 +20,9 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matchDescription = faker.lorem().characters(50),
         ),
         matchArgument(
-            description = "valid match with match player goals in favor with minimum amount of 1",
+            description = "valid match with match player goals in favor with minimum amount of 0",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, goalsInFavor = 1),
+                matchPlayerArgument(team = A, goalsInFavor = 0),
                 matchPlayerArgument(team = B)
             ),
         ),
@@ -34,9 +34,9 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             ),
         ),
         matchArgument(
-            description = "valid match with match player goals against with minimum amount of 1",
+            description = "valid match with match player goals against with minimum amount of 0",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, goalsAgainst = 1),
+                matchPlayerArgument(team = A, goalsAgainst = 0),
                 matchPlayerArgument(team = B)
             ),
         ),
@@ -44,6 +44,20 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             description = "valid match with match player goals against with maximum amount of 9",
             matchPlayers = setOf(
                 matchPlayerArgument(team = A, goalsAgainst = 9),
+                matchPlayerArgument(team = B)
+            ),
+        ),
+        matchArgument(
+            description = "valid match with match player yellow cards with minimum amount of 0",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, yellowCards = 0),
+                matchPlayerArgument(team = B)
+            ),
+        ),
+        matchArgument(
+            description = "valid match with match player yellow cards with maximum amount of 9",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, yellowCards = 9),
                 matchPlayerArgument(team = B)
             ),
         ),

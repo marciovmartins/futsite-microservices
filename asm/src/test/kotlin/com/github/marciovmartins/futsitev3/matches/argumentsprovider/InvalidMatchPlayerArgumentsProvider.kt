@@ -118,6 +118,16 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             exceptionMessage = "must be less than or equal to 9",
             exceptionField = "goalsInFavor",
         ),
+// kotlin automatically converts from double to short rounding down
+//        matchArgument(
+//            description = "invalid match with match player goals in favor value as double",
+//            matchPlayers = setOf(
+//                matchPlayerArgument(team = A, goalsInFavor = 2.9),
+//                matchPlayerArgument(team = B),
+//            ),
+//            exceptionMessage = "must be less than or equal to 9",
+//            exceptionField = "goalsInFavor",
+//        ),
 //        https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
 //        matchArgument(
 //            description = "invalid match with null match player goals against",
@@ -146,5 +156,43 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             exceptionMessage = "must be less than or equal to 9",
             exceptionField = "goalsAgainst",
         ),
+// kotlin automatically converts from double to short rounding down
+//        matchArgument(
+//            description = "invalid match with match player goals against value as double",
+//            matchPlayers = setOf(
+//                matchPlayerArgument(team = A, goalsAgainst = 2.9),
+//                matchPlayerArgument(team = B),
+//            ),
+//            exceptionMessage = "must be less than or equal to 9",
+//            exceptionField = "goalsAgainst",
+//        ),
+        matchArgument(
+            description = "invalid match with negative match player yellow cards",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, yellowCards = -1),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "must be greater than or equal to 0",
+            exceptionField = "yellowCards",
+        ),
+        matchArgument(
+            description = "invalid match with match player yellow cards value exceeding 9",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, yellowCards = 10),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "must be less than or equal to 9",
+            exceptionField = "yellowCards",
+        ),
+// kotlin automatically converts from double to short rounding down
+//        matchArgument(
+//            description = "invalid match with match player yellow cards value as double",
+//            matchPlayers = setOf(
+//                matchPlayerArgument(team = A, yellowCards = 2.9),
+//                matchPlayerArgument(team = B),
+//            ),
+//            exceptionMessage = "must be less than or equal to 9",
+//            exceptionField = "yellowCards",
+//        ),
     )
 }
