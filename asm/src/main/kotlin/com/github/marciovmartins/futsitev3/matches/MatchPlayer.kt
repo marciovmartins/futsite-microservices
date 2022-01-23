@@ -26,7 +26,7 @@ class MatchPlayer(
     @field:Size(min = 1, max = 50)
     val nickname: String,
 
-    @field:Max(255)
+    @field:Max(9)
     @field:PositiveOrZero
     val goalsInFavor: Short,
 

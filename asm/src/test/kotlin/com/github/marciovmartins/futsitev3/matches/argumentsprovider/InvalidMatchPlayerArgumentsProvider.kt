@@ -110,12 +110,12 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             exceptionField = "goalsInFavor",
         ),
         matchArgument(
-            description = "invalid match with match player goals in favor value exceeding 255",
+            description = "invalid match with match player goals in favor value exceeding 9",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, goalsInFavor = 256),
+                matchPlayerArgument(team = A, goalsInFavor = 10),
                 matchPlayerArgument(team = B),
             ),
-            exceptionMessage = "must be less than or equal to 255",
+            exceptionMessage = "must be less than or equal to 9",
             exceptionField = "goalsInFavor",
         ),
 //        https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in

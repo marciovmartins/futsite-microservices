@@ -27,9 +27,9 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             ),
         ),
         matchArgument(
-            description = "valid match with match player goals in favor with maximum amount of 255",
+            description = "valid match with match player goals in favor with maximum amount of 9",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, goalsInFavor = 255),
+                matchPlayerArgument(team = A, goalsInFavor = 9),
                 matchPlayerArgument(team = B)
             ),
         ),
