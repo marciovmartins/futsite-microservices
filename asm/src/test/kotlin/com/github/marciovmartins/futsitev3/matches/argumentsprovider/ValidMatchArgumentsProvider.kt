@@ -20,7 +20,7 @@ object ValidMatchArgumentsProvider : ArgumentsProvider {
         ),
         matchArgument(
             description = "valid match with date in the past",
-            matchDate = LocalDate.now().minusDays(1),
+            matchDate = LocalDate.now().minusDays(1).toString(),
         ),
         matchArgument(
             description = "valid match with quote with minimum of 1 character",

@@ -10,6 +10,24 @@ import java.util.stream.Stream
 object InvalidMatchArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         matchArgument(
+            description = "invalid match date with invalid date format",
+            matchDate = "invalid-format",
+            exceptionMessage = "Text 'invalid-format' could not be parsed at index 0",
+            exceptionField = "date",
+        ),
+        matchArgument(
+            description = "invalid match date with wrong date in human readable format",
+            matchDate = "03/12/2007",
+            exceptionMessage = "Text '03/12/2007' could not be parsed at index 0",
+            exceptionField = "date",
+        ),
+        matchArgument(
+            description = "invalid match date with wrong date in millis",
+            matchDate = "1642941722026",
+            exceptionMessage = "Text '1642941722026' could not be parsed at index 0",
+            exceptionField = "date",
+        ),
+        matchArgument(
             description = "invalid match with date in the future",
             matchDate = LocalDate.now().plusDays(1),
             exceptionMessage = "must be a date in the past or in the present",

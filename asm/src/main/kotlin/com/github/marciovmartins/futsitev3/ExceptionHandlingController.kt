@@ -1,6 +1,7 @@
 package com.github.marciovmartins.futsitev3
 
 import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import org.springframework.data.rest.core.RepositoryConstraintViolationException
@@ -41,6 +42,11 @@ class ExceptionHandlingController {
         is ValueInstantiationException -> {
             val field = cause.path.mapFieldsPath()
             val invalidValue = cause.invalidValue()
+            listOf(ResponseError(message = cause.cause!!.message!!, field = field, invalidValue = invalidValue))
+        }
+        is InvalidFormatException -> {
+            val field = cause.path.mapFieldsPath()
+            val invalidValue = cause.value
             listOf(ResponseError(message = cause.cause!!.message!!, field = field, invalidValue = invalidValue))
         }
         else -> listOf(ResponseError(message = ex.message!!))
