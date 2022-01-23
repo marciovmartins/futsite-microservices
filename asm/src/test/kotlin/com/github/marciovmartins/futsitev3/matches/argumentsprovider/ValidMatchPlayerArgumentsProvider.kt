@@ -33,5 +33,19 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerArgument(team = B)
             ),
         ),
+        matchArgument(
+            description = "valid match with match player goals against with minimum amount of 1",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, goalsAgainst = 1),
+                matchPlayerArgument(team = B)
+            ),
+        ),
+        matchArgument(
+            description = "valid match with match player goals against with maximum amount of 9",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, goalsAgainst = 9),
+                matchPlayerArgument(team = B)
+            ),
+        ),
     )
 }

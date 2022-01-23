@@ -28,8 +28,10 @@ class MatchPlayer(
 
     @field:Max(255)
     @field:PositiveOrZero
-    val goalsInFavor: java.lang.Short, // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
+    val goalsInFavor: Short,
 
+    @field:Max(9)
+    @field:PositiveOrZero
     val goalsAgainst: Short,
 
     val yellowCards: Short,

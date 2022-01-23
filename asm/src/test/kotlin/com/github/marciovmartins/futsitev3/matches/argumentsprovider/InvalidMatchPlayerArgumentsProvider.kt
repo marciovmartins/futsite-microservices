@@ -90,15 +90,16 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             exceptionMessage = "size must be between 1 and 50",
             exceptionField = "nickname",
         ),
-        matchArgument(
-            description = "invalid match with null match player goals in favor",
-            matchPlayers = setOf(
-                matchPlayerArgument(team = A, goalsInFavor = null),
-                matchPlayerArgument(team = B),
-            ),
-            exceptionMessage = "cannot be null",
-            exceptionField = "matchPlayers.0.goalsInFavor",
-        ),
+//        https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
+//        matchArgument(
+//            description = "invalid match with null match player goals in favor",
+//            matchPlayers = setOf(
+//                matchPlayerArgument(team = A, goalsInFavor = null),
+//                matchPlayerArgument(team = B),
+//            ),
+//            exceptionMessage = "cannot be null",
+//            exceptionField = "matchPlayers.0.goalsInFavor",
+//        ),
         matchArgument(
             description = "invalid match with negative match player goals in favor",
             matchPlayers = setOf(
@@ -116,6 +117,34 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             ),
             exceptionMessage = "must be less than or equal to 255",
             exceptionField = "goalsInFavor",
+        ),
+//        https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
+//        matchArgument(
+//            description = "invalid match with null match player goals against",
+//            matchPlayers = setOf(
+//                matchPlayerArgument(team = A, goalsAgainst = null),
+//                matchPlayerArgument(team = B),
+//            ),
+//            exceptionMessage = "cannot be null",
+//            exceptionField = "matchPlayers.0.goalsAgainst",
+//        ),
+        matchArgument(
+            description = "invalid match with negative match player goals against",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, goalsAgainst = -1),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "must be greater than or equal to 0",
+            exceptionField = "goalsAgainst",
+        ),
+        matchArgument(
+            description = "invalid match with match player goals against value exceeding 9",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, goalsAgainst = 10),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "must be less than or equal to 9",
+            exceptionField = "goalsAgainst",
         ),
     )
 }
