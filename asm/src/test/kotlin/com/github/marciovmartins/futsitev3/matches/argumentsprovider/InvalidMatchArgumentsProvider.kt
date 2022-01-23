@@ -9,6 +9,19 @@ import java.util.stream.Stream
 
 object InvalidMatchArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
+        // DATE
+        matchArgument(
+            description = "invalid match with date in the future",
+            matchDate = LocalDate.now().plusDays(1),
+            exceptionMessage = "must be a date in the past or in the present",
+            exceptionField = "date",
+        ),
+        matchArgument(
+            description = "invalid match with null date",
+            matchDate = null,
+            exceptionMessage = "cannot be null",
+            exceptionField = "date",
+        ),
         matchArgument(
             description = "invalid match date with invalid date format",
             matchDate = "invalid-format",
@@ -27,30 +40,21 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             exceptionMessage = "Text '1642941722026' could not be parsed at index 0",
             exceptionField = "date",
         ),
-        matchArgument(
-            description = "invalid match with date in the future",
-            matchDate = LocalDate.now().plusDays(1),
-            exceptionMessage = "must be a date in the past or in the present",
-            exceptionField = "date",
-        ),
-        matchArgument(
-            description = "invalid match with null date",
-            matchDate = null,
-            exceptionMessage = "cannot be null",
-            exceptionField = "date",
-        ),
+        // QUOTE
         matchArgument(
             description = "invalid match with quote exceeding 255 characters",
             matchQuote = faker.lorem().characters(256),
             exceptionMessage = "size must be between 0 and 255",
             exceptionField = "quote",
         ),
+        // AUTHOR
         matchArgument(
             description = "invalid match with author exceeding 50 characters",
             matchAuthor = faker.lorem().characters(51),
             exceptionMessage = "size must be between 0 and 50",
             exceptionField = "author",
         ),
+        // DESCRIPTION
         matchArgument(
             description = "invalid match with description exceeding 2048 characters",
             matchDescription = faker.lorem().characters(2049),
