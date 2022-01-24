@@ -170,5 +170,43 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
 //            exceptionMessage = "must be less than or equal to 9",
 //            exceptionField = "yellowCards",
 //        ),
+
+        // BLUE CARDS
+        matchArgument(
+            description = "invalid match with negative match player blue cards",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, blueCards = -1),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "must be greater than or equal to 0",
+            exceptionField = "blueCards",
+        ),
+        matchArgument(
+            description = "invalid match with match player blue cards value exceeding 9",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, blueCards = 10),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "must be less than or equal to 9",
+            exceptionField = "blueCards",
+        ),
+//        matchArgument( // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
+//            description = "invalid match with null match player blue cards",
+//            matchPlayers = setOf(
+//                matchPlayerArgument(team = A, blueCards = null),
+//                matchPlayerArgument(team = B),
+//            ),
+//            exceptionMessage = "cannot be null",
+//            exceptionField = "matchPlayers.0.blueCards",
+//        ),
+//        matchArgument( //Kotlin automatically converts from double to short rounding down
+//            description = "invalid match with match player blue cards value as double",
+//            matchPlayers = setOf(
+//                matchPlayerArgument(team = A, blueCards = 2.9),
+//                matchPlayerArgument(team = B),
+//            ),
+//            exceptionMessage = "must be less than or equal to 9",
+//            exceptionField = "blueCards",
+//        ),
     )
 }
