@@ -14,7 +14,7 @@ class MatchControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(ValidMatchArgumentsProvider::class)
     @ArgumentsSource(ValidMatchPlayerArgumentsProvider::class)
-    fun `should succeed to create and retrieve a match`(
+    fun `create and retrieve a match`(
         @Suppress("UNUSED_PARAMETER") description: String,
         matchToCreate: MatchDTO,
     ) {
@@ -42,7 +42,7 @@ class MatchControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchPlayerArgumentsProvider::class)
-    fun `should fail with invalid data`(
+    fun `fail with invalid data`(
         @Suppress("UNUSED_PARAMETER") description: String,
         matchToCreate: MatchDTO,
         exceptionMessage: String,

@@ -42,6 +42,8 @@ class MatchPlayer(
     @field:PositiveOrZero
     val blueCards: Short,
 
+    @field:Max(9)
+    @field:PositiveOrZero
     val redCards: Short,
 ) {
     enum class Team {

@@ -208,5 +208,43 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
 //            exceptionMessage = "must be less than or equal to 9",
 //            exceptionField = "blueCards",
 //        ),
+
+        // RED CARDS
+        matchArgument(
+            description = "invalid match with negative match player red cards",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, redCards = -1),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "must be greater than or equal to 0",
+            exceptionField = "redCards",
+        ),
+        matchArgument(
+            description = "invalid match with match player red cards value exceeding 9",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, redCards = 10),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "must be less than or equal to 9",
+            exceptionField = "redCards",
+        ),
+//        matchArgument( // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
+//            description = "invalid match with null match player red cards",
+//            matchPlayers = setOf(
+//                matchPlayerArgument(team = A, redCards = null),
+//                matchPlayerArgument(team = B),
+//            ),
+//            exceptionMessage = "cannot be null",
+//            exceptionField = "matchPlayers.0.redCards",
+//        ),
+//        matchArgument( //Kotlin automatically converts from double to short rounding down
+//            description = "invalid match with match player red cards value as double",
+//            matchPlayers = setOf(
+//                matchPlayerArgument(team = A, redCards = 2.9),
+//                matchPlayerArgument(team = B),
+//            ),
+//            exceptionMessage = "must be less than or equal to 9",
+//            exceptionField = "redCards",
+//        ),
     )
 }

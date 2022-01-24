@@ -73,5 +73,19 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerArgument(team = B)
             ),
         ),
+        matchArgument(
+            description = "valid match with match player blue cards with maximum amount of 9",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, blueCards = 9),
+                matchPlayerArgument(team = B)
+            ),
+        ),
+        matchArgument(
+            description = "valid match with match player red cards with maximum amount of 9",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A, redCards = 9),
+                matchPlayerArgument(team = B)
+            ),
+        ),
     )
 }
