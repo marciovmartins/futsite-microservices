@@ -61,5 +61,52 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             exceptionMessage = "size must be between 0 and 2048",
             exceptionField = "description",
         ),
+        // MATCH PLAYERS
+        matchArgument(
+            description = "invalid match with null match players",
+            matchPlayers = null,
+            exceptionMessage = "cannot be null",
+            exceptionField = "matchPlayers",
+        ),
+        matchArgument(
+            description = "invalid match with empty match players",
+            matchPlayers = emptySet(),
+            exceptionMessage = "must not be empty",
+            exceptionField = "matchPlayers",
+        ),
+        matchArgument(
+            description = "invalid match with exactly only one match player of team A",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A),
+            ),
+            exceptionMessage = "must have at least one player for team A and one player for team B",
+            exceptionField = "matchPlayers",
+        ),
+        matchArgument(
+            description = "invalid match with exactly only one match player of team A",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "must have at least one player for team A and one player for team B",
+            exceptionField = "matchPlayers",
+        ),
+        matchArgument(
+            description = "invalid match with only match players from team A",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = A),
+                matchPlayerArgument(team = A),
+            ),
+            exceptionMessage = "must have at least one player for team A and one player for team B",
+            exceptionField = "matchPlayers",
+        ),
+        matchArgument(
+            description = "invalid match with only match players from team B",
+            matchPlayers = setOf(
+                matchPlayerArgument(team = B),
+                matchPlayerArgument(team = B),
+            ),
+            exceptionMessage = "must have at least one player for team A and one player for team B",
+            exceptionField = "matchPlayers",
+        ),
     )
 }

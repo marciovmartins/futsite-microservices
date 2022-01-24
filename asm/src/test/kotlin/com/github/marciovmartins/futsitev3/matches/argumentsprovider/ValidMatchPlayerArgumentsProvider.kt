@@ -8,6 +8,7 @@ import java.util.stream.Stream
 
 object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
+        // TEAM
         matchArgument(
             description = "valid match with team in upper case",
             matchPlayers = setOf(
@@ -15,6 +16,7 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerArgument(team = B)
             ),
         ),
+        // NICKNAME
         matchArgument(
             description = "valid match with match player nickname with minimum of 1 character",
             matchPlayers = setOf(
@@ -26,6 +28,7 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             description = "valid match with match player nickname with maximum of 50 character",
             matchDescription = faker.lorem().characters(50),
         ),
+        // GOALS IN FAVOR
         matchArgument(
             description = "valid match with match player goals in favor with minimum amount of 0",
             matchPlayers = setOf(
@@ -40,6 +43,7 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerArgument(team = B)
             ),
         ),
+        // GOALS AGAINST
         matchArgument(
             description = "valid match with match player goals against with minimum amount of 0",
             matchPlayers = setOf(
@@ -54,6 +58,7 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerArgument(team = B)
             ),
         ),
+        // YELLOW CARDS
         matchArgument(
             description = "valid match with match player yellow cards with minimum amount of 0",
             matchPlayers = setOf(
