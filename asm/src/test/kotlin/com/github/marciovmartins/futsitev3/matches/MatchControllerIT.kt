@@ -93,4 +93,32 @@ class MatchControllerIT : BaseIT() {
             .ignoringCollectionOrder()
             .isEqualTo(matchToUpdate)
     }
+
+    @ParameterizedTest(name = "{0}")
+    @ArgumentsSource(InvalidMatchArgumentsProvider::class)
+    @ArgumentsSource(InvalidMatchPlayerArgumentsProvider::class)
+    fun `update match with invalid data fails`(
+        @Suppress("UNUSED_PARAMETER") description: String,
+        matchToUpdate: MatchDTO,
+        exceptionMessage: String,
+        exceptionField: String,
+    ) {
+        // setup
+        val matchToCreate = minimumMatchDTO()
+        val matchLocationUrl = webTestClient.post()
+            .uri(traverson.follow("matches").asLink().href)
+            .bodyValue(matchToCreate)
+            .exchange().expectStatus().isCreated
+            .returnResult(Unit::class.java)
+            .responseHeaders.location.toString()
+
+        // execution && assertion
+        webTestClient.put()
+            .uri(matchLocationUrl)
+            .bodyValue(matchToUpdate)
+            .exchange().expectStatus().isBadRequest
+            .expectBody()
+            .jsonPath("$[0].message").isEqualTo(exceptionMessage)
+            .jsonPath("$[0].field").isEqualTo(exceptionField)
+    }
 }
