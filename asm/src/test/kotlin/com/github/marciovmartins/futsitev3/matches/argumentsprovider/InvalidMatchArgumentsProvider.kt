@@ -1,6 +1,7 @@
 package com.github.marciovmartins.futsitev3.matches.argumentsprovider
 
 import com.github.marciovmartins.futsitev3.MyFaker.faker
+import com.github.marciovmartins.futsitev3.matches.MatchPlayerFixture.matchPlayerDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
@@ -77,7 +78,7 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with exactly only one match player of team A",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A),
+                matchPlayerDTO(team = A),
             ),
             exceptionMessage = "must have at least one player for team A and one player for team B",
             exceptionField = "matchPlayers",
@@ -85,7 +86,7 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with exactly only one match player of team A",
             matchPlayers = setOf(
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must have at least one player for team A and one player for team B",
             exceptionField = "matchPlayers",
@@ -93,8 +94,8 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with only match players from team A",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A),
-                matchPlayerArgument(team = A),
+                matchPlayerDTO(team = A),
+                matchPlayerDTO(team = A),
             ),
             exceptionMessage = "must have at least one player for team A and one player for team B",
             exceptionField = "matchPlayers",
@@ -102,8 +103,8 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with only match players from team B",
             matchPlayers = setOf(
-                matchPlayerArgument(team = B),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = B),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must have at least one player for team A and one player for team B",
             exceptionField = "matchPlayers",

@@ -2,7 +2,6 @@ package com.github.marciovmartins.futsitev3.matches
 
 import java.time.LocalDate
 import javax.persistence.CascadeType
-import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -17,24 +16,23 @@ import javax.validation.constraints.Size
 class Match(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    var id: Long? = null,
 
     @field:PastOrPresent
-    @Column(nullable = false)
-    val date: LocalDate,
+    var date: LocalDate,
 
     @field:Size(max = 255)
-    val quote: String?,
+    var quote: String?,
 
     @field:Size(max = 50)
-    val author: String?,
+    var author: String?,
 
     @field:Size(max = 2048)
-    val description: String?,
+    var description: String?,
 
     @field:NotEmpty
     @field:BothTeams
     @JoinColumn(name = "match_id", nullable = false)
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-    val matchPlayers: Set<MatchPlayer>
+    var matchPlayers: Set<MatchPlayer>
 )

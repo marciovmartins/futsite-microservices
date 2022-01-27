@@ -17,34 +17,34 @@ import javax.validation.constraints.Size
 class MatchPlayer(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    var id: Long? = null,
 
     @Enumerated(EnumType.STRING)
-    val team: Team,
+    var team: Team,
 
     @field:NotBlank
     @field:Size(min = 1, max = 50)
-    val nickname: String,
+    var nickname: String,
 
     @field:Max(9)
     @field:PositiveOrZero
-    val goalsInFavor: Short,
+    var goalsInFavor: Short,
 
     @field:Max(9)
     @field:PositiveOrZero
-    val goalsAgainst: Short,
+    var goalsAgainst: Short,
 
     @field:Max(9)
     @field:PositiveOrZero
-    val yellowCards: Short,
+    var yellowCards: Short,
 
     @field:Max(9)
     @field:PositiveOrZero
-    val blueCards: Short,
+    var blueCards: Short,
 
     @field:Max(9)
     @field:PositiveOrZero
-    val redCards: Short,
+    var redCards: Short,
 ) {
     enum class Team {
         A, B;

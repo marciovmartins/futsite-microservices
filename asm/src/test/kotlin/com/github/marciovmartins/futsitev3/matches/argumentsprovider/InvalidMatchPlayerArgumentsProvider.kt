@@ -1,6 +1,7 @@
 package com.github.marciovmartins.futsitev3.matches.argumentsprovider
 
 import com.github.marciovmartins.futsitev3.MyFaker.faker
+import com.github.marciovmartins.futsitev3.matches.MatchPlayerFixture.matchPlayerDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
@@ -12,8 +13,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with invalid match player team value",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A),
-                matchPlayerArgument(team = "C"),
+                matchPlayerDTO(team = A),
+                matchPlayerDTO(team = "C"),
             ),
             exceptionMessage = "must be one of the values accepted: [A, B]",
             exceptionField = "matchPlayers.1.team",
@@ -21,8 +22,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with match player team value in small case",
             matchPlayers = setOf(
-                matchPlayerArgument(team = "a"),
-                matchPlayerArgument(team = B)
+                matchPlayerDTO(team = "a"),
+                matchPlayerDTO(team = B)
             ),
             exceptionMessage = "must be one of the values accepted: [A, B]",
             exceptionField = "matchPlayers.0.team",
@@ -32,8 +33,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with null match player nickname",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, nickname = null),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, nickname = null),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "cannot be null",
             exceptionField = "matchPlayers.0.nickname",
@@ -41,8 +42,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with blank match player nickname",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, nickname = "     "),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, nickname = "     "),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must not be blank",
             exceptionField = "nickname",
@@ -50,8 +51,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with match player nickname exceeding 50 characters",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, nickname = faker.lorem().characters(51)),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, nickname = faker.lorem().characters(51)),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "size must be between 1 and 50",
             exceptionField = "nickname",
@@ -61,8 +62,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with negative match player goals in favor",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, goalsInFavor = -1),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, goalsInFavor = -1),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must be greater than or equal to 0",
             exceptionField = "goalsInFavor",
@@ -70,8 +71,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with match player goals in favor value exceeding 9",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, goalsInFavor = 10),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, goalsInFavor = 10),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must be less than or equal to 9",
             exceptionField = "goalsInFavor",
@@ -99,8 +100,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with negative match player goals against",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, goalsAgainst = -1),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, goalsAgainst = -1),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must be greater than or equal to 0",
             exceptionField = "goalsAgainst",
@@ -108,8 +109,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with match player goals against value exceeding 9",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, goalsAgainst = 10),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, goalsAgainst = 10),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must be less than or equal to 9",
             exceptionField = "goalsAgainst",
@@ -137,8 +138,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with negative match player yellow cards",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, yellowCards = -1),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, yellowCards = -1),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must be greater than or equal to 0",
             exceptionField = "yellowCards",
@@ -146,8 +147,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with match player yellow cards value exceeding 9",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, yellowCards = 10),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, yellowCards = 10),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must be less than or equal to 9",
             exceptionField = "yellowCards",
@@ -175,8 +176,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with negative match player blue cards",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, blueCards = -1),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, blueCards = -1),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must be greater than or equal to 0",
             exceptionField = "blueCards",
@@ -184,8 +185,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with match player blue cards value exceeding 9",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, blueCards = 10),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, blueCards = 10),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must be less than or equal to 9",
             exceptionField = "blueCards",
@@ -213,8 +214,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with negative match player red cards",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, redCards = -1),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, redCards = -1),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must be greater than or equal to 0",
             exceptionField = "redCards",
@@ -222,8 +223,8 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with match player red cards value exceeding 9",
             matchPlayers = setOf(
-                matchPlayerArgument(team = A, redCards = 10),
-                matchPlayerArgument(team = B),
+                matchPlayerDTO(team = A, redCards = 10),
+                matchPlayerDTO(team = B),
             ),
             exceptionMessage = "must be less than or equal to 9",
             exceptionField = "redCards",
