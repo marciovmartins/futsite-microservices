@@ -14,13 +14,14 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             description = "invalid match with invalid match player team value",
             matchPlayers = setOf(
                 matchPlayerDTO(team = A),
+                matchPlayerDTO(team = B),
                 matchPlayerDTO(team = "C"),
             ),
             exceptionMessage = "must be one of the values accepted: [A, B]",
-            exceptionField = "matchPlayers.1.team",
+            exceptionField = "matchPlayers.2.team",
         ),
         matchArgument(
-            description = "invalid match with match player team value in small case",
+            description = "invalid match with match player team value in smallcase",
             matchPlayers = setOf(
                 matchPlayerDTO(team = "a"),
                 matchPlayerDTO(team = B)

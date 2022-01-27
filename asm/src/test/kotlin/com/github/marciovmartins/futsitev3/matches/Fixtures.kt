@@ -1,6 +1,9 @@
 package com.github.marciovmartins.futsitev3.matches
 
 import com.github.marciovmartins.futsitev3.MyFaker.faker
+import com.github.marciovmartins.futsitev3.matches.MatchPlayerFixture.matchPlayerDTO
+import com.github.marciovmartins.futsitev3.matches.argumentsprovider.A
+import com.github.marciovmartins.futsitev3.matches.argumentsprovider.B
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.MatchDTO
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.MatchPlayerDTO
 import java.time.LocalDate
@@ -11,24 +14,11 @@ object MatchFixture {
         quote = null,
         author = null,
         description = null,
-        matchPlayers = setOf(
-            MatchPlayerFixture.minimumMatchPlayerDTO(team = MatchPlayer.Team.A.name),
-            MatchPlayerFixture.minimumMatchPlayerDTO(team = MatchPlayer.Team.B.name),
-        )
+        matchPlayers = setOf(matchPlayerDTO(team = A), matchPlayerDTO(team = B))
     )
 }
 
 object MatchPlayerFixture {
-    fun minimumMatchPlayerDTO(team: Any?) = MatchPlayerDTO(
-        team = team,
-        nickname = faker.superhero().name(),
-        goalsInFavor = faker.random().nextInt(0, 5),
-        goalsAgainst = faker.random().nextInt(0, 1),
-        yellowCards = faker.random().nextInt(0, 2),
-        blueCards = faker.random().nextInt(0, 3),
-        redCards = faker.random().nextInt(0, 1),
-    )
-
     fun matchPlayerDTO(
         team: Any?,
         nickname: Any? = faker.superhero().name(),
