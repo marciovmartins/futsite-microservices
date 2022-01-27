@@ -84,7 +84,7 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             exceptionField = "matchPlayers",
         ),
         matchArgument(
-            description = "invalid match with exactly only one match player of team A",
+            description = "invalid match with exactly only one match player of team B",
             matchPlayers = setOf(
                 matchPlayerDTO(team = B),
             ),
