@@ -16,7 +16,7 @@ fun main(args: Array<String>) {
 }
 
 @Configuration
-class RestValidationConfiguration : RepositoryRestConfigurer {
+class MyRepositoryRestConfiguration : RepositoryRestConfigurer {
     @Autowired
     private lateinit var validator: Validator
 
