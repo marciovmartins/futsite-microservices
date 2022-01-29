@@ -27,6 +27,7 @@ import org.zalando.problem.Status
 import org.zalando.problem.jackson.ProblemModule
 import org.zalando.problem.spring.web.advice.ProblemHandling
 import org.zalando.problem.violations.ConstraintViolationProblemModule
+import org.zalando.problem.violations.Violation
 import javax.annotation.concurrent.Immutable
 import kotlin.reflect.full.cast
 
@@ -34,7 +35,7 @@ import kotlin.reflect.full.cast
 @Suppress("SpringFacetCodeInspection")
 class ZalandoProblemConfiguration {
     @Bean
-    fun problemModuleBean(): Module = ProblemModule().withStackTraces()
+    fun problemModuleBean(): Module = ProblemModule()
 
     @Bean
     fun constraintViolationProblemModuleBean(): Module = ConstraintViolationProblemModule()
@@ -45,7 +46,7 @@ class ZalandoProblemConfiguration {
 
 @ControllerAdvice
 class ExceptionHandler : ProblemHandling {
-    override fun isCausalChainsEnabled() = true
+    override fun isCausalChainsEnabled() = false
 
     override fun handleMessageNotReadableException(
         exception: HttpMessageNotReadableException,
@@ -57,15 +58,12 @@ class ExceptionHandler : ProblemHandling {
         when (val cause = exception.cause) {
             is MissingKotlinParameterException -> problemBuilder.with(
                 "violations", listOf(
-                    Violation(
-                        message = "cannot be null",
-                        field = cause.path.mapFieldsPath()
-                    )
+                    Violation(cause.path.mapFieldsPath(), "cannot be null")
                 )
             )
             is InvalidFormatException -> problemBuilder.with(
                 "violations", listOf(
-                    Violation(
+                    MyViolation(
                         message = cause.cause!!.message!!,
                         field = cause.path.mapFieldsPath(),
                         invalidValue = cause.value
@@ -75,7 +73,7 @@ class ExceptionHandler : ProblemHandling {
             is JsonMappingException -> when (val innerCause = cause.cause!!) {
                 is InvalidValueException -> problemBuilder.with(
                     "violations", listOf(
-                        Violation(
+                        MyViolation(
                             message = innerCause.message!!,
                             field = cause.path.mapFieldsPath(),
                             invalidValue = innerCause.invalidValue
@@ -84,14 +82,11 @@ class ExceptionHandler : ProblemHandling {
                 )
                 else -> problemBuilder.with(
                     "violations", listOf(
-                        Violation(
-                            message = innerCause.message!!,
-                            field = cause.path.mapFieldsPath()
-                        )
+                        Violation(cause.path.mapFieldsPath(), innerCause.message!!)
                     )
                 )
             }
-            else -> problemBuilder.with("validations", listOf(Violation(message = exception.message!!)))
+            else -> problemBuilder.withDetail(exception.message!!)
         }
         return create(problemBuilder.build(), request)
     }
@@ -103,7 +98,7 @@ class ExceptionHandler : ProblemHandling {
     ): ResponseEntity<Problem> {
         val violations = exception.errors.allErrors
             .map { FieldError::class.cast(it) }
-            .map { Violation(message = it.defaultMessage!!, field = it.field) }
+            .map { Violation(it.field, it.defaultMessage!!) }
         val problem = Problem.builder()
             .withTitle("Constraint Violation")
             .withStatus(Status.BAD_REQUEST)
@@ -146,7 +141,7 @@ interface InvalidValueException {
 
 @Immutable
 @Suppress("unused")
-private class Violation(val message: String, val field: String? = null, val invalidValue: Any? = null)
+private class MyViolation(val message: String, val field: String, val invalidValue: Any)
 
 private fun Collection<JsonMappingException.Reference>.mapFieldsPath() =
     this.joinToString(separator = ".") { mapPath(it) }
