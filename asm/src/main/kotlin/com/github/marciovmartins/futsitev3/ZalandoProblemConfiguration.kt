@@ -3,6 +3,7 @@ package com.github.marciovmartins.futsitev3
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 import org.springframework.context.annotation.Bean
@@ -43,6 +44,14 @@ class ExceptionHandler : ProblemHandling {
             .withTitle("Constraint Violation")
             .withStatus(Status.BAD_REQUEST)
         when (val cause = exception.cause) {
+            is MissingKotlinParameterException -> problemBuilder.with(
+                "violations", listOf(
+                    Violation(
+                        field = cause.path.mapFieldsPath(),
+                        message = "cannot be null"
+                    )
+                )
+            )
             is InvalidFormatException -> problemBuilder.with(
                 "violations", listOf(
                     Violation(
