@@ -1,7 +1,5 @@
 package com.github.marciovmartins.futsitev3.matches
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.github.marciovmartins.futsitev3.EnumUtils
 import java.time.LocalDate
 import javax.persistence.CascadeType
 import javax.persistence.Entity
@@ -85,13 +83,7 @@ class MatchPlayer(
     var redCards: Short,
 ) {
     enum class Team {
-        A, B;
-
-        companion object {
-            @JvmStatic
-            @JsonCreator
-            fun createTeam(value: String): Team = EnumUtils.mapEnum(values(), value)
-        }
+        A, B
     }
 }
 
