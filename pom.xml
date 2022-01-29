@@ -27,7 +27,7 @@
         <maven-plugin.version>3.0.0-M5</maven-plugin.version>
         <maven-surefire-plugin.version>${maven-plugin.version}</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>${maven-plugin.version}</maven-failsafe-plugin.version>
-        <swagger.version>2.1.11</swagger.version>
+        <zalando-problem-spring-web.version>0.27.0</zalando-problem-spring-web.version>
     </properties>
 
     <repositories>

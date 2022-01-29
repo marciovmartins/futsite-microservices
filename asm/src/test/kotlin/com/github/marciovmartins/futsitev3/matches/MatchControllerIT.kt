@@ -56,8 +56,8 @@ class MatchControllerIT : BaseIT() {
             .bodyValue(matchToCreate)
             .exchange().expectStatus().isBadRequest
             .expectBody()
-            .jsonPath("$[0].message").isEqualTo(exceptionMessage)
-            .jsonPath("$[0].field").isEqualTo(exceptionField)
+            .jsonPath("$.violations[0].field").isEqualTo(exceptionField)
+            .jsonPath("$.violations[0].message").isEqualTo(exceptionMessage)
     }
 
     @ParameterizedTest(name = "{0}")
@@ -119,8 +119,8 @@ class MatchControllerIT : BaseIT() {
             .bodyValue(matchToUpdate)
             .exchange().expectStatus().isBadRequest
             .expectBody()
-            .jsonPath("$[0].message").isEqualTo(exceptionMessage)
-            .jsonPath("$[0].field").isEqualTo(exceptionField)
+            .jsonPath("$.violations[0].field").isEqualTo(exceptionField)
+            .jsonPath("$.violations[0].message").isEqualTo(exceptionMessage)
     }
 
     @Test
