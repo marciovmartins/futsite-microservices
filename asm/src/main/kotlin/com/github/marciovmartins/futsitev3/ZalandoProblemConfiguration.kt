@@ -1,17 +1,8 @@
 package com.github.marciovmartins.futsitev3
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.BeanDescription
-import com.fasterxml.jackson.databind.DeserializationConfig
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JavaType
-import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.Module
-import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
-import com.fasterxml.jackson.databind.deser.std.EnumDeserializer
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
-import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -39,9 +30,6 @@ class ZalandoProblemConfiguration {
 
     @Bean
     fun constraintViolationProblemModuleBean(): Module = ConstraintViolationProblemModule()
-
-    @Bean
-    fun myBeanSerializerModifierBean(): Module = SimpleModule().setDeserializerModifier(MyBeanDeserializerModifier())
 }
 
 @ControllerAdvice
@@ -64,28 +52,21 @@ class ExceptionHandler : ProblemHandling {
             is InvalidFormatException -> problemBuilder.with(
                 "violations", listOf(
                     MyViolation(
-                        message = cause.cause!!.message!!,
+                        message = if (cause.cause == null) {
+                            cause.message
+                        } else {
+                            cause.cause!!.message
+                        }!!,
                         field = cause.path.mapFieldsPath(),
                         invalidValue = cause.value
                     )
                 )
             )
-            is JsonMappingException -> when (val innerCause = cause.cause!!) {
-                is InvalidValueException -> problemBuilder.with(
-                    "violations", listOf(
-                        MyViolation(
-                            message = innerCause.message!!,
-                            field = cause.path.mapFieldsPath(),
-                            invalidValue = innerCause.invalidValue
-                        )
-                    )
+            is JsonMappingException -> problemBuilder.with(
+                "violations", listOf(
+                    Violation(cause.path.mapFieldsPath(), cause.cause!!.message!!)
                 )
-                else -> problemBuilder.with(
-                    "violations", listOf(
-                        Violation(cause.path.mapFieldsPath(), innerCause.message!!)
-                    )
-                )
-            }
+            )
             else -> problemBuilder.withDetail(exception.message!!)
         }
         return create(problemBuilder.build(), request)
@@ -106,37 +87,6 @@ class ExceptionHandler : ProblemHandling {
             .build()
         return create(problem, request)
     }
-}
-
-class MyBeanDeserializerModifier : BeanDeserializerModifier() {
-    override fun modifyEnumDeserializer(
-        config: DeserializationConfig?,
-        type: JavaType?,
-        beanDesc: BeanDescription?,
-        deserializer: JsonDeserializer<*>
-    ): JsonDeserializer<*> = when (deserializer) {
-        is EnumDeserializer -> super.modifyEnumDeserializer(config, type, beanDesc, MyEnumDeserializer(deserializer))
-        else -> super.modifyEnumDeserializer(config, type, beanDesc, deserializer)
-    }
-
-    class MyEnumDeserializer(deserializer: EnumDeserializer) :
-        EnumDeserializer(deserializer, false) {
-        override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?): Any = try {
-            super.deserialize(p, ctxt)
-        } catch (ex: InvalidFormatException) {
-            throw IllegalEnumArgumentException(this._valueClass.enumConstants, ex.value, ex)
-        }
-    }
-
-    class IllegalEnumArgumentException(enums: Array<*>, override val invalidValue: Any, ex: Throwable) :
-        InvalidValueException,
-        IllegalArgumentException(
-            "must be one of the values accepted: [%s]".format(enums.joinToString(", "), ex)
-        )
-}
-
-interface InvalidValueException {
-    val invalidValue: Any
 }
 
 @Immutable

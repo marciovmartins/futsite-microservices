@@ -34,6 +34,11 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.github.marciovmartins.jackson.databind.deser</groupId>
+            <artifactId>spring-boot-jackson-deserializer-enum-modifier</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.zalando</groupId>
             <artifactId>problem-spring-web</artifactId>
             <version>${zalando-problem-spring-web.version}</version>
