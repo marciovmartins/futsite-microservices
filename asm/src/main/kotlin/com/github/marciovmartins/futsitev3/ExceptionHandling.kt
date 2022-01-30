@@ -52,8 +52,7 @@ class ExceptionHandlingController {
         }
         is ValueInstantiationException -> {
             val field = cause.path.mapFieldsPath()
-            val invalidValue = cause.invalidValue()
-            listOf(ResponseError(message = cause.cause!!.message!!, field = field, invalidValue = invalidValue))
+            listOf(ResponseError(message = cause.cause!!.message!!, field = field))
         }
         is InvalidFormatException -> {
             val field = cause.path.mapFieldsPath()
@@ -65,16 +64,9 @@ class ExceptionHandlingController {
             }
             listOf(ResponseError(message = message, field = field, invalidValue = invalidValue))
         }
-        is JsonMappingException -> when (val innerCause = cause.cause!!) {
-            is InvalidValueException -> {
-                val field = cause.path.mapFieldsPath()
-                val invalidValue = innerCause.invalidValue
-                listOf(ResponseError(message = innerCause.message!!, field = field, invalidValue = invalidValue))
-            }
-            else -> {
-                val field = cause.path.mapFieldsPath()
-                listOf(ResponseError(message = innerCause.message!!, field = field))
-            }
+        is JsonMappingException -> {
+            val field = cause.path.mapFieldsPath()
+            listOf(ResponseError(message = cause.cause!!.message!!, field = field))
         }
         else -> listOf(ResponseError(message = ex.message!!))
     }
@@ -96,17 +88,8 @@ class ExceptionHandlingController {
     )
 }
 
-interface InvalidValueException {
-    val invalidValue: Any
-}
-
 private fun Collection<JsonMappingException.Reference>.mapFieldsPath() =
         this.joinToString(separator = ".") { mapPath(it) }
-
-private fun Throwable.invalidValue() = when (val cause = this.cause) {
-    is InvalidValueException -> cause.invalidValue
-    else -> null
-}
 
 private fun mapPath(it: JsonMappingException.Reference): String = when (it.from) {
     is Collection<*> -> it.index.toString()
