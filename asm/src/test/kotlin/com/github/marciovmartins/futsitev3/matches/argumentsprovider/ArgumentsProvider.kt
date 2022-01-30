@@ -15,14 +15,17 @@ fun matchArgument(
         matchPlayerDTO(team = A),
         matchPlayerDTO(team = B),
     ),
-    exceptionMessage: String? = null,
-    exceptionField: String? = null,
+    expectedException: Array<ExpectedException>? = null
 ) = Arguments.of(
     description,
     MatchDTO(matchDate, matchQuote, matchAuthor, matchDescription, matchPlayers),
-    exceptionMessage,
-    exceptionField
+    expectedException
 )!!
+
+data class ExpectedException(
+    val message: String,
+    val field: String
+)
 
 data class MatchDTO(
     val date: Any?,

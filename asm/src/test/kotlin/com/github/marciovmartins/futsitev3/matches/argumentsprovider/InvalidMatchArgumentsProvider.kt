@@ -14,82 +14,115 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         matchArgument(
             description = "invalid match with date in the future",
             matchDate = LocalDate.now().plusDays(1),
-            exceptionMessage = "must be a date in the past or in the present",
-            exceptionField = "date",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "must be a date in the past or in the present",
+                    field = "date"
+                ),
+            ),
         ),
         matchArgument(
             description = "invalid match with null date",
             matchDate = null,
-            exceptionMessage = "cannot be null",
-            exceptionField = "date",
+            expectedException = arrayOf(ExpectedException(message = "cannot be null", field = "date")),
         ),
         matchArgument(
             description = "invalid match date with invalid date format",
             matchDate = "invalid-format",
-            exceptionMessage = "Text 'invalid-format' could not be parsed at index 0",
-            exceptionField = "date",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "Text 'invalid-format' could not be parsed at index 0",
+                    field = "date"
+                ),
+            ),
         ),
         matchArgument(
             description = "invalid match date with wrong date in human readable format",
             matchDate = "03/12/2007",
-            exceptionMessage = "Text '03/12/2007' could not be parsed at index 0",
-            exceptionField = "date",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "Text '03/12/2007' could not be parsed at index 0",
+                    field = "date"
+                ),
+            ),
         ),
         matchArgument(
             description = "invalid match date with wrong date in millis",
             matchDate = "1642941722026",
-            exceptionMessage = "Text '1642941722026' could not be parsed at index 0",
-            exceptionField = "date",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "Text '1642941722026' could not be parsed at index 0",
+                    field = "date"
+                ),
+            ),
         ),
         // QUOTE
         matchArgument(
             description = "invalid match with quote exceeding 255 characters",
             matchQuote = faker.lorem().characters(256),
-            exceptionMessage = "size must be between 0 and 255",
-            exceptionField = "quote",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "size must be between 0 and 255",
+                    field = "quote"
+                ),
+            ),
         ),
         // AUTHOR
         matchArgument(
             description = "invalid match with author exceeding 50 characters",
             matchAuthor = faker.lorem().characters(51),
-            exceptionMessage = "size must be between 0 and 50",
-            exceptionField = "author",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "size must be between 0 and 50",
+                    field = "author"
+                ),
+            ),
         ),
         // DESCRIPTION
         matchArgument(
             description = "invalid match with description exceeding 2048 characters",
             matchDescription = faker.lorem().characters(2049),
-            exceptionMessage = "size must be between 0 and 2048",
-            exceptionField = "description",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "size must be between 0 and 2048",
+                    field = "description"
+                ),
+            ),
         ),
         // MATCH PLAYERS
         matchArgument(
             description = "invalid match with null match players",
             matchPlayers = null,
-            exceptionMessage = "cannot be null",
-            exceptionField = "matchPlayers",
+            expectedException = arrayOf(ExpectedException(message = "cannot be null", field = "matchPlayers")),
         ),
         matchArgument(
             description = "invalid match with empty match players",
             matchPlayers = emptySet(),
-            exceptionMessage = "must not be empty",
-            exceptionField = "matchPlayers",
+            expectedException = arrayOf(ExpectedException(message = "must not be empty", field = "matchPlayers")),
         ),
         matchArgument(
             description = "invalid match with exactly only one match player of team A",
             matchPlayers = setOf(
                 matchPlayerDTO(team = A),
             ),
-            exceptionMessage = "must have at least one player for team A and one player for team B",
-            exceptionField = "matchPlayers",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "must have at least one player for team A and one player for team B",
+                    field = "matchPlayers"
+                ),
+            ),
         ),
         matchArgument(
             description = "invalid match with exactly only one match player of team B",
             matchPlayers = setOf(
                 matchPlayerDTO(team = B),
             ),
-            exceptionMessage = "must have at least one player for team A and one player for team B",
-            exceptionField = "matchPlayers",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "must have at least one player for team A and one player for team B",
+                    field = "matchPlayers"
+                ),
+            ),
         ),
         matchArgument(
             description = "invalid match with only match players from team A",
@@ -97,8 +130,12 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A),
                 matchPlayerDTO(team = A),
             ),
-            exceptionMessage = "must have at least one player for team A and one player for team B",
-            exceptionField = "matchPlayers",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "must have at least one player for team A and one player for team B",
+                    field = "matchPlayers"
+                ),
+            ),
         ),
         matchArgument(
             description = "invalid match with only match players from team B",
@@ -106,8 +143,12 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = B),
                 matchPlayerDTO(team = B),
             ),
-            exceptionMessage = "must have at least one player for team A and one player for team B",
-            exceptionField = "matchPlayers",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "must have at least one player for team A and one player for team B",
+                    field = "matchPlayers"
+                ),
+            ),
         ),
     )
 }

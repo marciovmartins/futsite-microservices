@@ -2,6 +2,7 @@ package com.github.marciovmartins.futsitev3.matches
 
 import com.github.marciovmartins.futsitev3.BaseIT
 import com.github.marciovmartins.futsitev3.matches.MatchFixture.minimumMatchDTO
+import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ExpectedException
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.InvalidMatchArgumentsProvider
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.InvalidMatchPlayerArgumentsProvider
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.MatchDTO
@@ -47,8 +48,7 @@ class MatchControllerIT : BaseIT() {
     fun `create match with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
         matchToCreate: MatchDTO,
-        exceptionMessage: String,
-        exceptionField: String,
+        expectedExceptions: Array<ExpectedException>,
     ) {
         // execution && assertion
         webTestClient.post()
@@ -56,8 +56,8 @@ class MatchControllerIT : BaseIT() {
             .bodyValue(matchToCreate)
             .exchange().expectStatus().isBadRequest
             .expectBody()
-            .jsonPath("$[0].message").isEqualTo(exceptionMessage)
-            .jsonPath("$[0].field").isEqualTo(exceptionField)
+            .jsonPath("$[0].message").isEqualTo(expectedExceptions[0].message)
+            .jsonPath("$[0].field").isEqualTo(expectedExceptions[0].field)
     }
 
     @ParameterizedTest(name = "{0}")
@@ -101,8 +101,7 @@ class MatchControllerIT : BaseIT() {
     fun `update match with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
         matchToUpdate: MatchDTO,
-        exceptionMessage: String,
-        exceptionField: String,
+        expectedExceptions: Array<ExpectedException>
     ) {
         // setup
         val matchToCreate = minimumMatchDTO()
@@ -119,8 +118,8 @@ class MatchControllerIT : BaseIT() {
             .bodyValue(matchToUpdate)
             .exchange().expectStatus().isBadRequest
             .expectBody()
-            .jsonPath("$[0].message").isEqualTo(exceptionMessage)
-            .jsonPath("$[0].field").isEqualTo(exceptionField)
+            .jsonPath("$[0].message").isEqualTo(expectedExceptions[0].message)
+            .jsonPath("$[0].field").isEqualTo(expectedExceptions[0].field)
     }
 
     @Test
