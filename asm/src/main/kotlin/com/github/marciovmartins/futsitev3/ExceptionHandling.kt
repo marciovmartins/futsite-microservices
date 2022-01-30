@@ -24,7 +24,8 @@ import com.github.marciovmartins.jackson.databind.deser.BeanDeserializerModifier
 @Configuration
 class ExceptionHandlingConfiguration {
     @Bean
-    fun myBeanSerializerModifierBean(): Module = SimpleModule().setDeserializerModifier(BeanDeserializerModifierDecorator(false))
+    fun myBeanSerializerModifierBean(): Module =
+        SimpleModule().setDeserializerModifier(BeanDeserializerModifierDecorator(false))
 }
 
 @ControllerAdvice
@@ -33,8 +34,8 @@ class ExceptionHandlingController {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException::class)
     fun handleConstraintViolation(
-            req: HttpServletRequest,
-            ex: ConstraintViolationException
+        req: HttpServletRequest,
+        ex: ConstraintViolationException
     ): List<ResponseError> = ex.constraintViolations.map {
         ResponseError(message = it.message, field = it.propertyPath.toString(), invalidValue = it.invalidValue)
     }
@@ -43,8 +44,8 @@ class ExceptionHandlingController {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleMessageNotReadableException(
-            req: HttpServletRequest,
-            ex: HttpMessageNotReadableException
+        req: HttpServletRequest,
+        ex: HttpMessageNotReadableException
     ): List<ResponseError> = when (val cause = ex.cause) {
         is MissingKotlinParameterException -> {
             val field = cause.path.mapFieldsPath()
@@ -75,21 +76,21 @@ class ExceptionHandlingController {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RepositoryConstraintViolationException::class)
     fun handleRepositoryConstraintViolationException(
-            req: HttpServletRequest,
-            ex: RepositoryConstraintViolationException
+        req: HttpServletRequest,
+        ex: RepositoryConstraintViolationException
     ): List<ResponseError> = ex.errors.allErrors
-            .map { FieldError::class.cast(it) }
-            .map { ResponseError(message = it.defaultMessage!!, field = it.field, invalidValue = it.rejectedValue) }
+        .map { FieldError::class.cast(it) }
+        .map { ResponseError(message = it.defaultMessage!!, field = it.field, invalidValue = it.rejectedValue) }
 
     data class ResponseError(
-            val message: String,
-            val field: String? = null,
-            val invalidValue: Any? = null
+        val message: String,
+        val field: String? = null,
+        val invalidValue: Any? = null
     )
 }
 
 private fun Collection<JsonMappingException.Reference>.mapFieldsPath() =
-        this.joinToString(separator = ".") { mapPath(it) }
+    this.joinToString(separator = ".") { mapPath(it) }
 
 private fun mapPath(it: JsonMappingException.Reference): String = when (it.from) {
     is Collection<*> -> it.index.toString()
