@@ -1,13 +1,9 @@
 package com.github.marciovmartins.futsitev3
 
 import com.fasterxml.jackson.databind.JsonMappingException
-import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException
-import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.data.rest.core.RepositoryConstraintViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -19,14 +15,6 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import javax.servlet.http.HttpServletRequest
 import javax.validation.ConstraintViolationException
 import kotlin.reflect.full.cast
-import com.github.marciovmartins.jackson.databind.deser.BeanDeserializerModifier as BeanDeserializerModifierDecorator
-
-@Configuration
-class ExceptionHandlingConfiguration {
-    @Bean
-    fun myBeanSerializerModifierBean(): Module =
-        SimpleModule().setDeserializerModifier(BeanDeserializerModifierDecorator(false))
-}
 
 @ControllerAdvice
 class ExceptionHandlingController {

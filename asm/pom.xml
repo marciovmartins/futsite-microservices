@@ -35,7 +35,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.marciovmartins.jackson.databind.deser</groupId>
-            <artifactId>jackson-deserializer-enum-modifier</artifactId>
+            <artifactId>spring-boot-jackson-deserializer-enum-modifier</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
