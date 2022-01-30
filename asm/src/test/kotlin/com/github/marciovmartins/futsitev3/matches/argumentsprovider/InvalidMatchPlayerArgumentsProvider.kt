@@ -9,75 +9,75 @@ import java.util.stream.Stream
 
 object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
-        // TEAM
-        matchArgument(
-            description = "invalid match with invalid match player team value",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A),
-                matchPlayerDTO(team = B),
-                matchPlayerDTO(team = "C"),
+            // TEAM
+            matchArgument(
+                    description = "invalid match with invalid match player team value",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A),
+                            matchPlayerDTO(team = B),
+                            matchPlayerDTO(team = "C"),
+                    ),
+                    exceptionMessage = "\"C\" is not one of the values accepted: [A, B]",
+                    exceptionField = "matchPlayers.2.team",
             ),
-            exceptionMessage = "must be one of the values accepted: [A, B]",
-            exceptionField = "matchPlayers.2.team",
-        ),
-        matchArgument(
-            description = "invalid match with match player team value in smallcase",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = "a"),
-                matchPlayerDTO(team = B)
+            matchArgument(
+                    description = "invalid match with match player team value in smallcase",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = "a"),
+                            matchPlayerDTO(team = B)
+                    ),
+                    exceptionMessage = "\"a\" is not one of the values accepted: [A, B]",
+                    exceptionField = "matchPlayers.0.team",
             ),
-            exceptionMessage = "must be one of the values accepted: [A, B]",
-            exceptionField = "matchPlayers.0.team",
-        ),
 
-        // NICKNAME
-        matchArgument(
-            description = "invalid match with null match player nickname",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, nickname = null),
-                matchPlayerDTO(team = B),
+            // NICKNAME
+            matchArgument(
+                    description = "invalid match with null match player nickname",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, nickname = null),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "cannot be null",
+                    exceptionField = "matchPlayers.0.nickname",
             ),
-            exceptionMessage = "cannot be null",
-            exceptionField = "matchPlayers.0.nickname",
-        ),
-        matchArgument(
-            description = "invalid match with blank match player nickname",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, nickname = "     "),
-                matchPlayerDTO(team = B),
+            matchArgument(
+                    description = "invalid match with blank match player nickname",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, nickname = "     "),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "must not be blank",
+                    exceptionField = "nickname",
             ),
-            exceptionMessage = "must not be blank",
-            exceptionField = "nickname",
-        ),
-        matchArgument(
-            description = "invalid match with match player nickname exceeding 50 characters",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, nickname = faker.lorem().characters(51)),
-                matchPlayerDTO(team = B),
+            matchArgument(
+                    description = "invalid match with match player nickname exceeding 50 characters",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, nickname = faker.lorem().characters(51)),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "size must be between 1 and 50",
+                    exceptionField = "nickname",
             ),
-            exceptionMessage = "size must be between 1 and 50",
-            exceptionField = "nickname",
-        ),
 
-        // GOALS IN FAVOR
-        matchArgument(
-            description = "invalid match with negative match player goals in favor",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, goalsInFavor = -1),
-                matchPlayerDTO(team = B),
+            // GOALS IN FAVOR
+            matchArgument(
+                    description = "invalid match with negative match player goals in favor",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, goalsInFavor = -1),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "must be greater than or equal to 0",
+                    exceptionField = "goalsInFavor",
             ),
-            exceptionMessage = "must be greater than or equal to 0",
-            exceptionField = "goalsInFavor",
-        ),
-        matchArgument(
-            description = "invalid match with match player goals in favor value exceeding 9",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, goalsInFavor = 10),
-                matchPlayerDTO(team = B),
+            matchArgument(
+                    description = "invalid match with match player goals in favor value exceeding 9",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, goalsInFavor = 10),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "must be less than or equal to 9",
+                    exceptionField = "goalsInFavor",
             ),
-            exceptionMessage = "must be less than or equal to 9",
-            exceptionField = "goalsInFavor",
-        ),
 //        matchArgument( // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
 //            description = "invalid match with null match player goals in favor",
 //            matchPlayers = setOf(
@@ -97,25 +97,25 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
 //            exceptionField = "goalsInFavor",
 //        ),
 
-        // GOALS AGAINST
-        matchArgument(
-            description = "invalid match with negative match player goals against",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, goalsAgainst = -1),
-                matchPlayerDTO(team = B),
+            // GOALS AGAINST
+            matchArgument(
+                    description = "invalid match with negative match player goals against",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, goalsAgainst = -1),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "must be greater than or equal to 0",
+                    exceptionField = "goalsAgainst",
             ),
-            exceptionMessage = "must be greater than or equal to 0",
-            exceptionField = "goalsAgainst",
-        ),
-        matchArgument(
-            description = "invalid match with match player goals against value exceeding 9",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, goalsAgainst = 10),
-                matchPlayerDTO(team = B),
+            matchArgument(
+                    description = "invalid match with match player goals against value exceeding 9",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, goalsAgainst = 10),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "must be less than or equal to 9",
+                    exceptionField = "goalsAgainst",
             ),
-            exceptionMessage = "must be less than or equal to 9",
-            exceptionField = "goalsAgainst",
-        ),
 //        matchArgument( // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
 //            description = "invalid match with null match player goals against",
 //            matchPlayers = setOf(
@@ -135,25 +135,25 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
 //            exceptionField = "goalsAgainst",
 //        ),
 
-        // YELLOW CARDS
-        matchArgument(
-            description = "invalid match with negative match player yellow cards",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, yellowCards = -1),
-                matchPlayerDTO(team = B),
+            // YELLOW CARDS
+            matchArgument(
+                    description = "invalid match with negative match player yellow cards",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, yellowCards = -1),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "must be greater than or equal to 0",
+                    exceptionField = "yellowCards",
             ),
-            exceptionMessage = "must be greater than or equal to 0",
-            exceptionField = "yellowCards",
-        ),
-        matchArgument(
-            description = "invalid match with match player yellow cards value exceeding 9",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, yellowCards = 10),
-                matchPlayerDTO(team = B),
+            matchArgument(
+                    description = "invalid match with match player yellow cards value exceeding 9",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, yellowCards = 10),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "must be less than or equal to 9",
+                    exceptionField = "yellowCards",
             ),
-            exceptionMessage = "must be less than or equal to 9",
-            exceptionField = "yellowCards",
-        ),
 //        matchArgument( // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
 //            description = "invalid match with null match player yellow cards",
 //            matchPlayers = setOf(
@@ -173,25 +173,25 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
 //            exceptionField = "yellowCards",
 //        ),
 
-        // BLUE CARDS
-        matchArgument(
-            description = "invalid match with negative match player blue cards",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, blueCards = -1),
-                matchPlayerDTO(team = B),
+            // BLUE CARDS
+            matchArgument(
+                    description = "invalid match with negative match player blue cards",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, blueCards = -1),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "must be greater than or equal to 0",
+                    exceptionField = "blueCards",
             ),
-            exceptionMessage = "must be greater than or equal to 0",
-            exceptionField = "blueCards",
-        ),
-        matchArgument(
-            description = "invalid match with match player blue cards value exceeding 9",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, blueCards = 10),
-                matchPlayerDTO(team = B),
+            matchArgument(
+                    description = "invalid match with match player blue cards value exceeding 9",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, blueCards = 10),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "must be less than or equal to 9",
+                    exceptionField = "blueCards",
             ),
-            exceptionMessage = "must be less than or equal to 9",
-            exceptionField = "blueCards",
-        ),
 //        matchArgument( // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
 //            description = "invalid match with null match player blue cards",
 //            matchPlayers = setOf(
@@ -211,25 +211,25 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
 //            exceptionField = "blueCards",
 //        ),
 
-        // RED CARDS
-        matchArgument(
-            description = "invalid match with negative match player red cards",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, redCards = -1),
-                matchPlayerDTO(team = B),
+            // RED CARDS
+            matchArgument(
+                    description = "invalid match with negative match player red cards",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, redCards = -1),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "must be greater than or equal to 0",
+                    exceptionField = "redCards",
             ),
-            exceptionMessage = "must be greater than or equal to 0",
-            exceptionField = "redCards",
-        ),
-        matchArgument(
-            description = "invalid match with match player red cards value exceeding 9",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A, redCards = 10),
-                matchPlayerDTO(team = B),
+            matchArgument(
+                    description = "invalid match with match player red cards value exceeding 9",
+                    matchPlayers = setOf(
+                            matchPlayerDTO(team = A, redCards = 10),
+                            matchPlayerDTO(team = B),
+                    ),
+                    exceptionMessage = "must be less than or equal to 9",
+                    exceptionField = "redCards",
             ),
-            exceptionMessage = "must be less than or equal to 9",
-            exceptionField = "redCards",
-        ),
 //        matchArgument( // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
 //            description = "invalid match with null match player red cards",
 //            matchPlayers = setOf(
