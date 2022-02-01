@@ -9,6 +9,7 @@ import com.github.marciovmartins.futsitev3.matches.argumentsprovider.MatchDTO
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ValidMatchArgumentsProvider
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ValidMatchPlayerArgumentsProvider
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.Matchers.containsInAnyOrder
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
@@ -56,8 +57,7 @@ class MatchControllerIT : BaseIT() {
             .bodyValue(matchToCreate)
             .exchange().expectStatus().isBadRequest
             .expectBody()
-            .jsonPath("$[0].message").isEqualTo(expectedExceptions[0].message)
-            .jsonPath("$[0].field").isEqualTo(expectedExceptions[0].field)
+            .jsonPath("$").value(containsInAnyOrder(*expectedExceptions.map { it.toMap() }.toTypedArray()))
     }
 
     @ParameterizedTest(name = "{0}")
