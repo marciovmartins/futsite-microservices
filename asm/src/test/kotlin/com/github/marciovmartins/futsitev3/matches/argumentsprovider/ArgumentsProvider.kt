@@ -15,7 +15,7 @@ fun matchArgument(
         matchPlayerDTO(team = A),
         matchPlayerDTO(team = B),
     ),
-    expectedException: Array<ExpectedException>? = null
+    expectedException: Set<ExpectedException>? = null
 ) = Arguments.of(
     description,
     MatchDTO(matchDate, matchQuote, matchAuthor, matchDescription, matchPlayers),

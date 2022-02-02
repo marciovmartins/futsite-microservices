@@ -17,7 +17,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = B),
                 matchPlayerDTO(team = "C"),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "\"C\" is not one of the values accepted: [A, B]",
                     field = "matchPlayers[].team",
@@ -30,7 +30,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = "a"),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "\"a\" is not one of the values accepted: [A, B]",
                     field = "matchPlayers[].team",
@@ -45,7 +45,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, nickname = null),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "cannot be null",
                     field = "matchPlayers[].nickname"
@@ -58,7 +58,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, nickname = "     "),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "must not be blank",
                     field = "matchPlayers[].nickname",
@@ -71,7 +71,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, nickname = faker.lorem().characters(51)),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "size must be between 1 and 50",
                     field = "matchPlayers[].nickname",
@@ -86,7 +86,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, goalsInFavor = -1),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "must be greater than or equal to 0",
                     field = "matchPlayers[].goalsInFavor",
@@ -99,7 +99,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, goalsInFavor = 10),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "must be less than or equal to 9",
                     field = "matchPlayers[].goalsInFavor",
@@ -132,7 +132,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, goalsAgainst = -1),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "must be greater than or equal to 0",
                     field = "matchPlayers[].goalsAgainst",
@@ -145,7 +145,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, goalsAgainst = 10),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "must be less than or equal to 9",
                     field = "matchPlayers[].goalsAgainst",
@@ -178,7 +178,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, yellowCards = -1),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "must be greater than or equal to 0",
                     field = "matchPlayers[].yellowCards",
@@ -191,7 +191,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, yellowCards = 10),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "must be less than or equal to 9",
                     field = "matchPlayers[].yellowCards",
@@ -224,7 +224,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, blueCards = -1),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "must be greater than or equal to 0",
                     field = "matchPlayers[].blueCards",
@@ -237,7 +237,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, blueCards = 10),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "must be less than or equal to 9",
                     field = "matchPlayers[].blueCards",
@@ -270,7 +270,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, redCards = -1),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "must be greater than or equal to 0",
                     field = "matchPlayers[].redCards",
@@ -283,7 +283,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 matchPlayerDTO(team = A, redCards = 10),
                 matchPlayerDTO(team = B),
             ),
-            expectedException = arrayOf(
+            expectedException = setOf(
                 ExpectedException(
                     message = "must be less than or equal to 9",
                     field = "matchPlayers[].redCards",

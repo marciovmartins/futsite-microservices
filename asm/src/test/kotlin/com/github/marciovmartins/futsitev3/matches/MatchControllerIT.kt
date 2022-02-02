@@ -49,7 +49,7 @@ class MatchControllerIT : BaseIT() {
     fun `create match with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
         matchToCreate: MatchDTO,
-        expectedExceptions: Array<ExpectedException>,
+        expectedExceptions: Set<ExpectedException>,
     ) {
         // execution
         val actualExceptions = webTestClient.post()
@@ -66,7 +66,7 @@ class MatchControllerIT : BaseIT() {
                 ExpectedResponseBody(
                     title = "Constraint Violation",
                     status = 400,
-                    violations = expectedExceptions.toSet()
+                    violations = expectedExceptions
                 )
             )
     }
@@ -112,7 +112,7 @@ class MatchControllerIT : BaseIT() {
     fun `update match with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
         matchToUpdate: MatchDTO,
-        expectedExceptions: Array<ExpectedException>
+        expectedExceptions: Set<ExpectedException>
     ) {
         // setup
         val matchToCreate = minimumMatchDTO()
@@ -137,7 +137,7 @@ class MatchControllerIT : BaseIT() {
                 ExpectedResponseBody(
                     title = "Constraint Violation",
                     status = 400,
-                    violations = expectedExceptions.toSet()
+                    violations = expectedExceptions
                 )
             )
     }
