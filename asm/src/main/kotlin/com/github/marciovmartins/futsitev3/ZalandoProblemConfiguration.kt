@@ -19,7 +19,6 @@ import org.zalando.problem.jackson.ProblemModule
 import org.zalando.problem.spring.web.advice.ProblemHandling
 import org.zalando.problem.violations.ConstraintViolationProblemModule
 import org.zalando.problem.violations.Violation
-import javax.annotation.concurrent.Immutable
 import kotlin.reflect.full.cast
 
 @Configuration
@@ -33,7 +32,7 @@ class ZalandoProblemConfiguration {
 }
 
 @ControllerAdvice
-class ExceptionHandler : ProblemHandling {
+class ZalandoProblemExceptionHandler : ProblemHandling {
     override fun isCausalChainsEnabled() = false
 
     override fun handleMessageNotReadableException(
@@ -45,25 +44,24 @@ class ExceptionHandler : ProblemHandling {
             .withStatus(Status.BAD_REQUEST)
         when (val cause = exception.cause) {
             is MissingKotlinParameterException -> problemBuilder.with(
-                "violations", listOf(
+                "violations", setOf(
                     Violation(cause.path.mapFieldsPath(), "cannot be null")
                 )
             )
             is InvalidFormatException -> problemBuilder.with(
-                "violations", listOf(
-                    MyViolation(
-                        message = if (cause.cause == null) {
+                "violations", setOf(
+                    Violation(
+                        cause.path.mapFieldsPath(),
+                        if (cause.cause == null) {
                             cause.message
                         } else {
                             cause.cause!!.message
                         }!!,
-                        field = cause.path.mapFieldsPath(),
-                        invalidValue = cause.value
                     )
                 )
             )
             is JsonMappingException -> problemBuilder.with(
-                "violations", listOf(
+                "violations", setOf(
                     Violation(cause.path.mapFieldsPath(), cause.cause!!.message!!)
                 )
             )
@@ -88,10 +86,6 @@ class ExceptionHandler : ProblemHandling {
         return create(problem, request)
     }
 }
-
-@Immutable
-@Suppress("unused")
-private class MyViolation(val message: String, val field: String, val invalidValue: Any)
 
 private fun Collection<JsonMappingException.Reference>.mapFieldsPath() =
     this.joinToString(separator = "") { mapPath(it) }.substring(1)
