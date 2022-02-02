@@ -11,103 +11,210 @@ import java.util.stream.Stream
 object InvalidMatchArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         // DATE
-        matchArgument(
-            description = "invalid match with date in the future",
-            matchDate = LocalDate.now().plusDays(1),
-            exceptionMessage = "must be a date in the past or in the present",
-            exceptionField = "date",
-        ),
+        argument {
+            val date = LocalDate.now().plusDays(1).toString()
+            matchArgument(
+                description = "invalid match with date in the future",
+                matchDate = date,
+                expectedException = arrayOf(
+                    ExpectedException(
+                        message = "must be a date in the past or in the present",
+                        field = "date",
+                        invalidValue = date,
+                    ),
+                ),
+            )
+        },
         matchArgument(
             description = "invalid match with null date",
             matchDate = null,
-            exceptionMessage = "cannot be null",
-            exceptionField = "date",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "cannot be null",
+                    field = "date",
+                    invalidValue = null,
+                )
+            ),
         ),
-        matchArgument(
-            description = "invalid match date with invalid date format",
-            matchDate = "invalid-format",
-            exceptionMessage = "Text 'invalid-format' could not be parsed at index 0",
-            exceptionField = "date",
-        ),
-        matchArgument(
-            description = "invalid match date with wrong date in human readable format",
-            matchDate = "03/12/2007",
-            exceptionMessage = "Text '03/12/2007' could not be parsed at index 0",
-            exceptionField = "date",
-        ),
-        matchArgument(
-            description = "invalid match date with wrong date in millis",
-            matchDate = "1642941722026",
-            exceptionMessage = "Text '1642941722026' could not be parsed at index 0",
-            exceptionField = "date",
-        ),
+        argument {
+            val date = "invalid-format"
+            matchArgument(
+                description = "invalid match date with invalid date format",
+                matchDate = date,
+                expectedException = arrayOf(
+                    ExpectedException(
+                        message = "Text 'invalid-format' could not be parsed at index 0",
+                        field = "date",
+                        invalidValue = date,
+                    ),
+                ),
+            )
+        },
+        argument {
+            val date = "03/12/2007"
+            matchArgument(
+                description = "invalid match date with wrong date in human readable format",
+                matchDate = date,
+                expectedException = arrayOf(
+                    ExpectedException(
+                        message = "Text '03/12/2007' could not be parsed at index 0",
+                        field = "date",
+                        invalidValue = date
+                    ),
+                ),
+            )
+        },
+        argument {
+            val date = "1642941722026"
+            matchArgument(
+                description = "invalid match date with wrong date in millis",
+                matchDate = date,
+                expectedException = arrayOf(
+                    ExpectedException(
+                        message = "Text '1642941722026' could not be parsed at index 0",
+                        field = "date",
+                        invalidValue = date
+                    ),
+                ),
+            )
+        },
         // QUOTE
-        matchArgument(
-            description = "invalid match with quote exceeding 255 characters",
-            matchQuote = faker.lorem().characters(256),
-            exceptionMessage = "size must be between 0 and 255",
-            exceptionField = "quote",
-        ),
+        argument {
+            val quote = faker.lorem().characters(256)
+            matchArgument(
+                description = "invalid match with quote exceeding 255 characters",
+                matchQuote = quote,
+                expectedException = arrayOf(
+                    ExpectedException(
+                        message = "size must be between 0 and 255",
+                        field = "quote",
+                        invalidValue = quote,
+                    ),
+                ),
+            )
+        },
         // AUTHOR
-        matchArgument(
-            description = "invalid match with author exceeding 50 characters",
-            matchAuthor = faker.lorem().characters(51),
-            exceptionMessage = "size must be between 0 and 50",
-            exceptionField = "author",
-        ),
+        argument {
+            val author = faker.lorem().characters(51)
+            matchArgument(
+                description = "invalid match with author exceeding 50 characters",
+                matchAuthor = author,
+                expectedException = arrayOf(
+                    ExpectedException(
+                        message = "size must be between 0 and 50",
+                        field = "author",
+                        invalidValue = author,
+                    ),
+                ),
+            )
+        },
         // DESCRIPTION
-        matchArgument(
-            description = "invalid match with description exceeding 2048 characters",
-            matchDescription = faker.lorem().characters(2049),
-            exceptionMessage = "size must be between 0 and 2048",
-            exceptionField = "description",
-        ),
+        argument {
+            val description = faker.lorem().characters(2049)
+            matchArgument(
+                description = "invalid match with description exceeding 2048 characters",
+                matchDescription = description,
+                expectedException = arrayOf(
+                    ExpectedException(
+                        message = "size must be between 0 and 2048",
+                        field = "description",
+                        invalidValue = description,
+                    ),
+                ),
+            )
+        },
         // MATCH PLAYERS
         matchArgument(
             description = "invalid match with null match players",
             matchPlayers = null,
-            exceptionMessage = "cannot be null",
-            exceptionField = "matchPlayers",
+            expectedException = arrayOf(ExpectedException(message = "cannot be null", field = "matchPlayers")),
         ),
         matchArgument(
             description = "invalid match with empty match players",
             matchPlayers = emptySet(),
-            exceptionMessage = "must not be empty",
-            exceptionField = "matchPlayers",
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "must not be empty",
+                    field = "matchPlayers",
+                    invalidValue = emptyList<Any>(),
+                )
+            ),
         ),
-        matchArgument(
-            description = "invalid match with exactly only one match player of team A",
-            matchPlayers = setOf(
+        argument {
+            val matchPlayers = setOf(
                 matchPlayerDTO(team = A),
-            ),
-            exceptionMessage = "must have at least one player for team A and one player for team B",
-            exceptionField = "matchPlayers",
-        ),
-        matchArgument(
-            description = "invalid match with exactly only one match player of team B",
-            matchPlayers = setOf(
+            )
+            matchArgument(
+                description = "invalid match with exactly only one match player of team A",
+                matchPlayers = matchPlayers,
+                expectedException = arrayOf(
+                    ExpectedException(
+                        message = "must have at least one player for team A and one player for team B",
+                        field = "matchPlayers",
+                        invalidValue = matchPlayers.map { it.toMap() },
+                    ),
+                ),
+            )
+        },
+        argument {
+            val matchPlayers = setOf(
                 matchPlayerDTO(team = B),
-            ),
-            exceptionMessage = "must have at least one player for team A and one player for team B",
-            exceptionField = "matchPlayers",
-        ),
-        matchArgument(
-            description = "invalid match with only match players from team A",
-            matchPlayers = setOf(
+            )
+            matchArgument(
+                description = "invalid match with exactly only one match player of team B",
+                matchPlayers = matchPlayers,
+                expectedException = arrayOf(
+                    ExpectedException(
+                        message = "must have at least one player for team A and one player for team B",
+                        field = "matchPlayers",
+                        invalidValue = matchPlayers.map { it.toMap() }
+                    ),
+                ),
+            )
+        },
+        argument {
+            val matchPlayers = setOf(
                 matchPlayerDTO(team = A),
                 matchPlayerDTO(team = A),
-            ),
-            exceptionMessage = "must have at least one player for team A and one player for team B",
-            exceptionField = "matchPlayers",
-        ),
-        matchArgument(
-            description = "invalid match with only match players from team B",
-            matchPlayers = setOf(
+            )
+            matchArgument(
+                description = "invalid match with only match players from team A",
+                matchPlayers = matchPlayers,
+                expectedException = arrayOf(
+                    ExpectedException(
+                        message = "must have at least one player for team A and one player for team B",
+                        field = "matchPlayers",
+                        invalidValue = matchPlayers.map { it.toMap() },
+                    ),
+                ),
+            )
+        },
+        argument {
+            val matchPlayers = setOf(
                 matchPlayerDTO(team = B),
                 matchPlayerDTO(team = B),
-            ),
-            exceptionMessage = "must have at least one player for team A and one player for team B",
-            exceptionField = "matchPlayers",
-        ),
+            )
+            matchArgument(
+                description = "invalid match with only match players from team B",
+                matchPlayers = matchPlayers,
+                expectedException = arrayOf(
+                    ExpectedException(
+                        message = "must have at least one player for team A and one player for team B",
+                        field = "matchPlayers",
+                        invalidValue = matchPlayers.map { it.toMap() },
+                    ),
+                ),
+            )
+        },
     )
 }
+
+private fun MatchPlayerDTO.toMap() = mapOf(
+    "team" to team,
+    "nickname" to nickname,
+    "goalsInFavor" to goalsInFavor,
+    "goalsAgainst" to goalsAgainst,
+    "yellowCards" to yellowCards,
+    "blueCards" to blueCards,
+    "redCards" to redCards,
+)

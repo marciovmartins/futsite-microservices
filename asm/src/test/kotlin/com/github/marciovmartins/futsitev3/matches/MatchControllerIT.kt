@@ -2,6 +2,7 @@ package com.github.marciovmartins.futsitev3.matches
 
 import com.github.marciovmartins.futsitev3.BaseIT
 import com.github.marciovmartins.futsitev3.matches.MatchFixture.minimumMatchDTO
+import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ExpectedException
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.InvalidMatchArgumentsProvider
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.InvalidMatchPlayerArgumentsProvider
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.MatchDTO
@@ -47,17 +48,20 @@ class MatchControllerIT : BaseIT() {
     fun `create match with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
         matchToCreate: MatchDTO,
-        exceptionMessage: String,
-        exceptionField: String,
+        expectedExceptions: Array<ExpectedException>,
     ) {
-        // execution && assertion
-        webTestClient.post()
+        // execution
+        val actualExceptions = webTestClient.post()
             .uri(traverson.follow("matches").asLink().href)
             .bodyValue(matchToCreate)
             .exchange().expectStatus().isBadRequest
-            .expectBody()
-            .jsonPath("$.violations[0].field").isEqualTo(exceptionField)
-            .jsonPath("$.violations[0].message").isEqualTo(exceptionMessage)
+            .expectBody(Array<ExpectedException>::class.java)
+            .returnResult().responseBody
+        // assertions
+        assertThat(actualExceptions)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(expectedExceptions)
     }
 
     @ParameterizedTest(name = "{0}")
@@ -101,8 +105,7 @@ class MatchControllerIT : BaseIT() {
     fun `update match with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
         matchToUpdate: MatchDTO,
-        exceptionMessage: String,
-        exceptionField: String,
+        expectedExceptions: Array<ExpectedException>
     ) {
         // setup
         val matchToCreate = minimumMatchDTO()
@@ -112,15 +115,18 @@ class MatchControllerIT : BaseIT() {
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
-
         // execution && assertion
-        webTestClient.put()
+        val actualExceptions = webTestClient.put()
             .uri(matchLocationUrl)
             .bodyValue(matchToUpdate)
             .exchange().expectStatus().isBadRequest
-            .expectBody()
-            .jsonPath("$.violations[0].field").isEqualTo(exceptionField)
-            .jsonPath("$.violations[0].message").isEqualTo(exceptionMessage)
+            .expectBody(Array<ExpectedException>::class.java)
+            .returnResult().responseBody
+        // assertions
+        assertThat(actualExceptions)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(expectedExceptions)
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.github.marciovmartins.futsitev3.matches
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDate
 import javax.persistence.CascadeType
 import javax.persistence.Entity
@@ -52,6 +53,7 @@ class Match(
 @Entity(name = "match_players")
 class MatchPlayer(
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 

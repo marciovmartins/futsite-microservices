@@ -4,6 +4,9 @@ import com.github.marciovmartins.futsitev3.matches.MatchPlayer
 import com.github.marciovmartins.futsitev3.matches.MatchPlayerFixture.matchPlayerDTO
 import org.junit.jupiter.params.provider.Arguments
 import java.time.LocalDate
+import java.util.function.Supplier
+
+fun argument(fn: Supplier<Arguments>): Arguments = fn.get()
 
 fun matchArgument(
     description: String,
@@ -15,14 +18,24 @@ fun matchArgument(
         matchPlayerDTO(team = A),
         matchPlayerDTO(team = B),
     ),
-    exceptionMessage: String? = null,
-    exceptionField: String? = null,
+    expectedException: Array<ExpectedException>? = null
 ) = Arguments.of(
     description,
     MatchDTO(matchDate, matchQuote, matchAuthor, matchDescription, matchPlayers),
-    exceptionMessage,
-    exceptionField
+    expectedException
 )!!
+
+data class ExpectedException(
+    val message: String,
+    val field: String,
+    val invalidValue: Any? = null,
+) {
+    fun toMap() = mapOf(
+        "message" to message,
+        "field" to field,
+        "invalidValue" to invalidValue
+    )
+}
 
 data class MatchDTO(
     val date: Any?,
