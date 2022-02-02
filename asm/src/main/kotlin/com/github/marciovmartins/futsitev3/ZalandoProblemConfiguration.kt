@@ -94,9 +94,9 @@ class ExceptionHandler : ProblemHandling {
 private class MyViolation(val message: String, val field: String, val invalidValue: Any)
 
 private fun Collection<JsonMappingException.Reference>.mapFieldsPath() =
-    this.joinToString(separator = ".") { mapPath(it) }
+    this.joinToString(separator = "") { mapPath(it) }.substring(1)
 
 private fun mapPath(it: JsonMappingException.Reference): String = when (it.from) {
-    is Collection<*> -> it.index.toString()
-    else -> it.fieldName
+    is Collection<*> -> "[]"
+    else -> ".${it.fieldName}"
 }

@@ -15,6 +15,7 @@ import javax.validation.Constraint
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 import javax.validation.Payload
+import javax.validation.Valid
 import javax.validation.constraints.Max
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
@@ -42,6 +43,7 @@ class Match(
     @field:Size(max = 2048)
     var description: String?,
 
+    @field:Valid
     @field:NotEmpty
     @field:BothTeams
     @JoinColumn(name = "match_id", nullable = false)

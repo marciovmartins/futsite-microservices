@@ -20,7 +20,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "\"C\" is not one of the values accepted: [A, B]",
-                    field = "matchPlayers.2.team",
+                    field = "matchPlayers[].team",
                 ),
             ),
         ),
@@ -33,7 +33,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "\"a\" is not one of the values accepted: [A, B]",
-                    field = "matchPlayers.0.team",
+                    field = "matchPlayers[].team",
                 ),
             ),
         ),
@@ -48,7 +48,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "cannot be null",
-                    field = "matchPlayers.0.nickname"
+                    field = "matchPlayers[].nickname"
                 ),
             ),
         ),
@@ -61,7 +61,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "must not be blank",
-                    field = "nickname",
+                    field = "matchPlayers[].nickname",
                 )
             ),
         ),
@@ -74,7 +74,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "size must be between 1 and 50",
-                    field = "nickname",
+                    field = "matchPlayers[].nickname",
                 ),
             ),
         ),
@@ -89,7 +89,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "must be greater than or equal to 0",
-                    field = "goalsInFavor",
+                    field = "matchPlayers[].goalsInFavor",
                 ),
             ),
         ),
@@ -102,7 +102,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "must be less than or equal to 9",
-                    field = "goalsInFavor",
+                    field = "matchPlayers[].goalsInFavor",
                 ),
             ),
         ),
@@ -113,7 +113,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
 //                matchPlayerArgument(team = B),
 //            ),
 //            exceptionMessage = "cannot be null",
-//            exceptionField = "matchPlayers.0.goalsInFavor",
+//            exceptionField = "matchPlayers[].goalsInFavor",
 //        ),
 //        matchArgument( // kotlin automatically converts from double to short rounding down
 //            description = "invalid match with match player goals in favor value as double",
@@ -135,7 +135,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "must be greater than or equal to 0",
-                    field = "goalsAgainst",
+                    field = "matchPlayers[].goalsAgainst",
                 ),
             ),
         ),
@@ -148,7 +148,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "must be less than or equal to 9",
-                    field = "goalsAgainst",
+                    field = "matchPlayers[].goalsAgainst",
                 ),
             ),
         ),
@@ -159,7 +159,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
 //                matchPlayerArgument(team = B),
 //            ),
 //            exceptionMessage = "cannot be null",
-//            exceptionField = "matchPlayers.0.goalsAgainst",
+//            exceptionField = "matchPlayers[].goalsAgainst",
 //        ),
 //        matchArgument( // kotlin automatically converts from double to short rounding down
 //            description = "invalid match with match player goals against value as double",
@@ -181,7 +181,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "must be greater than or equal to 0",
-                    field = "yellowCards",
+                    field = "matchPlayers[].yellowCards",
                 ),
             ),
         ),
@@ -194,7 +194,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "must be less than or equal to 9",
-                    field = "yellowCards",
+                    field = "matchPlayers[].yellowCards",
                 ),
             ),
         ),
@@ -205,7 +205,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
 //                matchPlayerArgument(team = B),
 //            ),
 //            exceptionMessage = "cannot be null",
-//            exceptionField = "matchPlayers.0.yellowCards",
+//            exceptionField = "matchPlayers[].yellowCards",
 //        ),
 //        matchArgument( //Kotlin automatically converts from double to short rounding down
 //            description = "invalid match with match player yellow cards value as double",
@@ -227,7 +227,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "must be greater than or equal to 0",
-                    field = "blueCards",
+                    field = "matchPlayers[].blueCards",
                 ),
             ),
         ),
@@ -240,7 +240,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "must be less than or equal to 9",
-                    field = "blueCards",
+                    field = "matchPlayers[].blueCards",
                 ),
             ),
         ),
@@ -251,7 +251,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
 //                matchPlayerArgument(team = B),
 //            ),
 //            exceptionMessage = "cannot be null",
-//            exceptionField = "matchPlayers.0.blueCards",
+//            exceptionField = "matchPlayers[].blueCards",
 //        ),
 //        matchArgument( //Kotlin automatically converts from double to short rounding down
 //            description = "invalid match with match player blue cards value as double",
@@ -273,7 +273,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "must be greater than or equal to 0",
-                    field = "redCards",
+                    field = "matchPlayers[].redCards",
                 ),
             ),
         ),
@@ -286,7 +286,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
             expectedException = arrayOf(
                 ExpectedException(
                     message = "must be less than or equal to 9",
-                    field = "redCards",
+                    field = "matchPlayers[].redCards",
                 ),
             ),
         ),
@@ -297,7 +297,7 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
 //                matchPlayerArgument(team = B),
 //            ),
 //            exceptionMessage = "cannot be null",
-//            exceptionField = "matchPlayers.0.redCards",
+//            exceptionField = "matchPlayers[].redCards",
 //        ),
 //        matchArgument( //Kotlin automatically converts from double to short rounding down
 //            description = "invalid match with match player red cards value as double",
