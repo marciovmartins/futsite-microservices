@@ -3,6 +3,7 @@ package com.github.marciovmartins.futsitev3.matches
 import com.github.marciovmartins.futsitev3.BaseIT
 import com.github.marciovmartins.futsitev3.matches.MatchFixture.minimumMatchDTO
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ExpectedException
+import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ExpectedResponseBody
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.InvalidMatchArgumentsProvider
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.InvalidMatchPlayerArgumentsProvider
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.MatchDTO
@@ -55,13 +56,19 @@ class MatchControllerIT : BaseIT() {
             .uri(traverson.follow("matches").asLink().href)
             .bodyValue(matchToCreate)
             .exchange().expectStatus().isBadRequest
-            .expectBody(Array<ExpectedException>::class.java)
+            .expectBody(ExpectedResponseBody::class.java)
             .returnResult().responseBody
         // assertions
         assertThat(actualExceptions)
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
-            .isEqualTo(expectedExceptions)
+            .isEqualTo(
+                ExpectedResponseBody(
+                    title = "Constraint Violation",
+                    status = 400,
+                    violations = expectedExceptions.toSet()
+                )
+            )
     }
 
     @ParameterizedTest(name = "{0}")
@@ -116,17 +123,23 @@ class MatchControllerIT : BaseIT() {
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
         // execution && assertion
-        val actualExceptions = webTestClient.put()
+        val actualException = webTestClient.put()
             .uri(matchLocationUrl)
             .bodyValue(matchToUpdate)
             .exchange().expectStatus().isBadRequest
-            .expectBody(Array<ExpectedException>::class.java)
+            .expectBody(ExpectedResponseBody::class.java)
             .returnResult().responseBody
         // assertions
-        assertThat(actualExceptions)
+        assertThat(actualException)
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
-            .isEqualTo(expectedExceptions)
+            .isEqualTo(
+                ExpectedResponseBody(
+                    title = "Constraint Violation",
+                    status = 400,
+                    violations = expectedExceptions.toSet()
+                )
+            )
     }
 
     @Test

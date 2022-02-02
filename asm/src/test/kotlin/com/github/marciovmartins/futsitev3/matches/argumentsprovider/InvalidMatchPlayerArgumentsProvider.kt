@@ -21,7 +21,6 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "\"C\" is not one of the values accepted: [A, B]",
                     field = "matchPlayers.2.team",
-                    invalidValue = "C",
                 ),
             ),
         ),
@@ -35,7 +34,6 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "\"a\" is not one of the values accepted: [A, B]",
                     field = "matchPlayers.0.team",
-                    invalidValue = "a",
                 ),
             ),
         ),
@@ -64,27 +62,22 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "must not be blank",
                     field = "nickname",
-                    invalidValue = "     ",
                 )
             ),
         ),
-        argument {
-            val nickname = faker.lorem().characters(51)
-            matchArgument(
-                description = "invalid match with match player nickname exceeding 50 characters",
-                matchPlayers = setOf(
-                    matchPlayerDTO(team = A, nickname = nickname),
-                    matchPlayerDTO(team = B),
+        matchArgument(
+            description = "invalid match with match player nickname exceeding 50 characters",
+            matchPlayers = setOf(
+                matchPlayerDTO(team = A, nickname = faker.lorem().characters(51)),
+                matchPlayerDTO(team = B),
+            ),
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "size must be between 1 and 50",
+                    field = "nickname",
                 ),
-                expectedException = arrayOf(
-                    ExpectedException(
-                        message = "size must be between 1 and 50",
-                        field = "nickname",
-                        invalidValue = nickname,
-                    ),
-                ),
-            )
-        },
+            ),
+        ),
 
         // GOALS IN FAVOR
         matchArgument(
@@ -97,7 +90,6 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "must be greater than or equal to 0",
                     field = "goalsInFavor",
-                    invalidValue = -1,
                 ),
             ),
         ),
@@ -111,7 +103,6 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "must be less than or equal to 9",
                     field = "goalsInFavor",
-                    invalidValue = 10,
                 ),
             ),
         ),
@@ -145,7 +136,6 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "must be greater than or equal to 0",
                     field = "goalsAgainst",
-                    invalidValue = -1,
                 ),
             ),
         ),
@@ -159,7 +149,6 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "must be less than or equal to 9",
                     field = "goalsAgainst",
-                    invalidValue = 10,
                 ),
             ),
         ),
@@ -193,7 +182,6 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "must be greater than or equal to 0",
                     field = "yellowCards",
-                    invalidValue = -1,
                 ),
             ),
         ),
@@ -207,7 +195,6 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "must be less than or equal to 9",
                     field = "yellowCards",
-                    invalidValue = 10,
                 ),
             ),
         ),
@@ -241,7 +228,6 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "must be greater than or equal to 0",
                     field = "blueCards",
-                    invalidValue = -1,
                 ),
             ),
         ),
@@ -255,7 +241,6 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "must be less than or equal to 9",
                     field = "blueCards",
-                    invalidValue = 10,
                 ),
             ),
         ),
@@ -289,7 +274,6 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "must be greater than or equal to 0",
                     field = "redCards",
-                    invalidValue = -1,
                 ),
             ),
         ),
@@ -303,7 +287,6 @@ object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
                 ExpectedException(
                     message = "must be less than or equal to 9",
                     field = "redCards",
-                    invalidValue = 10,
                 ),
             ),
         ),

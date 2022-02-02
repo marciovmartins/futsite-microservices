@@ -4,9 +4,6 @@ import com.github.marciovmartins.futsitev3.matches.MatchPlayer
 import com.github.marciovmartins.futsitev3.matches.MatchPlayerFixture.matchPlayerDTO
 import org.junit.jupiter.params.provider.Arguments
 import java.time.LocalDate
-import java.util.function.Supplier
-
-fun argument(fn: Supplier<Arguments>): Arguments = fn.get()
 
 fun matchArgument(
     description: String,
@@ -25,10 +22,15 @@ fun matchArgument(
     expectedException
 )!!
 
+data class ExpectedResponseBody(
+    val title: String,
+    val status: Int,
+    val violations: Set<ExpectedException>,
+)
+
 data class ExpectedException(
     val message: String,
     val field: String,
-    val invalidValue: Any? = null,
 )
 
 data class MatchDTO(
