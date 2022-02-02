@@ -9,7 +9,6 @@ import com.github.marciovmartins.futsitev3.matches.argumentsprovider.MatchDTO
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ValidMatchArgumentsProvider
 import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ValidMatchPlayerArgumentsProvider
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.Matchers.containsInAnyOrder
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
@@ -51,13 +50,18 @@ class MatchControllerIT : BaseIT() {
         matchToCreate: MatchDTO,
         expectedExceptions: Array<ExpectedException>,
     ) {
-        // execution && assertion
-        webTestClient.post()
+        // execution
+        val actualExceptions = webTestClient.post()
             .uri(traverson.follow("matches").asLink().href)
             .bodyValue(matchToCreate)
             .exchange().expectStatus().isBadRequest
-            .expectBody()
-            .jsonPath("$").value(containsInAnyOrder(*expectedExceptions.map { it.toMap() }.toTypedArray()))
+            .expectBody(Array<ExpectedException>::class.java)
+            .returnResult().responseBody
+        // assertions
+        assertThat(actualExceptions)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(expectedExceptions)
     }
 
     @ParameterizedTest(name = "{0}")
@@ -111,15 +115,18 @@ class MatchControllerIT : BaseIT() {
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
-
         // execution && assertion
-        webTestClient.put()
+        val actualExceptions = webTestClient.put()
             .uri(matchLocationUrl)
             .bodyValue(matchToUpdate)
             .exchange().expectStatus().isBadRequest
-            .expectBody()
-            .jsonPath("$[0].message").isEqualTo(expectedExceptions[0].message)
-            .jsonPath("$[0].field").isEqualTo(expectedExceptions[0].field)
+            .expectBody(Array<ExpectedException>::class.java)
+            .returnResult().responseBody
+        // assertions
+        assertThat(actualExceptions)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(expectedExceptions)
     }
 
     @Test
