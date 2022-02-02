@@ -160,5 +160,20 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
                 ),
             ),
         ),
+        matchArgument(
+            description = "invalid match with with multiple errors",
+            matchDate = LocalDate.now().plusDays(1).toString(),
+            matchQuote = faker.lorem().characters(256),
+            expectedException = arrayOf(
+                ExpectedException(
+                    message = "must be a date in the past or in the present",
+                    field = "date",
+                ),
+                ExpectedException(
+                    message = "size must be between 0 and 255",
+                    field = "quote",
+                ),
+            ),
+        ),
     )
 }
