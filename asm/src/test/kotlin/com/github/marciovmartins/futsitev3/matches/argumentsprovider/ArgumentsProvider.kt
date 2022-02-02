@@ -29,13 +29,7 @@ data class ExpectedException(
     val message: String,
     val field: String,
     val invalidValue: Any? = null,
-) {
-    fun toMap() = mapOf(
-        "message" to message,
-        "field" to field,
-        "invalidValue" to invalidValue
-    )
-}
+)
 
 data class MatchDTO(
     val date: Any?,
