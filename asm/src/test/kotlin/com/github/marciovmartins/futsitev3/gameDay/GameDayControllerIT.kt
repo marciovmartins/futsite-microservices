@@ -1,60 +1,62 @@
-package com.github.marciovmartins.futsitev3.matches
+package com.github.marciovmartins.futsitev3.gameDay
 
 import com.github.marciovmartins.futsitev3.BaseIT
-import com.github.marciovmartins.futsitev3.matches.MatchFixture.minimumMatchDTO
-import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ExpectedException
-import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ExpectedResponseBody
-import com.github.marciovmartins.futsitev3.matches.argumentsprovider.InvalidMatchArgumentsProvider
-import com.github.marciovmartins.futsitev3.matches.argumentsprovider.InvalidMatchPlayerArgumentsProvider
-import com.github.marciovmartins.futsitev3.matches.argumentsprovider.MatchDTO
-import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ValidMatchArgumentsProvider
-import com.github.marciovmartins.futsitev3.matches.argumentsprovider.ValidMatchPlayerArgumentsProvider
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.gameDayDTO
+import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ExpectedException
+import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ExpectedResponseBody
+import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.GameDayDTO
+import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidGameDayArgumentsProvider
+import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidMatchArgumentsProvider
+import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidMatchPlayerArgumentsProvider
+import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ValidGameDayArgumentsProvider
+import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ValidMatchPlayerArgumentsProvider
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
 
-class MatchControllerIT : BaseIT() {
+class GameDayControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
-    @ArgumentsSource(ValidMatchArgumentsProvider::class)
+    @ArgumentsSource(ValidGameDayArgumentsProvider::class)
     @ArgumentsSource(ValidMatchPlayerArgumentsProvider::class)
     fun `create and retrieve a match`(
         @Suppress("UNUSED_PARAMETER") description: String,
-        matchToCreate: MatchDTO,
+        gameDayToCreate: GameDayDTO,
     ) {
         // execution
-        val matchLocationUrl = webTestClient.post()
-            .uri(traverson.follow("matches").asLink().href)
-            .bodyValue(matchToCreate)
+        val gameDayLocationUrl = webTestClient.post()
+            .uri(traverson.follow("gameDays").asLink().href)
+            .bodyValue(gameDayToCreate)
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
-        val match = webTestClient.get()
-            .uri(matchLocationUrl)
+        val gameDay = webTestClient.get()
+            .uri(gameDayLocationUrl)
             .exchange().expectStatus().isOk
-            .returnResult(MatchDTO::class.java)
+            .returnResult(GameDayDTO::class.java)
             .responseBody.blockFirst()
 
         // assertion
-        assertThat(match)
+        assertThat(gameDay)
             .isNotNull
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
-            .isEqualTo(matchToCreate)
+            .isEqualTo(gameDayToCreate)
     }
 
     @ParameterizedTest(name = "{0}")
+    @ArgumentsSource(InvalidGameDayArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchPlayerArgumentsProvider::class)
     fun `create match with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
-        matchToCreate: MatchDTO,
+        gameDayToCreate: GameDayDTO,
         expectedExceptions: Set<ExpectedException>,
     ) {
         // execution
         val actualExceptions = webTestClient.post()
-            .uri(traverson.follow("matches").asLink().href)
-            .bodyValue(matchToCreate)
+            .uri(traverson.follow("gameDays").asLink().href)
+            .bodyValue(gameDayToCreate)
             .exchange().expectStatus().isBadRequest
             .expectBody(ExpectedResponseBody::class.java)
             .returnResult().responseBody
@@ -72,60 +74,61 @@ class MatchControllerIT : BaseIT() {
     }
 
     @ParameterizedTest(name = "{0}")
-    @ArgumentsSource(ValidMatchArgumentsProvider::class)
+    @ArgumentsSource(ValidGameDayArgumentsProvider::class)
     @ArgumentsSource(ValidMatchPlayerArgumentsProvider::class)
     fun `update and retrieve a match`(
         @Suppress("UNUSED_PARAMETER") description: String,
-        matchToUpdate: MatchDTO,
+        gameDayToUpdate: GameDayDTO,
     ) {
         // setup
-        val matchToCreate = minimumMatchDTO()
-        val matchLocationUrl = webTestClient.post()
-            .uri(traverson.follow("matches").asLink().href)
-            .bodyValue(matchToCreate)
+        val gameDayToCreate = gameDayDTO()
+        val gameDayLocationUrl = webTestClient.post()
+            .uri(traverson.follow("gameDays").asLink().href)
+            .bodyValue(gameDayToCreate)
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
 
         // execution
         webTestClient.put()
-            .uri(matchLocationUrl)
-            .bodyValue(matchToUpdate)
+            .uri(gameDayLocationUrl)
+            .bodyValue(gameDayToUpdate)
             .exchange().expectStatus().isOk
-        val match = webTestClient.get()
-            .uri(matchLocationUrl)
+        val gameDay = webTestClient.get()
+            .uri(gameDayLocationUrl)
             .exchange().expectStatus().isOk
-            .returnResult(MatchDTO::class.java)
+            .returnResult(GameDayDTO::class.java)
             .responseBody.blockFirst()
 
         // assertion
-        assertThat(match)
+        assertThat(gameDay)
             .isNotNull
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
-            .isEqualTo(matchToUpdate)
+            .isEqualTo(gameDayToUpdate)
     }
 
     @ParameterizedTest(name = "{0}")
+    @ArgumentsSource(InvalidGameDayArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchPlayerArgumentsProvider::class)
     fun `update match with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
-        matchToUpdate: MatchDTO,
+        gameDayToUpdate: GameDayDTO,
         expectedExceptions: Set<ExpectedException>
     ) {
         // setup
-        val matchToCreate = minimumMatchDTO()
-        val matchLocationUrl = webTestClient.post()
-            .uri(traverson.follow("matches").asLink().href)
-            .bodyValue(matchToCreate)
+        val gameDayToCreate = gameDayDTO()
+        val gameDayLocationUrl = webTestClient.post()
+            .uri(traverson.follow("gameDays").asLink().href)
+            .bodyValue(gameDayToCreate)
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
         // execution && assertion
         val actualException = webTestClient.put()
-            .uri(matchLocationUrl)
-            .bodyValue(matchToUpdate)
+            .uri(gameDayLocationUrl)
+            .bodyValue(gameDayToUpdate)
             .exchange().expectStatus().isBadRequest
             .expectBody(ExpectedResponseBody::class.java)
             .returnResult().responseBody
@@ -145,20 +148,20 @@ class MatchControllerIT : BaseIT() {
     @Test
     fun `delete existing match`() {
         // setup
-        val matchToCreate = minimumMatchDTO()
-        val matchLocationUrl = webTestClient.post()
-            .uri(traverson.follow("matches").asLink().href)
-            .bodyValue(matchToCreate)
+        val gameDayToCreate = gameDayDTO()
+        val gameDayLocationUrl = webTestClient.post()
+            .uri(traverson.follow("gameDays").asLink().href)
+            .bodyValue(gameDayToCreate)
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
 
         // execution && assertion
         webTestClient.delete()
-            .uri(matchLocationUrl)
+            .uri(gameDayLocationUrl)
             .exchange().expectStatus().isNoContent
         webTestClient.get()
-            .uri(matchLocationUrl)
+            .uri(gameDayLocationUrl)
             .exchange().expectStatus().isNotFound
     }
 }

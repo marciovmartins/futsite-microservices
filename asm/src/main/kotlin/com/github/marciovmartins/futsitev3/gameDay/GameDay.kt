@@ -1,8 +1,9 @@
-package com.github.marciovmartins.futsitev3.matches
+package com.github.marciovmartins.futsitev3.gameDay
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDate
 import javax.persistence.CascadeType
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
@@ -25,8 +26,8 @@ import javax.validation.constraints.Size
 import kotlin.reflect.KClass
 
 @Suppress("unused")
-@Entity(name = "matches")
-class Match(
+@Entity(name = "gameDays")
+class GameDay(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -42,6 +43,23 @@ class Match(
 
     @field:Size(max = 2048)
     var description: String?,
+
+    @field:Valid
+    @field:NotEmpty
+    @JoinColumn(name = "game_day_id", nullable = false)
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    var matches: Set<Match>,
+)
+
+@Suppress("unused")
+@Entity(name = "matches")
+class Match(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
+
+    @Column(name = "match_order")
+    var order: Short? = null,
 
     @field:Valid
     @field:NotEmpty
