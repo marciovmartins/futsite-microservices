@@ -19,7 +19,7 @@ class GameDayControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(ValidGameDayArgumentsProvider::class)
     @ArgumentsSource(ValidMatchPlayerArgumentsProvider::class)
-    fun `create and retrieve a match`(
+    fun `create and retrieve a game day`(
         @Suppress("UNUSED_PARAMETER") description: String,
         gameDayToCreate: GameDayDTO,
     ) {
@@ -45,38 +45,9 @@ class GameDayControllerIT : BaseIT() {
     }
 
     @ParameterizedTest(name = "{0}")
-    @ArgumentsSource(InvalidGameDayArgumentsProvider::class)
-    @ArgumentsSource(InvalidMatchArgumentsProvider::class)
-    @ArgumentsSource(InvalidMatchPlayerArgumentsProvider::class)
-    fun `create match with invalid data fails`(
-        @Suppress("UNUSED_PARAMETER") description: String,
-        gameDayToCreate: GameDayDTO,
-        expectedExceptions: Set<ExpectedException>,
-    ) {
-        // execution
-        val actualExceptions = webTestClient.post()
-            .uri(traverson.follow("gameDays").asLink().href)
-            .bodyValue(gameDayToCreate)
-            .exchange().expectStatus().isBadRequest
-            .expectBody(ExpectedResponseBody::class.java)
-            .returnResult().responseBody
-        // assertions
-        assertThat(actualExceptions)
-            .usingRecursiveComparison()
-            .ignoringCollectionOrder()
-            .isEqualTo(
-                ExpectedResponseBody(
-                    title = "Constraint Violation",
-                    status = 400,
-                    violations = expectedExceptions
-                )
-            )
-    }
-
-    @ParameterizedTest(name = "{0}")
     @ArgumentsSource(ValidGameDayArgumentsProvider::class)
     @ArgumentsSource(ValidMatchPlayerArgumentsProvider::class)
-    fun `update and retrieve a match`(
+    fun `update and retrieve a game day`(
         @Suppress("UNUSED_PARAMETER") description: String,
         gameDayToUpdate: GameDayDTO,
     ) {
@@ -108,11 +79,60 @@ class GameDayControllerIT : BaseIT() {
             .isEqualTo(gameDayToUpdate)
     }
 
+    @Test
+    fun `delete existing game day`() {
+        // setup
+        val gameDayToCreate = gameDayDTO()
+        val gameDayLocationUrl = webTestClient.post()
+            .uri(traverson.follow("gameDays").asLink().href)
+            .bodyValue(gameDayToCreate)
+            .exchange().expectStatus().isCreated
+            .returnResult(Unit::class.java)
+            .responseHeaders.location.toString()
+
+        // execution && assertion
+        webTestClient.delete()
+            .uri(gameDayLocationUrl)
+            .exchange().expectStatus().isNoContent
+        webTestClient.get()
+            .uri(gameDayLocationUrl)
+            .exchange().expectStatus().isNotFound
+    }
+
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(InvalidGameDayArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchPlayerArgumentsProvider::class)
-    fun `update match with invalid data fails`(
+    fun `create game day with invalid data fails`(
+        @Suppress("UNUSED_PARAMETER") description: String,
+        gameDayToCreate: GameDayDTO,
+        expectedExceptions: Set<ExpectedException>,
+    ) {
+        // execution
+        val actualExceptions = webTestClient.post()
+            .uri(traverson.follow("gameDays").asLink().href)
+            .bodyValue(gameDayToCreate)
+            .exchange().expectStatus().isBadRequest
+            .expectBody(ExpectedResponseBody::class.java)
+            .returnResult().responseBody
+        // assertions
+        assertThat(actualExceptions)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(
+                ExpectedResponseBody(
+                    title = "Constraint Violation",
+                    status = 400,
+                    violations = expectedExceptions
+                )
+            )
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @ArgumentsSource(InvalidGameDayArgumentsProvider::class)
+    @ArgumentsSource(InvalidMatchArgumentsProvider::class)
+    @ArgumentsSource(InvalidMatchPlayerArgumentsProvider::class)
+    fun `update game day with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
         gameDayToUpdate: GameDayDTO,
         expectedExceptions: Set<ExpectedException>
@@ -143,25 +163,5 @@ class GameDayControllerIT : BaseIT() {
                     violations = expectedExceptions
                 )
             )
-    }
-
-    @Test
-    fun `delete existing match`() {
-        // setup
-        val gameDayToCreate = gameDayDTO()
-        val gameDayLocationUrl = webTestClient.post()
-            .uri(traverson.follow("gameDays").asLink().href)
-            .bodyValue(gameDayToCreate)
-            .exchange().expectStatus().isCreated
-            .returnResult(Unit::class.java)
-            .responseHeaders.location.toString()
-
-        // execution && assertion
-        webTestClient.delete()
-            .uri(gameDayLocationUrl)
-            .exchange().expectStatus().isNoContent
-        webTestClient.get()
-            .uri(gameDayLocationUrl)
-            .exchange().expectStatus().isNotFound
     }
 }

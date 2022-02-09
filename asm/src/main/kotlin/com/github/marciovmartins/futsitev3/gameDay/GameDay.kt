@@ -55,6 +55,7 @@ class GameDay(
 @Entity(name = "matches")
 class Match(
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
