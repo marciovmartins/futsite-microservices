@@ -1,6 +1,6 @@
 package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.matchPlayerDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
@@ -11,44 +11,44 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         // MATCH PLAYERS
         singleMatchArgument(
             testDescription = "invalid game day with exactly only one match player of team A",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A),
+            players = setOf(
+                playerDTO(team = A),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must have at least one player for team A and one player for team B",
-                field = "matches[].matchPlayers",
+                field = "matches[].players",
             ),
         ),
         singleMatchArgument(
             testDescription = "invalid game day with exactly only one match player of team B",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = B),
+            players = setOf(
+                playerDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must have at least one player for team A and one player for team B",
-                field = "matches[].matchPlayers",
+                field = "matches[].players",
             ),
         ),
         singleMatchArgument(
             testDescription = "invalid game day with only match players from team A",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = A),
-                matchPlayerDTO(team = A),
+            players = setOf(
+                playerDTO(team = A),
+                playerDTO(team = A),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must have at least one player for team A and one player for team B",
-                field = "matches[].matchPlayers",
+                field = "matches[].players",
             ),
         ),
         singleMatchArgument(
             testDescription = "invalid game day with only match players from team B",
-            matchPlayers = setOf(
-                matchPlayerDTO(team = B),
-                matchPlayerDTO(team = B),
+            players = setOf(
+                playerDTO(team = B),
+                playerDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must have at least one player for team A and one player for team B",
-                field = "matches[].matchPlayers",
+                field = "matches[].players",
             ),
         ),
     )

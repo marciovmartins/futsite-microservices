@@ -1,7 +1,9 @@
 package com.github.marciovmartins.futsitev3.gameDay
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.hibernate.annotations.Type
 import java.time.LocalDate
+import java.util.UUID
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -18,8 +20,8 @@ import javax.validation.ConstraintValidatorContext
 import javax.validation.Payload
 import javax.validation.Valid
 import javax.validation.constraints.Max
-import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
 import javax.validation.constraints.PastOrPresent
 import javax.validation.constraints.PositiveOrZero
 import javax.validation.constraints.Size
@@ -67,12 +69,12 @@ class Match(
     @field:BothTeams
     @JoinColumn(name = "match_id", nullable = false)
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-    var matchPlayers: Set<MatchPlayer>
+    var players: Set<Player>
 )
 
 @Suppress("unused")
-@Entity(name = "match_players")
-class MatchPlayer(
+@Entity(name = "players")
+class Player(
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,9 +83,9 @@ class MatchPlayer(
     @Enumerated(EnumType.STRING)
     var team: Team,
 
-    @field:NotBlank
-    @field:Size(min = 1, max = 50)
-    var nickname: String,
+    @field:NotNull
+    @Type(type = "uuid-char")
+    var userId: UUID,
 
     @field:Max(9)
     @field:PositiveOrZero
@@ -118,10 +120,10 @@ annotation class BothTeams(
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<Payload>> = []
 ) {
-    class BothTeamsConstraintValidator : ConstraintValidator<BothTeams, Set<MatchPlayer>> {
-        override fun isValid(value: Set<MatchPlayer>?, context: ConstraintValidatorContext?): Boolean =
+    class BothTeamsConstraintValidator : ConstraintValidator<BothTeams, Set<Player>> {
+        override fun isValid(value: Set<Player>?, context: ConstraintValidatorContext?): Boolean =
             value == null || value.isEmpty() || hasMatchPlayersFromBothTeams(value)
 
-        private fun hasMatchPlayersFromBothTeams(value: Set<MatchPlayer>) = value.map { it.team }.toSet().size > 1
+        private fun hasMatchPlayersFromBothTeams(value: Set<Player>) = value.map { it.team }.toSet().size > 1
     }
 }

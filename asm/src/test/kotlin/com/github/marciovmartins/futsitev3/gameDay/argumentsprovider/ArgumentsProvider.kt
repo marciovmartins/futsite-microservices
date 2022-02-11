@@ -2,7 +2,7 @@ package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.gameDayDTO
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.matchDTO
-import com.github.marciovmartins.futsitev3.gameDay.MatchPlayer
+import com.github.marciovmartins.futsitev3.gameDay.Player
 import org.junit.jupiter.params.provider.Arguments
 import java.time.LocalDate
 
@@ -18,13 +18,13 @@ fun gameDayArgument(
 
 fun singleMatchArgument(
     testDescription: String,
-    matchPlayers: Set<MatchPlayerDTO>,
+    players: Set<PlayerDTO>,
     expectedExceptions: Set<ExpectedException>? = null
 ): Arguments = Arguments.of(
     testDescription,
     gameDayDTO(
         matches = setOf(
-            matchDTO(matchPlayers = matchPlayers)
+            matchDTO(players = players)
         ),
     ),
     expectedExceptions
@@ -56,12 +56,12 @@ data class GameDayDTO(
 
 data class MatchDTO(
     val order: Any?,
-    val matchPlayers: Set<MatchPlayerDTO>?,
+    val players: Set<PlayerDTO>?,
 )
 
-data class MatchPlayerDTO(
+data class PlayerDTO(
     val team: Any?,
-    val nickname: Any?,
+    val userId: Any?,
     val goalsInFavor: Any?,
     val goalsAgainst: Any?,
     val yellowCards: Any?,
@@ -69,5 +69,5 @@ data class MatchPlayerDTO(
     val redCards: Any?,
 )
 
-val A = MatchPlayer.Team.A.name
-val B = MatchPlayer.Team.B.name
+val A = Player.Team.A.name
+val B = Player.Team.B.name

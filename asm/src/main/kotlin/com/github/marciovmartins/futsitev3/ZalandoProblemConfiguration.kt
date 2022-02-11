@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.NativeWebRequest
 import org.zalando.problem.Problem
+import org.zalando.problem.ProblemBuilder
 import org.zalando.problem.Status
 import org.zalando.problem.jackson.ProblemModule
 import org.zalando.problem.spring.web.advice.ProblemHandling
@@ -48,18 +49,7 @@ class ZalandoProblemExceptionHandler : ProblemHandling {
                     Violation(cause.path.mapFieldsPath(), "cannot be null")
                 )
             )
-            is InvalidFormatException -> problemBuilder.with(
-                "violations", setOf(
-                    Violation(
-                        cause.path.mapFieldsPath(),
-                        if (cause.cause == null) {
-                            cause.message
-                        } else {
-                            cause.cause!!.message
-                        }!!,
-                    )
-                )
-            )
+            is InvalidFormatException -> processInvalidFormatException(problemBuilder, cause)
             is JsonMappingException -> problemBuilder.with(
                 "violations", setOf(
                     Violation(cause.path.mapFieldsPath(), cause.cause!!.message!!)
@@ -84,6 +74,26 @@ class ZalandoProblemExceptionHandler : ProblemHandling {
             .with("violations", violations)
             .build()
         return create(problem, request)
+    }
+
+    private fun processInvalidFormatException(problemBuilder: ProblemBuilder, cause: InvalidFormatException) {
+        val fieldPath = cause.path.mapFieldsPath()
+        if (cause.message != null && cause.message!!.contains("UUID has to be represented by standard 36-char representation")) {
+            problemBuilder.with("violations", setOf(Violation(fieldPath, "Invalid uuid format")))
+        } else {
+            problemBuilder.with(
+                "violations", setOf(
+                    Violation(
+                        fieldPath,
+                        if (cause.cause == null) {
+                            cause.message
+                        } else {
+                            cause.cause!!.message
+                        }!!,
+                    )
+                )
+            )
+        }
     }
 }
 
