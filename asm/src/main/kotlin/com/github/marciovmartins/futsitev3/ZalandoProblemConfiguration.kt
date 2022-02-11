@@ -44,17 +44,9 @@ class ZalandoProblemExceptionHandler : ProblemHandling {
             .withTitle("Constraint Violation")
             .withStatus(Status.BAD_REQUEST)
         when (val cause = exception.cause) {
-            is MissingKotlinParameterException -> problemBuilder.with(
-                "violations", setOf(
-                    Violation(cause.path.mapFieldsPath(), "cannot be null")
-                )
-            )
+            is MissingKotlinParameterException -> processMissingKotlinParameter(problemBuilder, cause)
             is InvalidFormatException -> processInvalidFormatException(problemBuilder, cause)
-            is JsonMappingException -> problemBuilder.with(
-                "violations", setOf(
-                    Violation(cause.path.mapFieldsPath(), cause.cause!!.message!!)
-                )
-            )
+            is JsonMappingException -> processingJsonMappingException(problemBuilder, cause)
             else -> problemBuilder.withDetail(exception.message!!)
         }
         return create(problemBuilder.build(), request)
@@ -76,8 +68,12 @@ class ZalandoProblemExceptionHandler : ProblemHandling {
         return create(problem, request)
     }
 
+    private fun processMissingKotlinParameter(problemBuilder: ProblemBuilder, cause: MissingKotlinParameterException) {
+        problemBuilder.with("violations", setOf(Violation(cause.path.mapFieldPath(), "cannot be null")))
+    }
+
     private fun processInvalidFormatException(problemBuilder: ProblemBuilder, cause: InvalidFormatException) {
-        val fieldPath = cause.path.mapFieldsPath()
+        val fieldPath = cause.path.mapFieldPath()
         if (cause.message != null && cause.message!!.contains("UUID has to be represented by standard 36-char representation")) {
             problemBuilder.with("violations", setOf(Violation(fieldPath, "Invalid uuid format")))
         } else {
@@ -95,9 +91,13 @@ class ZalandoProblemExceptionHandler : ProblemHandling {
             )
         }
     }
+
+    private fun processingJsonMappingException(problemBuilder: ProblemBuilder, cause: JsonMappingException) {
+        problemBuilder.with("violations", setOf(Violation(cause.path.mapFieldPath(), cause.cause!!.message!!)))
+    }
 }
 
-private fun Collection<JsonMappingException.Reference>.mapFieldsPath() =
+private fun Collection<JsonMappingException.Reference>.mapFieldPath() =
     this.joinToString(separator = "") { mapPath(it) }.substring(1)
 
 private fun mapPath(it: JsonMappingException.Reference): String = when (it.from) {
