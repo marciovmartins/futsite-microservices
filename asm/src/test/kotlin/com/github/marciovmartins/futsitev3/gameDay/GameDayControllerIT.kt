@@ -8,6 +8,7 @@ import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidPlay
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ValidGameDayArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ValidMatchPlayerArgumentsProvider
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
@@ -41,6 +42,7 @@ class GameDayControllerIT : BaseIT() {
             .isEqualTo(gameDayToCreate)
     }
 
+    @Disabled // enable after fix https://stackoverflow.com/questions/71041196/how-to-update-an-aggregate-with-nested-lists-using-spring-boot-data-rest-jpa-and
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(ValidGameDayArgumentsProvider::class)
     @ArgumentsSource(ValidMatchPlayerArgumentsProvider::class)
@@ -73,6 +75,25 @@ class GameDayControllerIT : BaseIT() {
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(gameDayToUpdate)
+    }
+
+    @Test // remove after fix https://stackoverflow.com/questions/71041196/how-to-update-an-aggregate-with-nested-lists-using-spring-boot-data-rest-jpa-and
+    fun `do not allow update a game play`() {
+        // setup
+        val gameDayToCreate = gameDayDTO()
+        val gameDayLocationUrl = webTestClient.post()
+            .uri(traverson.follow("gameDays").asLink().href)
+            .bodyValue(gameDayToCreate)
+            .exchange().expectStatus().isCreated
+            .returnResult(Unit::class.java)
+            .responseHeaders.location.toString()
+        // execution
+        val response = webTestClient.put()
+            .uri(gameDayLocationUrl)
+            .bodyValue(gameDayDTO())
+            .exchange()
+        // assertions
+        response.expectStatus().isEqualTo(HttpStatus.METHOD_NOT_ALLOWED)
     }
 
     @Test
@@ -127,6 +148,7 @@ class GameDayControllerIT : BaseIT() {
             )
     }
 
+    @Disabled // enable after fix https://stackoverflow.com/questions/71041196/how-to-update-an-aggregate-with-nested-lists-using-spring-boot-data-rest-jpa-and
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(InvalidGameDayArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
