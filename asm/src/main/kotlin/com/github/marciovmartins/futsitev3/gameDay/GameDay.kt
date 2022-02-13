@@ -48,6 +48,7 @@ class GameDay(
 
     @field:Valid
     @field:NotEmpty
+    @field:UniqueMatchOrder
     @JoinColumn(name = "game_day_id", nullable = false)
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     var matches: Set<Match>,
@@ -108,6 +109,22 @@ class Player(
 ) {
     enum class Team {
         A, B
+    }
+}
+
+@MustBeDocumented
+@Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
+@Constraint(validatedBy = [UniqueMatchOrder.UniqueMatchOrderConstraintValidator::class])
+annotation class UniqueMatchOrder(
+    val message: String = "must not have duplicated match order",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<Payload>> = []
+) {
+    class UniqueMatchOrderConstraintValidator : ConstraintValidator<UniqueMatchOrder, Set<Match>> {
+        override fun isValid(value: Set<Match>?, context: ConstraintValidatorContext?): Boolean =
+            value == null || value.isEmpty() || hasUniqueMatchOrder(value)
+
+        private fun hasUniqueMatchOrder(value: Set<Match>) = value.map { it.order }.toSet().size == value.size
     }
 }
 

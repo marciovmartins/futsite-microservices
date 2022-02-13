@@ -2,6 +2,7 @@ package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.gameDayDTO
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.matchDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerDTO
 import com.github.marciovmartins.futsitev3.gameDay.Player
 import org.junit.jupiter.params.provider.Arguments
 import java.time.LocalDate
@@ -18,13 +19,14 @@ fun gameDayArgument(
 
 fun singleMatchArgument(
     testDescription: String,
-    players: Set<PlayerDTO>,
+    order: Any? = 1,
+    players: Set<PlayerDTO> = setOf(playerDTO(team = A), playerDTO(team = B)),
     expectedExceptions: Set<ExpectedException>? = null
 ): Arguments = Arguments.of(
     testDescription,
     gameDayDTO(
         matches = setOf(
-            matchDTO(players = players)
+            matchDTO(order = order, players = players)
         ),
     ),
     expectedExceptions

@@ -6,7 +6,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import java.util.stream.Stream
 
-object InvalidMatchPlayerArgumentsProvider : ArgumentsProvider {
+object InvalidPlayerArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         // TEAM
         singleMatchArgument(

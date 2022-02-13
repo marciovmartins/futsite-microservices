@@ -7,7 +7,7 @@ import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ExpectedRes
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.GameDayDTO
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidGameDayArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidMatchArgumentsProvider
-import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidMatchPlayerArgumentsProvider
+import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidPlayerArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ValidGameDayArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ValidMatchPlayerArgumentsProvider
 import org.assertj.core.api.Assertions.assertThat
@@ -102,7 +102,7 @@ class GameDayControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(InvalidGameDayArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
-    @ArgumentsSource(InvalidMatchPlayerArgumentsProvider::class)
+    @ArgumentsSource(InvalidPlayerArgumentsProvider::class)
     fun `create game day with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
         gameDayToCreate: GameDayDTO,
@@ -131,7 +131,7 @@ class GameDayControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(InvalidGameDayArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
-    @ArgumentsSource(InvalidMatchPlayerArgumentsProvider::class)
+    @ArgumentsSource(InvalidPlayerArgumentsProvider::class)
     fun `update game day with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
         gameDayToUpdate: GameDayDTO,

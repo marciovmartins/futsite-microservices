@@ -8,6 +8,23 @@ import java.util.stream.Stream
 
 object InvalidMatchArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
+        // ORDER
+        singleMatchArgument(
+            testDescription = "invalid game day with match order equal to zero",
+            order = 0,
+            expectedExceptions = singleExpectedException(
+                message = "must be greater than or equal to 1",
+                field = "matches[].players",
+            ),
+        ),
+        singleMatchArgument(
+            testDescription = "invalid game day with negative match order",
+            order = -1,
+            expectedExceptions = singleExpectedException(
+                message = "must be greater than or equal to 1",
+                field = "matches[].players",
+            ),
+        ),
         // MATCH PLAYERS
         singleMatchArgument(
             testDescription = "invalid game day with exactly only one match player of team A",
