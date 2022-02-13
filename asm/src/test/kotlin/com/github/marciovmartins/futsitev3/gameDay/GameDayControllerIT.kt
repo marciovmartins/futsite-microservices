@@ -14,6 +14,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
+import org.springframework.http.HttpStatus
 
 class GameDayControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
@@ -145,7 +146,7 @@ class GameDayControllerIT : BaseIT() {
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
-        // execution && assertion
+        // execution
         val actualException = webTestClient.put()
             .uri(gameDayLocationUrl)
             .bodyValue(gameDayToUpdate)
@@ -163,5 +164,15 @@ class GameDayControllerIT : BaseIT() {
                     violations = expectedExceptions
                 )
             )
+    }
+
+    @Test
+    fun `do not allow retrieve multiple game days`() {
+        // execution
+        val response = webTestClient.get()
+            .uri(traverson.follow("gameDays").asLink().href)
+            .exchange()
+        // assertions
+        response.expectStatus().isEqualTo(HttpStatus.METHOD_NOT_ALLOWED)
     }
 }
