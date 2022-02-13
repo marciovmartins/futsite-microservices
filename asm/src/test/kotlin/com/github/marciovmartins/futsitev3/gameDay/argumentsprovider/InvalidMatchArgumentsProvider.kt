@@ -51,5 +51,28 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
                 field = "matches[].players",
             ),
         ),
+        singleMatchArgument(
+            testDescription = "invalid game day with duplicated player user id in different team",
+            players = setOf(
+                playerDTO(team = A, userId = "d636819a-7df6-4c07-90ff-e4a781530500"),
+                playerDTO(team = B, userId = "d636819a-7df6-4c07-90ff-e4a781530500"),
+            ),
+            expectedExceptions = singleExpectedException(
+                message = "cannot have duplicated player user id",
+                field = "matches[].players"
+            )
+        ),
+        singleMatchArgument(
+            testDescription = "invalid game day with duplicated player user id on same team",
+            players = setOf(
+                playerDTO(team = A, userId = "f70897f4-497b-48f2-8094-18464886195b"),
+                playerDTO(team = A, userId = "f70897f4-497b-48f2-8094-18464886195b"),
+                playerDTO(team = B),
+            ),
+            expectedExceptions = singleExpectedException(
+                message = "cannot have duplicated player user id",
+                field = "matches[].players"
+            )
+        ),
     )
 }

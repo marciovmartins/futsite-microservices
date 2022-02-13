@@ -27,10 +27,10 @@ import javax.validation.constraints.PositiveOrZero
 import javax.validation.constraints.Size
 import kotlin.reflect.KClass
 
-@Suppress("unused")
 @Entity(name = "gameDays")
 class GameDay(
     @Id
+    @Suppress("unused")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
@@ -53,7 +53,6 @@ class GameDay(
     var matches: Set<Match>,
 )
 
-@Suppress("unused")
 @Entity(name = "matches")
 class Match(
     @Id
@@ -67,12 +66,12 @@ class Match(
     @field:Valid
     @field:NotEmpty
     @field:BothTeams
+    @field:UniquePlayers
     @JoinColumn(name = "match_id", nullable = false)
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     var players: Set<Player>
 )
 
-@Suppress("unused")
 @Entity(name = "players")
 class Player(
     @Id
@@ -125,5 +124,21 @@ annotation class BothTeams(
             value == null || value.isEmpty() || hasMatchPlayersFromBothTeams(value)
 
         private fun hasMatchPlayersFromBothTeams(value: Set<Player>) = value.map { it.team }.toSet().size > 1
+    }
+}
+
+@MustBeDocumented
+@Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
+@Constraint(validatedBy = [UniquePlayers.UniquePlayersConstraintValidator::class])
+annotation class UniquePlayers(
+    val message: String = "cannot have duplicated player user id",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<Payload>> = []
+) {
+    class UniquePlayersConstraintValidator : ConstraintValidator<UniquePlayers, Set<Player>> {
+        override fun isValid(value: Set<Player>?, context: ConstraintValidatorContext?): Boolean =
+            value == null || value.isEmpty() || hasUniquePlayers(value)
+
+        private fun hasUniquePlayers(value: Set<Player>) = value.map { it.userId }.toSet().size == value.size
     }
 }
