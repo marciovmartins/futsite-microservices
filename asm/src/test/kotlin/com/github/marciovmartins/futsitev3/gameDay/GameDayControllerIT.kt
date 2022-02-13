@@ -31,13 +31,12 @@ class GameDayControllerIT : BaseIT() {
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
-        val gameDay = webTestClient.get()
+        val responseGet = webTestClient.get()
             .uri(gameDayLocationUrl)
-            .exchange().expectStatus().isOk
-            .returnResult(GameDayDTO::class.java)
-            .responseBody.blockFirst()
-
+            .exchange()
         // assertion
+        responseGet.expectStatus().isOk
+        val gameDay = responseGet.returnResult(GameDayDTO::class.java).responseBody.blockFirst()
         assertThat(gameDay)
             .isNotNull
             .usingRecursiveComparison()
@@ -60,19 +59,18 @@ class GameDayControllerIT : BaseIT() {
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
-
         // execution
-        webTestClient.put()
+        val responsePut = webTestClient.put()
             .uri(gameDayLocationUrl)
             .bodyValue(gameDayToUpdate)
-            .exchange().expectStatus().isOk
-        val gameDay = webTestClient.get()
+            .exchange()
+        val responseGet = webTestClient.get()
             .uri(gameDayLocationUrl)
-            .exchange().expectStatus().isOk
-            .returnResult(GameDayDTO::class.java)
-            .responseBody.blockFirst()
-
+            .exchange()
         // assertion
+        responsePut.expectStatus().isOk
+        responseGet.expectStatus().isOk
+        val gameDay = responseGet.returnResult(GameDayDTO::class.java).responseBody.blockFirst()
         assertThat(gameDay)
             .isNotNull
             .usingRecursiveComparison()
@@ -90,14 +88,16 @@ class GameDayControllerIT : BaseIT() {
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
-
-        // execution && assertion
-        webTestClient.delete()
+        // execution
+        val responseDelete = webTestClient.delete()
             .uri(gameDayLocationUrl)
-            .exchange().expectStatus().isNoContent
-        webTestClient.get()
+            .exchange()
+        val responseGet = webTestClient.get()
             .uri(gameDayLocationUrl)
-            .exchange().expectStatus().isNotFound
+            .exchange()
+        // assertions
+        responseDelete.expectStatus().isNoContent
+        responseGet.expectStatus().isNotFound
     }
 
     @ParameterizedTest(name = "{0}")
@@ -110,13 +110,14 @@ class GameDayControllerIT : BaseIT() {
         expectedExceptions: Set<ExpectedException>,
     ) {
         // execution
-        val actualExceptions = webTestClient.post()
+        val response = webTestClient.post()
             .uri(traverson.follow("gameDays").asLink().href)
             .bodyValue(gameDayToCreate)
-            .exchange().expectStatus().isBadRequest
+            .exchange()
+        // assertions
+        val actualExceptions = response.expectStatus().isBadRequest
             .expectBody(ExpectedResponseBody::class.java)
             .returnResult().responseBody
-        // assertions
         assertThat(actualExceptions)
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
@@ -143,17 +144,18 @@ class GameDayControllerIT : BaseIT() {
         val gameDayLocationUrl = webTestClient.post()
             .uri(traverson.follow("gameDays").asLink().href)
             .bodyValue(gameDayToCreate)
-            .exchange().expectStatus().isCreated
+            .exchange()
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
         // execution
-        val actualException = webTestClient.put()
+        val response = webTestClient.put()
             .uri(gameDayLocationUrl)
             .bodyValue(gameDayToUpdate)
-            .exchange().expectStatus().isBadRequest
+            .exchange()
+        // assertions
+        val actualException = response.expectStatus().isBadRequest
             .expectBody(ExpectedResponseBody::class.java)
             .returnResult().responseBody
-        // assertions
         assertThat(actualException)
             .usingRecursiveComparison()
             .ignoringCollectionOrder()

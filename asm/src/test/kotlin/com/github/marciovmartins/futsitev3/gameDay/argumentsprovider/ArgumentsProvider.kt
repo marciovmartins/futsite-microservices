@@ -7,7 +7,7 @@ import com.github.marciovmartins.futsitev3.gameDay.Player
 import org.junit.jupiter.params.provider.Arguments
 import java.time.LocalDate
 
-fun gameDayArgument(
+internal fun gameDayArgument(
     testDescription: String,
     date: Any? = LocalDate.now().toString(),
     quote: Any? = null,
@@ -17,7 +17,7 @@ fun gameDayArgument(
     expectedException: Set<ExpectedException>? = null
 ) = Arguments.of(testDescription, GameDayDTO(date, quote, author, description, matches), expectedException)!!
 
-fun singleMatchArgument(
+internal fun singleMatchArgument(
     testDescription: String,
     order: Any? = 1,
     players: Set<PlayerDTO> = setOf(playerDTO(team = A), playerDTO(team = B)),
@@ -32,7 +32,7 @@ fun singleMatchArgument(
     expectedExceptions
 )
 
-fun singleExpectedException(
+internal fun singleExpectedException(
     message: String,
     field: String,
 ) = setOf(ExpectedException(message = message, field = field))
