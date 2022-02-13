@@ -50,7 +50,8 @@ class GameDay(
 
     @field:Valid
     @field:NotEmpty
-    @field:ValidMatchOrders
+    @field:UniqueMatchOrder
+    @field:SequentialMatchOrder
     @JoinColumn(name = "game_day_id", nullable = false)
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     var matches: Set<Match>,
@@ -117,32 +118,40 @@ class Player(
     }
 }
 
-@MustBeDocumented
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
-@Constraint(validatedBy = [ValidMatchOrders.ValidMatchOrdersConstraintValidator::class])
-annotation class ValidMatchOrders(
+@Constraint(validatedBy = [UniqueMatchOrder.ValidMatchOrdersConstraintValidator::class])
+annotation class UniqueMatchOrder(
     val message: String = "must have valid match with sequential order",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<Payload>> = []
 ) {
-    class ValidMatchOrdersConstraintValidator : ConstraintValidator<ValidMatchOrders, Set<Match>> {
+    class ValidMatchOrdersConstraintValidator : ConstraintValidator<UniqueMatchOrder, Set<Match>> {
         override fun isValid(value: Set<Match>?, context: ConstraintValidatorContext?) =
-            value == null || value.isEmpty() || hasValidMatches(value)
+            value == null || value.isEmpty() || hasUniqueMatchOrder(value)
 
-        private fun hasValidMatches(value: Set<Match>) = hasUniqueMatchOrder(value) && hasSequentialMatchOrder(value)
+        private fun hasUniqueMatchOrder(value: Set<Match>) = value.map { it.order }.toSet().size == value.size
+    }
+}
 
-        private fun hasUniqueMatchOrder(value: Set<Match>) =
-            value.map { it.order }.toSet().size == value.size
+@Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
+@Constraint(validatedBy = [SequentialMatchOrder.SequentialMatchOrderConstraintValidator::class])
+annotation class SequentialMatchOrder(
+    val message: String = "must have valid match with sequential order",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<Payload>> = []
+) {
+    class SequentialMatchOrderConstraintValidator : ConstraintValidator<SequentialMatchOrder, Set<Match>> {
+        override fun isValid(value: Set<Match>?, context: ConstraintValidatorContext?) =
+            value == null || value.isEmpty() || hasSequentialMatchOrder(value)
 
         private fun hasSequentialMatchOrder(value: Set<Match>): Boolean {
             val matchOrdersGreaterThanZero = value.mapNotNull { it.order }.filter { it > 0 }.toSet()
-            return matchOrdersGreaterThanZero.isEmpty()
-                    || matchOrdersGreaterThanZero == generateSequence(1.toShort(), Short::inc).take(value.size).toSet()
+            val expectedMatchOrderSequence = generateSequence(1.toShort(), Short::inc).take(value.size).toSet()
+            return matchOrdersGreaterThanZero.isEmpty() || matchOrdersGreaterThanZero == expectedMatchOrderSequence
         }
     }
 }
 
-@MustBeDocumented
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
 @Constraint(validatedBy = [BothTeams.BothTeamsConstraintValidator::class])
 annotation class BothTeams(
@@ -158,7 +167,6 @@ annotation class BothTeams(
     }
 }
 
-@MustBeDocumented
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
 @Constraint(validatedBy = [UniquePlayers.UniquePlayersConstraintValidator::class])
 annotation class UniquePlayers(
