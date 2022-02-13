@@ -1,6 +1,7 @@
 package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 
 import com.github.marciovmartins.futsitev3.MyFaker.faker
+import com.github.marciovmartins.futsitev3.gameDay.ExpectedException
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.matchDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments

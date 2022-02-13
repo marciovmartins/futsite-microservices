@@ -2,9 +2,6 @@ package com.github.marciovmartins.futsitev3.gameDay
 
 import com.github.marciovmartins.futsitev3.BaseIT
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.gameDayDTO
-import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ExpectedException
-import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ExpectedResponseBody
-import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.GameDayDTO
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidGameDayArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidMatchArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidPlayerArgumentsProvider

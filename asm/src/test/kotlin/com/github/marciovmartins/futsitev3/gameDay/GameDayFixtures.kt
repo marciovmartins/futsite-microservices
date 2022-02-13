@@ -1,11 +1,6 @@
 package com.github.marciovmartins.futsitev3.gameDay
 
 import com.github.marciovmartins.futsitev3.MyFaker.faker
-import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.A
-import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.B
-import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.GameDayDTO
-import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.MatchDTO
-import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.PlayerDTO
 import java.time.LocalDate
 import java.util.UUID
 
@@ -33,3 +28,40 @@ object GameDayFixture {
         redCards: Any? = faker.random().nextInt(0, 1),
     ) = PlayerDTO(team, userId, goalsInFavor, goalsAgainst, yellowCards, blueCards, redCards)
 }
+
+data class GameDayDTO(
+    val date: Any?,
+    val quote: Any?,
+    val author: Any?,
+    val description: Any?,
+    val matches: Set<MatchDTO>?
+)
+
+data class MatchDTO(
+    val order: Any?,
+    val players: Set<PlayerDTO>?,
+)
+
+data class PlayerDTO(
+    val team: Any?,
+    val userId: Any?,
+    val goalsInFavor: Any?,
+    val goalsAgainst: Any?,
+    val yellowCards: Any?,
+    val blueCards: Any?,
+    val redCards: Any?,
+)
+
+data class ExpectedResponseBody(
+    val title: String,
+    val status: Int,
+    val violations: Set<ExpectedException>,
+)
+
+data class ExpectedException(
+    val message: String,
+    val field: String,
+)
+
+val A = Player.Team.A.name
+val B = Player.Team.B.name

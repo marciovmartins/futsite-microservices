@@ -1,5 +1,7 @@
 package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 
+import com.github.marciovmartins.futsitev3.gameDay.A
+import com.github.marciovmartins.futsitev3.gameDay.B
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.matchDTO
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerDTO
 import org.junit.jupiter.api.extension.ExtensionContext
