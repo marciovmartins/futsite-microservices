@@ -14,7 +14,7 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             order = 0,
             expectedExceptions = singleExpectedException(
                 message = "must be greater than or equal to 1",
-                field = "matches[].players",
+                field = "matches[].order",
             ),
         ),
         singleMatchArgument(
@@ -22,7 +22,7 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
             order = -1,
             expectedExceptions = singleExpectedException(
                 message = "must be greater than or equal to 1",
-                field = "matches[].players",
+                field = "matches[].order",
             ),
         ),
         // MATCH PLAYERS

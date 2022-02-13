@@ -20,6 +20,7 @@ import javax.validation.ConstraintValidatorContext
 import javax.validation.Payload
 import javax.validation.Valid
 import javax.validation.constraints.Max
+import javax.validation.constraints.Min
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.PastOrPresent
@@ -27,6 +28,7 @@ import javax.validation.constraints.PositiveOrZero
 import javax.validation.constraints.Size
 import kotlin.reflect.KClass
 
+@Suppress("unused")
 @Entity(name = "gameDays")
 class GameDay(
     @Id
@@ -48,12 +50,13 @@ class GameDay(
 
     @field:Valid
     @field:NotEmpty
-    @field:ValidMatches
+    @field:ValidMatchOrders
     @JoinColumn(name = "game_day_id", nullable = false)
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     var matches: Set<Match>,
 )
 
+@Suppress("unused")
 @Entity(name = "matches")
 class Match(
     @Id
@@ -61,6 +64,7 @@ class Match(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
+    @field:Min(1)
     @Column(name = "match_order")
     var order: Short? = null,
 
@@ -73,6 +77,7 @@ class Match(
     var players: Set<Player>
 )
 
+@Suppress("unused")
 @Entity(name = "players")
 class Player(
     @Id
@@ -114,13 +119,13 @@ class Player(
 
 @MustBeDocumented
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
-@Constraint(validatedBy = [ValidMatches.UniqueMatchOrderConstraintValidator::class])
-annotation class ValidMatches(
+@Constraint(validatedBy = [ValidMatchOrders.ValidMatchOrdersConstraintValidator::class])
+annotation class ValidMatchOrders(
     val message: String = "must have valid match with sequential order",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<Payload>> = []
 ) {
-    class UniqueMatchOrderConstraintValidator : ConstraintValidator<ValidMatches, Set<Match>> {
+    class ValidMatchOrdersConstraintValidator : ConstraintValidator<ValidMatchOrders, Set<Match>> {
         override fun isValid(value: Set<Match>?, context: ConstraintValidatorContext?) =
             value == null || value.isEmpty() || hasValidMatches(value)
 
@@ -146,7 +151,7 @@ annotation class BothTeams(
     val payload: Array<KClass<Payload>> = []
 ) {
     class BothTeamsConstraintValidator : ConstraintValidator<BothTeams, Set<Player>> {
-        override fun isValid(value: Set<Player>?, context: ConstraintValidatorContext?): Boolean =
+        override fun isValid(value: Set<Player>?, context: ConstraintValidatorContext?) =
             value == null || value.isEmpty() || hasMatchPlayersFromBothTeams(value)
 
         private fun hasMatchPlayersFromBothTeams(value: Set<Player>) = value.map { it.team }.toSet().size > 1
@@ -162,7 +167,7 @@ annotation class UniquePlayers(
     val payload: Array<KClass<Payload>> = []
 ) {
     class UniquePlayersConstraintValidator : ConstraintValidator<UniquePlayers, Set<Player>> {
-        override fun isValid(value: Set<Player>?, context: ConstraintValidatorContext?): Boolean =
+        override fun isValid(value: Set<Player>?, context: ConstraintValidatorContext?) =
             value == null || value.isEmpty() || hasUniquePlayers(value)
 
         private fun hasUniquePlayers(value: Set<Player>) = value.map { it.userId }.toSet().size == value.size
