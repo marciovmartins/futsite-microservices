@@ -145,7 +145,7 @@ object InvalidGameDayArgumentsProvider : ArgumentsProvider {
             ),
             expectedException = setOf(
                 ExpectedException(
-                    message = "must have valid match with sequential order",
+                    message = "must have match order sequentially",
                     field = "matches",
                 )
             ),
