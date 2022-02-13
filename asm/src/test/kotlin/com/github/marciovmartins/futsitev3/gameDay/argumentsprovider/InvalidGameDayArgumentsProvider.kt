@@ -132,7 +132,7 @@ object InvalidGameDayArgumentsProvider : ArgumentsProvider {
             ),
             expectedException = setOf(
                 ExpectedException(
-                    message = "must not have duplicated match order",
+                    message = "must have valid match with sequential order",
                     field = "matches",
                 )
             ),
@@ -145,7 +145,7 @@ object InvalidGameDayArgumentsProvider : ArgumentsProvider {
             ),
             expectedException = setOf(
                 ExpectedException(
-                    message = "must have sequential match order",
+                    message = "must have valid match with sequential order",
                     field = "matches",
                 )
             ),

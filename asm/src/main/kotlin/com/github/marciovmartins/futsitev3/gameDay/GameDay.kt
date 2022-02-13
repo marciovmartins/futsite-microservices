@@ -48,7 +48,7 @@ class GameDay(
 
     @field:Valid
     @field:NotEmpty
-    @field:UniqueMatchOrder
+    @field:ValidMatches
     @JoinColumn(name = "game_day_id", nullable = false)
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     var matches: Set<Match>,
@@ -114,17 +114,26 @@ class Player(
 
 @MustBeDocumented
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
-@Constraint(validatedBy = [UniqueMatchOrder.UniqueMatchOrderConstraintValidator::class])
-annotation class UniqueMatchOrder(
-    val message: String = "must not have duplicated match order",
+@Constraint(validatedBy = [ValidMatches.UniqueMatchOrderConstraintValidator::class])
+annotation class ValidMatches(
+    val message: String = "must have valid match with sequential order",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<Payload>> = []
 ) {
-    class UniqueMatchOrderConstraintValidator : ConstraintValidator<UniqueMatchOrder, Set<Match>> {
-        override fun isValid(value: Set<Match>?, context: ConstraintValidatorContext?): Boolean =
-            value == null || value.isEmpty() || hasUniqueMatchOrder(value)
+    class UniqueMatchOrderConstraintValidator : ConstraintValidator<ValidMatches, Set<Match>> {
+        override fun isValid(value: Set<Match>?, context: ConstraintValidatorContext?) =
+            value == null || value.isEmpty() || hasValidMatches(value)
 
-        private fun hasUniqueMatchOrder(value: Set<Match>) = value.map { it.order }.toSet().size == value.size
+        private fun hasValidMatches(value: Set<Match>) = hasUniqueMatchOrder(value) && hasSequentialMatchOrder(value)
+
+        private fun hasUniqueMatchOrder(value: Set<Match>) =
+            value.map { it.order }.toSet().size == value.size
+
+        private fun hasSequentialMatchOrder(value: Set<Match>): Boolean {
+            val matchOrdersGreaterThanZero = value.mapNotNull { it.order }.filter { it > 0 }.toSet()
+            return matchOrdersGreaterThanZero.isEmpty()
+                    || matchOrdersGreaterThanZero == generateSequence(1.toShort(), Short::inc).take(value.size).toSet()
+        }
     }
 }
 
