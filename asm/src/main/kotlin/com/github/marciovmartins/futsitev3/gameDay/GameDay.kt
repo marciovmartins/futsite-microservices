@@ -91,23 +91,23 @@ class Player(
     @Type(type = "uuid-char")
     var userId: UUID,
 
-    @field:Max(9)
+    @field:Max(99)
     @field:PositiveOrZero
     var goalsInFavor: Short,
 
-    @field:Max(9)
+    @field:Max(99)
     @field:PositiveOrZero
     var goalsAgainst: Short,
 
-    @field:Max(9)
+    @field:Max(99)
     @field:PositiveOrZero
     var yellowCards: Short,
 
-    @field:Max(9)
+    @field:Max(99)
     @field:PositiveOrZero
     var blueCards: Short,
 
-    @field:Max(9)
+    @field:Max(99)
     @field:PositiveOrZero
     var redCards: Short,
 ) {

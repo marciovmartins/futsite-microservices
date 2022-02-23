@@ -7,23 +7,10 @@ import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
-import java.util.UUID
 import java.util.stream.Stream
 
 object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
-        // NICKNAME
-        gameDayArgument(
-            testDescription = "valid match with match player userId with valid uuid",
-            matches = setOf(
-                matchDTO(
-                    players = setOf(
-                        playerDTO(team = A, userId = UUID.randomUUID().toString()),
-                        playerDTO(team = B)
-                    ),
-                ),
-            ),
-        ),
         // GOALS IN FAVOR
         gameDayArgument(
             testDescription = "valid match with match player goals in favor with minimum amount of 0",
@@ -41,7 +28,7 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, goalsInFavor = 9),
+                        playerDTO(team = A, goalsInFavor = 99),
                         playerDTO(team = B)
                     ),
                 ),
@@ -64,7 +51,7 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, goalsAgainst = 9),
+                        playerDTO(team = A, goalsAgainst = 99),
                         playerDTO(team = B)
                     ),
                 ),
@@ -87,7 +74,7 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, yellowCards = 9),
+                        playerDTO(team = A, yellowCards = 99),
                         playerDTO(team = B)
                     ),
                 ),
@@ -98,7 +85,7 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, blueCards = 9),
+                        playerDTO(team = A, blueCards = 99),
                         playerDTO(team = B)
                     ),
                 ),
@@ -109,7 +96,7 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, redCards = 9),
+                        playerDTO(team = A, redCards = 99),
                         playerDTO(team = B)
                     ),
                 ),

@@ -72,11 +72,11 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
         singleMatchArgument(
             testDescription = "invalid game day with match player goals in favor value exceeding 9",
             players = setOf(
-                playerDTO(team = A, goalsInFavor = 10),
+                playerDTO(team = A, goalsInFavor = 100),
                 playerDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
-                message = "must be less than or equal to 9",
+                message = "must be less than or equal to 99",
                 field = "matches[].players[].goalsInFavor",
             ),
         ),
@@ -95,7 +95,7 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
 //                matchPlayerArgument(team = A, goalsInFavor = 2.9),
 //                matchPlayerArgument(team = B),
 //            ),
-//            exceptionMessage = "must be less than or equal to 9",
+//            exceptionMessage = "must be less than or equal to 99",
 //            exceptionField = "goalsInFavor",
 //        ),
 
@@ -114,11 +114,11 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
         singleMatchArgument(
             testDescription = "invalid game day with match player goals against value exceeding 9",
             players = setOf(
-                playerDTO(team = A, goalsAgainst = 10),
+                playerDTO(team = A, goalsAgainst = 100),
                 playerDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
-                message = "must be less than or equal to 9",
+                message = "must be less than or equal to 99",
                 field = "matches[].players[].goalsAgainst",
             ),
         ),
@@ -137,7 +137,7 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
 //                matchPlayerArgument(team = A, goalsAgainst = 2.9),
 //                matchPlayerArgument(team = B),
 //            ),
-//            exceptionMessage = "must be less than or equal to 9",
+//            exceptionMessage = "must be less than or equal to 99",
 //            exceptionField = "goalsAgainst",
 //        ),
 
@@ -156,11 +156,11 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
         singleMatchArgument(
             testDescription = "invalid game day with match player yellow cards value exceeding 9",
             players = setOf(
-                playerDTO(team = A, yellowCards = 10),
+                playerDTO(team = A, yellowCards = 100),
                 playerDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
-                message = "must be less than or equal to 9",
+                message = "must be less than or equal to 99",
                 field = "matches[].players[].yellowCards",
             ),
         ),
@@ -179,7 +179,7 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
 //                matchPlayerArgument(team = A, yellowCards = 2.9),
 //                matchPlayerArgument(team = B),
 //            ),
-//            exceptionMessage = "must be less than or equal to 9",
+//            exceptionMessage = "must be less than or equal to 99",
 //            exceptionField = "yellowCards",
 //        ),
 
@@ -198,11 +198,11 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
         singleMatchArgument(
             testDescription = "invalid game day with match player blue cards value exceeding 9",
             players = setOf(
-                playerDTO(team = A, blueCards = 10),
+                playerDTO(team = A, blueCards = 100),
                 playerDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
-                message = "must be less than or equal to 9",
+                message = "must be less than or equal to 99",
                 field = "matches[].players[].blueCards",
             ),
         ),
@@ -221,7 +221,7 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
 //                matchPlayerArgument(team = A, blueCards = 2.9),
 //                matchPlayerArgument(team = B),
 //            ),
-//            exceptionMessage = "must be less than or equal to 9",
+//            exceptionMessage = "must be less than or equal to 99",
 //            exceptionField = "blueCards",
 //        ),
 
@@ -240,11 +240,11 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
         singleMatchArgument(
             testDescription = "invalid game day with match player red cards value exceeding 9",
             players = setOf(
-                playerDTO(team = A, redCards = 10),
+                playerDTO(team = A, redCards = 100),
                 playerDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
-                message = "must be less than or equal to 9",
+                message = "must be less than or equal to 99",
                 field = "matches[].players[].redCards",
             ),
         ),
@@ -263,7 +263,7 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
 //                matchPlayerArgument(team = A, redCards = 2.9),
 //                matchPlayerArgument(team = B),
 //            ),
-//            exceptionMessage = "must be less than or equal to 9",
+//            exceptionMessage = "must be less than or equal to 99",
 //            exceptionField = "redCards",
 //        ),
     )
