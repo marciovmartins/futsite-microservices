@@ -11,16 +11,22 @@ import com.github.marciovmartins.futsitev3.gameDay.MatchDTO
 import com.github.marciovmartins.futsitev3.gameDay.PlayerDTO
 import org.junit.jupiter.params.provider.Arguments
 import java.time.LocalDate
+import java.util.UUID
 
 internal fun gameDayArgument(
     testDescription: String,
+    amateurSoccerGroupId: Any? = UUID.randomUUID().toString(),
     date: Any? = LocalDate.now().toString(),
     quote: Any? = null,
     author: Any? = null,
     description: Any? = null,
     matches: Set<MatchDTO>? = setOf(matchDTO()),
     expectedException: Set<ExpectedException>? = null
-) = Arguments.of(testDescription, GameDayDTO(date, quote, author, description, matches), expectedException)!!
+) = Arguments.of(
+    testDescription,
+    GameDayDTO(amateurSoccerGroupId, date, quote, author, description, matches),
+    expectedException
+)!!
 
 internal fun singleMatchArgument(
     testDescription: String,

@@ -6,12 +6,13 @@ import java.util.UUID
 
 object GameDayFixture {
     fun gameDayDTO(
+        amateurSoccerGroupId: Any? = UUID.randomUUID().toString(),
         date: Any? = LocalDate.now().toString(),
         quote: Any? = null,
         author: Any? = null,
         description: Any? = null,
         matches: Set<MatchDTO> = setOf(matchDTO())
-    ) = GameDayDTO(date, quote, author, description, matches)
+    ) = GameDayDTO(amateurSoccerGroupId, date, quote, author, description, matches)
 
     fun matchDTO(
         order: Any? = 1,
@@ -30,6 +31,7 @@ object GameDayFixture {
 }
 
 data class GameDayDTO(
+    val amateurSoccerGroupId: Any?,
     val date: Any?,
     val quote: Any?,
     val author: Any?,

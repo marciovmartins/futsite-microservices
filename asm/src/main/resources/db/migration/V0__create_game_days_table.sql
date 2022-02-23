@@ -1,10 +1,13 @@
 create table game_days
 (
-    id          int unsigned auto_increment primary key,
-    date        date          not null,
-    quote       varchar(255)  null,
-    author      varchar(50)   null,
-    description varchar(2048) null
+    id                      int unsigned auto_increment primary key,
+    amateur_soccer_group_id varchar(36)   not null,
+    date                    date          not null,
+    quote                   varchar(255)  null,
+    author                  varchar(50)   null,
+    description             varchar(2048) null,
+    constraint game_days_amateur_soccer_group_id_date_uindex
+        unique (amateur_soccer_group_id, date)
 );
 
 create table matches
@@ -30,4 +33,3 @@ create table players
     constraint match_players_matches_id_fk
         foreign key (match_id) references matches (id)
 );
-

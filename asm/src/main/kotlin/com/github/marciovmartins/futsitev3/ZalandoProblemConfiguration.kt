@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.NativeWebRequest
 import org.zalando.problem.Problem
 import org.zalando.problem.ProblemBuilder
-import org.zalando.problem.Status
 import org.zalando.problem.jackson.ProblemModule
 import org.zalando.problem.spring.web.advice.ProblemHandling
 import org.zalando.problem.violations.ConstraintViolationProblemModule
@@ -42,7 +41,7 @@ class ZalandoProblemExceptionHandler : ProblemHandling {
     ): ResponseEntity<Problem> {
         val problemBuilder = Problem.builder()
             .withTitle("Constraint Violation")
-            .withStatus(Status.BAD_REQUEST)
+            .withStatus(defaultConstraintViolationStatus())
         when (val cause = exception.cause) {
             is MissingKotlinParameterException -> processMissingKotlinParameter(problemBuilder, cause)
             is InvalidFormatException -> processInvalidFormatException(problemBuilder, cause)
@@ -62,7 +61,7 @@ class ZalandoProblemExceptionHandler : ProblemHandling {
             .map { Violation(it.field, it.defaultMessage!!) }
         val problem = Problem.builder()
             .withTitle("Constraint Violation")
-            .withStatus(Status.BAD_REQUEST)
+            .withStatus(defaultConstraintViolationStatus())
             .with("violations", violations)
             .build()
         return create(problem, request)
@@ -77,24 +76,19 @@ class ZalandoProblemExceptionHandler : ProblemHandling {
         if (cause.message != null && cause.message!!.contains("UUID has to be represented by standard 36-char representation")) {
             problemBuilder.with("violations", setOf(Violation(fieldPath, "Invalid uuid format")))
         } else {
-            problemBuilder.with(
-                "violations", setOf(
-                    Violation(
-                        fieldPath,
-                        if (cause.cause == null) {
-                            cause.message
-                        } else {
-                            cause.cause!!.message
-                        }!!,
-                    )
-                )
-            )
+            problemBuilder.with("violations", setOf(Violation(fieldPath, extractMessage(cause))))
         }
     }
 
     private fun processingJsonMappingException(problemBuilder: ProblemBuilder, cause: JsonMappingException) {
         problemBuilder.with("violations", setOf(Violation(cause.path.mapFieldPath(), cause.cause!!.message!!)))
     }
+
+    private fun extractMessage(cause: InvalidFormatException) = if (cause.cause == null) {
+        cause.message
+    } else {
+        cause.cause!!.message
+    }!!
 }
 
 private fun Collection<JsonMappingException.Reference>.mapFieldPath() =

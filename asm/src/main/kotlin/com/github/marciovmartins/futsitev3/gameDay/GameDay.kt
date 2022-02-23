@@ -31,6 +31,9 @@ class GameDay(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
+    @Type(type = "uuid-char")
+    var amateurSoccerGroupId: UUID,
+
     @field:PastOrPresent
     var date: LocalDate,
 

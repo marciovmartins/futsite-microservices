@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
 import org.springframework.http.HttpStatus
+import java.time.LocalDate
 
 class GameDayControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
@@ -195,5 +196,44 @@ class GameDayControllerIT : BaseIT() {
             .exchange()
         // assertions
         response.expectStatus().isEqualTo(HttpStatus.METHOD_NOT_ALLOWED)
+    }
+
+    @Test
+    fun `cannot add two game days with the same day`() {
+        // setup
+        val amateurSoccerGroupId = "9d8797da-e5dd-4f08-b777-532b4aa316ef"
+        val date = LocalDate.now().toString()
+        val gameDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
+        val secondDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
+        val gameDayLocationUrl = webTestClient.post()
+            .uri(traverson.follow("gameDays").asLink().href)
+            .bodyValue(gameDayToCreate)
+            .exchange()
+            .returnResult(Unit::class.java)
+            .responseHeaders.location.toString()
+        // execution
+        val response = webTestClient.post()
+            .uri(traverson.follow("gameDays").asLink().href)
+            .bodyValue(secondDayToCreate)
+            .exchange()
+        // assertions
+        val actualException = response.expectStatus().isBadRequest
+            .expectBody(ExpectedResponseBody::class.java)
+            .returnResult().responseBody
+        assertThat(actualException)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(
+                ExpectedResponseBody(
+                    title = "Constraint Violation",
+                    status = 400,
+                    violations = setOf(
+                        ExpectedException(
+                            message = "A game day for this date already exists",
+                            field = "date"
+                        )
+                    )
+                )
+            )
     }
 }
