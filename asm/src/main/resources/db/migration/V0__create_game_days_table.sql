@@ -1,8 +1,9 @@
 create table game_days
 (
-    id                      int unsigned auto_increment primary key,
-    amateur_soccer_group_id varchar(36) not null,
-    date                    date        not null,
+    id                      varchar(36) primary key,
+    amateur_soccer_group_id varchar(36)  not null,
+    date                    date         not null,
+    version                 int unsigned not null,
     constraint game_days_amateur_soccer_group_id_date_uindex
         unique (amateur_soccer_group_id, date)
 );
@@ -10,7 +11,7 @@ create table game_days
 create table matches
 (
     id          int unsigned auto_increment primary key,
-    game_day_id int unsigned not null,
+    game_day_id varchar(36)  not null,
     match_order int unsigned not null,
     constraint matches_day_games_id_fk
         foreign key (game_day_id) references game_days (id)

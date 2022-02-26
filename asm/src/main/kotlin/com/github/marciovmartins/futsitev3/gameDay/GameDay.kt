@@ -14,6 +14,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
+import javax.persistence.Version
 import javax.validation.Valid
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
@@ -27,8 +28,9 @@ import javax.validation.constraints.PositiveOrZero
 class GameDay(
     @Id
     @Suppress("unused")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+    @Type(type = "uuid-char")
+    @Column(length = 36, unique = true, nullable = false)
+    var id: UUID? = null,
 
     @Type(type = "uuid-char")
     var amateurSoccerGroupId: UUID,
@@ -43,6 +45,9 @@ class GameDay(
     @JoinColumn(name = "game_day_id", nullable = false)
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     var matches: Set<Match>,
+
+    @Version
+    var version: Long? = null,
 )
 
 @Suppress("unused")

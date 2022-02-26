@@ -14,7 +14,7 @@ import javax.persistence.EntityManager
 import javax.persistence.PersistenceException
 
 @Suppress("unused")
-interface GameDayRepository : CrudRepository<GameDay, Long>, CustomizedGameDayRepository {
+interface GameDayRepository : CrudRepository<GameDay, UUID>, CustomizedGameDayRepository {
     @RestResource(exported = false)
     override fun findAll(): MutableIterable<GameDay>
 
@@ -32,7 +32,6 @@ interface CustomizedGameDayRepository {
 @Repository
 class CustomizedGameDayRepositoryImpl(private val em: EntityManager) : CustomizedGameDayRepository {
     override fun <S : GameDay?> save(entity: S): S {
-        if (entity?.id != null) throwPutMethodNotAllowed()
         try {
             em.persist(entity)
         } catch (e: PersistenceException) {

@@ -8,12 +8,12 @@ import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidPlay
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ValidGameDayArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ValidMatchPlayerArgumentsProvider
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
 import org.springframework.http.HttpStatus
 import java.time.LocalDate
+import java.util.UUID
 
 class GameDayControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
@@ -23,9 +23,12 @@ class GameDayControllerIT : BaseIT() {
         @Suppress("UNUSED_PARAMETER") description: String,
         gameDayToCreate: GameDayDTO,
     ) {
+        // setup
+        val gameDayId = UUID.randomUUID().toString()
+
         // execution
-        val gameDayLocationUrl = webTestClient.post()
-            .uri(traverson.follow("gameDays").asLink().href)
+        val gameDayLocationUrl = webTestClient.put()
+            .uri("gameDays/{id}", gameDayId)
             .bodyValue(gameDayToCreate)
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
@@ -33,6 +36,7 @@ class GameDayControllerIT : BaseIT() {
         val responseGet = webTestClient.get()
             .uri(gameDayLocationUrl)
             .exchange()
+
         // assertion
         responseGet.expectStatus().isOk
         val gameDay = responseGet.returnResult(GameDayDTO::class.java).responseBody.blockFirst()
@@ -43,7 +47,6 @@ class GameDayControllerIT : BaseIT() {
             .isEqualTo(gameDayToCreate)
     }
 
-    @Disabled // enable after fix https://stackoverflow.com/questions/71041196/how-to-update-an-aggregate-with-nested-lists-using-spring-boot-data-rest-jpa-and
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(ValidGameDayArgumentsProvider::class)
     @ArgumentsSource(ValidMatchPlayerArgumentsProvider::class)
@@ -52,13 +55,15 @@ class GameDayControllerIT : BaseIT() {
         gameDayToUpdate: GameDayDTO,
     ) {
         // setup
+        val gameDayId = UUID.randomUUID().toString()
         val gameDayToCreate = gameDayDTO()
-        val gameDayLocationUrl = webTestClient.post()
-            .uri(traverson.follow("gameDays").asLink().href)
+        val gameDayLocationUrl = webTestClient.put()
+            .uri("gameDays/{id}", gameDayId)
             .bodyValue(gameDayToCreate)
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
+
         // execution
         val responsePut = webTestClient.put()
             .uri(gameDayLocationUrl)
@@ -67,6 +72,7 @@ class GameDayControllerIT : BaseIT() {
         val responseGet = webTestClient.get()
             .uri(gameDayLocationUrl)
             .exchange()
+
         // assertion
         responsePut.expectStatus().isOk
         responseGet.expectStatus().isOk
@@ -78,35 +84,18 @@ class GameDayControllerIT : BaseIT() {
             .isEqualTo(gameDayToUpdate)
     }
 
-    @Test // remove after fix https://stackoverflow.com/questions/71041196/how-to-update-an-aggregate-with-nested-lists-using-spring-boot-data-rest-jpa-and
-    fun `do not allow update a game play`() {
-        // setup
-        val gameDayToCreate = gameDayDTO()
-        val gameDayLocationUrl = webTestClient.post()
-            .uri(traverson.follow("gameDays").asLink().href)
-            .bodyValue(gameDayToCreate)
-            .exchange().expectStatus().isCreated
-            .returnResult(Unit::class.java)
-            .responseHeaders.location.toString()
-        // execution
-        val response = webTestClient.put()
-            .uri(gameDayLocationUrl)
-            .bodyValue(gameDayDTO())
-            .exchange()
-        // assertions
-        response.expectStatus().isEqualTo(HttpStatus.METHOD_NOT_ALLOWED)
-    }
-
     @Test
     fun `delete existing game day`() {
         // setup
+        val gameDayId = UUID.randomUUID().toString()
         val gameDayToCreate = gameDayDTO()
-        val gameDayLocationUrl = webTestClient.post()
-            .uri(traverson.follow("gameDays").asLink().href)
+        val gameDayLocationUrl = webTestClient.put()
+            .uri("gameDays/{id}", gameDayId)
             .bodyValue(gameDayToCreate)
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
+
         // execution
         val responseDelete = webTestClient.delete()
             .uri(gameDayLocationUrl)
@@ -114,6 +103,7 @@ class GameDayControllerIT : BaseIT() {
         val responseGet = webTestClient.get()
             .uri(gameDayLocationUrl)
             .exchange()
+
         // assertions
         responseDelete.expectStatus().isNoContent
         responseGet.expectStatus().isNotFound
@@ -128,11 +118,15 @@ class GameDayControllerIT : BaseIT() {
         gameDayToCreate: GameDayDTO,
         expectedExceptions: Set<ExpectedException>,
     ) {
+        // setup
+        val gameDayId = UUID.randomUUID().toString()
+
         // execution
-        val response = webTestClient.post()
-            .uri(traverson.follow("gameDays").asLink().href)
+        val response = webTestClient.put()
+            .uri("gameDays/{id}", gameDayId)
             .bodyValue(gameDayToCreate)
             .exchange()
+
         // assertions
         val actualExceptions = response.expectStatus().isBadRequest
             .expectBody(ExpectedResponseBody::class.java)
@@ -149,7 +143,6 @@ class GameDayControllerIT : BaseIT() {
             )
     }
 
-    @Disabled // enable after fix https://stackoverflow.com/questions/71041196/how-to-update-an-aggregate-with-nested-lists-using-spring-boot-data-rest-jpa-and
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(InvalidGameDayArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
@@ -160,18 +153,21 @@ class GameDayControllerIT : BaseIT() {
         expectedExceptions: Set<ExpectedException>
     ) {
         // setup
+        val gameDayId = UUID.randomUUID().toString()
         val gameDayToCreate = gameDayDTO()
-        val gameDayLocationUrl = webTestClient.post()
-            .uri(traverson.follow("gameDays").asLink().href)
+        val gameDayLocationUrl = webTestClient.put()
+            .uri("gameDays/{id}", gameDayId)
             .bodyValue(gameDayToCreate)
             .exchange()
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
+
         // execution
         val response = webTestClient.put()
             .uri(gameDayLocationUrl)
             .bodyValue(gameDayToUpdate)
             .exchange()
+
         // assertions
         val actualException = response.expectStatus().isBadRequest
             .expectBody(ExpectedResponseBody::class.java)
@@ -194,6 +190,7 @@ class GameDayControllerIT : BaseIT() {
         val response = webTestClient.get()
             .uri(traverson.follow("gameDays").asLink().href)
             .exchange()
+
         // assertions
         response.expectStatus().isEqualTo(HttpStatus.METHOD_NOT_ALLOWED)
     }
@@ -201,21 +198,24 @@ class GameDayControllerIT : BaseIT() {
     @Test
     fun `cannot add two game days with the same day`() {
         // setup
+        val gameDayId = UUID.randomUUID().toString()
         val amateurSoccerGroupId = "9d8797da-e5dd-4f08-b777-532b4aa316ef"
         val date = LocalDate.now().toString()
         val gameDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
-        val secondDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
-        webTestClient.post()
-            .uri(traverson.follow("gameDays").asLink().href)
+        val secondGameDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
+        webTestClient.put()
+            .uri("gameDays/{id}", gameDayId)
             .bodyValue(gameDayToCreate)
             .exchange()
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
+
         // execution
-        val response = webTestClient.post()
-            .uri(traverson.follow("gameDays").asLink().href)
-            .bodyValue(secondDayToCreate)
+        val response = webTestClient.put()
+            .uri("gameDays/{id}", gameDayId)
+            .bodyValue(secondGameDayToCreate)
             .exchange()
+
         // assertions
         val actualException = response.expectStatus().isBadRequest
             .expectBody(ExpectedResponseBody::class.java)
