@@ -44,6 +44,11 @@
             <version>${zalando-problem-spring-web.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.github.marciovmartins.problem.spring.web</groupId>
+            <artifactId>problem-spring-web-starter-expanded</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
