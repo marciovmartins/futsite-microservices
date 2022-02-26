@@ -9,7 +9,7 @@ class GameDayDateNotUniqueConstraintViolation : AbstractThrowableProblem(
     null,
     "Constraint Violation",
     Status.BAD_REQUEST,
-    "A game day for this date already exists"
+    null
 ) {
     override fun getCause(): Exceptional? = super.cause
 

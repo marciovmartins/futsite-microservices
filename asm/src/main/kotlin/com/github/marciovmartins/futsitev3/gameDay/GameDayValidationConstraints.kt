@@ -6,6 +6,22 @@ import javax.validation.ConstraintValidatorContext
 import javax.validation.Payload
 import kotlin.reflect.KClass
 
+@Target(AnnotationTarget.CLASS)
+@Constraint(validatedBy = [SameAmateurSoccerGroupId.SameAmateurSoccerGroupIdConstraintValidator::class])
+annotation class SameAmateurSoccerGroupId(
+    val message: String = "Cannot update amateur soccer group id",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<Payload>> = []
+) {
+    class SameAmateurSoccerGroupIdConstraintValidator : ConstraintValidator<SameAmateurSoccerGroupId, GameDay> {
+        override fun isValid(value: GameDay, context: ConstraintValidatorContext?) =
+            value.persistedAmateurSoccerGroupId == null || matchAmateurSoccerGroupId(value)
+
+        private fun matchAmateurSoccerGroupId(value: GameDay) =
+            value.persistedAmateurSoccerGroupId == value.amateurSoccerGroupId
+    }
+}
+
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
 @Constraint(validatedBy = [UniqueMatchOrder.ValidMatchOrdersConstraintValidator::class])
 annotation class UniqueMatchOrder(

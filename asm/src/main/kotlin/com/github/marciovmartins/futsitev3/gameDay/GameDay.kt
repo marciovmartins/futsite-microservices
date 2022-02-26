@@ -24,6 +24,7 @@ import javax.validation.constraints.PastOrPresent
 import javax.validation.constraints.PositiveOrZero
 
 @Suppress("unused")
+@SameAmateurSoccerGroupId
 @Entity(name = "gameDays")
 class GameDay(
     @Id
@@ -33,6 +34,7 @@ class GameDay(
     var id: UUID? = null,
 
     @Type(type = "uuid-char")
+    @Column(name = "amateur_soccer_group_id")
     var amateurSoccerGroupId: UUID,
 
     @field:PastOrPresent
@@ -48,6 +50,11 @@ class GameDay(
 
     @Version
     var version: Long? = null,
+
+    @JsonIgnore
+    @Type(type = "uuid-char")
+    @Column(name = "amateur_soccer_group_id", insertable = false, updatable = false)
+    var persistedAmateurSoccerGroupId: UUID? = null,
 )
 
 @Suppress("unused")

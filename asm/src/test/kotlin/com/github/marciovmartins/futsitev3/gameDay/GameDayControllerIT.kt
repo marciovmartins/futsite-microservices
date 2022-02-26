@@ -56,7 +56,7 @@ class GameDayControllerIT : BaseIT() {
     ) {
         // setup
         val gameDayId = UUID.randomUUID().toString()
-        val gameDayToCreate = gameDayDTO()
+        val gameDayToCreate = gameDayDTO().copy(amateurSoccerGroupId = gameDayToUpdate.amateurSoccerGroupId)
         val gameDayLocationUrl = webTestClient.put()
             .uri("gameDays/{id}", gameDayId)
             .bodyValue(gameDayToCreate)
@@ -154,7 +154,7 @@ class GameDayControllerIT : BaseIT() {
     ) {
         // setup
         val gameDayId = UUID.randomUUID().toString()
-        val gameDayToCreate = gameDayDTO()
+        val gameDayToCreate = gameDayDTO().copy(amateurSoccerGroupId = gameDayToUpdate.amateurSoccerGroupId)
         val gameDayLocationUrl = webTestClient.put()
             .uri("gameDays/{id}", gameDayId)
             .bodyValue(gameDayToCreate)
@@ -198,13 +198,12 @@ class GameDayControllerIT : BaseIT() {
     @Test
     fun `cannot add two game days with the same day`() {
         // setup
-        val gameDayId = UUID.randomUUID().toString()
-        val amateurSoccerGroupId = "9d8797da-e5dd-4f08-b777-532b4aa316ef"
+        val amateurSoccerGroupId = UUID.randomUUID().toString()
         val date = LocalDate.now().toString()
         val gameDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
         val secondGameDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
         webTestClient.put()
-            .uri("gameDays/{id}", gameDayId)
+            .uri("gameDays/{id}", UUID.randomUUID().toString())
             .bodyValue(gameDayToCreate)
             .exchange()
             .returnResult(Unit::class.java)
@@ -212,7 +211,7 @@ class GameDayControllerIT : BaseIT() {
 
         // execution
         val response = webTestClient.put()
-            .uri("gameDays/{id}", gameDayId)
+            .uri("gameDays/{id}", UUID.randomUUID().toString())
             .bodyValue(secondGameDayToCreate)
             .exchange()
 
@@ -232,6 +231,43 @@ class GameDayControllerIT : BaseIT() {
                             message = "A game day for this date already exists",
                             field = "date"
                         )
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun `do not allow update the amateur soccer group id`() {
+        // setup
+        val gameDayId = UUID.randomUUID().toString()
+        val gameDayToCreate = gameDayDTO()
+        val gameDayToUpdate = gameDayToCreate.copy(amateurSoccerGroupId = UUID.randomUUID().toString())
+        webTestClient.put()
+            .uri("gameDays/{id}", gameDayId)
+            .bodyValue(gameDayToCreate)
+            .exchange()
+            .returnResult(Unit::class.java)
+            .responseHeaders.location.toString()
+
+        // execution
+        val response = webTestClient.put()
+            .uri("gameDays/{id}", gameDayId)
+            .bodyValue(gameDayToUpdate)
+            .exchange()
+
+        // assertions
+        val actualException = response.expectStatus().isBadRequest
+            .expectBody(ExpectedResponseBody::class.java)
+            .returnResult().responseBody
+        assertThat(actualException)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(
+                ExpectedResponseBody(
+                    title = "Constraint Violation",
+                    status = 400,
+                    violations = setOf(
+                        ExpectedException(message = "Cannot update amateur soccer group id")
                     )
                 )
             )

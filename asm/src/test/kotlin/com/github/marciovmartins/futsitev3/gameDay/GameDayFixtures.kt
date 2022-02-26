@@ -57,12 +57,13 @@ data class PlayerDTO(
 data class ExpectedResponseBody(
     val title: String,
     val status: Int,
-    val violations: Set<ExpectedException>,
+    val violations: Set<ExpectedException>? = null,
+    val detail: String? = null,
 )
 
 data class ExpectedException(
     val message: String,
-    val field: String,
+    val field: String? = null,
 )
 
 val A = Player.Team.A.name
