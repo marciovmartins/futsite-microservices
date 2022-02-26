@@ -205,7 +205,7 @@ class GameDayControllerIT : BaseIT() {
         val date = LocalDate.now().toString()
         val gameDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
         val secondDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
-        val gameDayLocationUrl = webTestClient.post()
+        webTestClient.post()
             .uri(traverson.follow("gameDays").asLink().href)
             .bodyValue(gameDayToCreate)
             .exchange()

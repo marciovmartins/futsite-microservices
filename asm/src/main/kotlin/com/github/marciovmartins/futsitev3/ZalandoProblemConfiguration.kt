@@ -1,11 +1,8 @@
 package com.github.marciovmartins.futsitev3
 
 import com.fasterxml.jackson.databind.JsonMappingException
-import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.data.rest.core.RepositoryConstraintViolationException
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -15,21 +12,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.NativeWebRequest
 import org.zalando.problem.Problem
 import org.zalando.problem.ProblemBuilder
-import org.zalando.problem.jackson.ProblemModule
 import org.zalando.problem.spring.web.advice.ProblemHandling
-import org.zalando.problem.violations.ConstraintViolationProblemModule
 import org.zalando.problem.violations.Violation
 import kotlin.reflect.full.cast
-
-@Configuration
-@Suppress("SpringFacetCodeInspection")
-class ZalandoProblemConfiguration {
-    @Bean
-    fun problemModuleBean(): Module = ProblemModule()
-
-    @Bean
-    fun constraintViolationProblemModuleBean(): Module = ConstraintViolationProblemModule()
-}
 
 @ControllerAdvice
 class ZalandoProblemExceptionHandler : ProblemHandling {
