@@ -1,6 +1,5 @@
 package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 
-import com.github.marciovmartins.futsitev3.MyFaker.faker
 import com.github.marciovmartins.futsitev3.gameDay.ExpectedException
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.matchDTO
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -62,54 +61,7 @@ object InvalidGameDayArgumentsProvider : ArgumentsProvider {
                 ),
             ),
         ),
-        // QUOTE
-        gameDayArgument(
-            testDescription = "invalid game day with quote exceeding 255 characters",
-            quote = faker.lorem().characters(256),
-            expectedException = setOf(
-                ExpectedException(
-                    message = "size must be between 0 and 255",
-                    field = "quote",
-                ),
-            ),
-        ),
-        // AUTHOR
-        gameDayArgument(
-            testDescription = "invalid game day with author exceeding 50 characters",
-            author = faker.lorem().characters(51),
-            expectedException = setOf(
-                ExpectedException(
-                    message = "size must be between 0 and 50",
-                    field = "author",
-                ),
-            ),
-        ),
-        // DESCRIPTION
-        gameDayArgument(
-            testDescription = "invalid game day with description exceeding 2048 characters",
-            description = faker.lorem().characters(2049),
-            expectedException = setOf(
-                ExpectedException(
-                    message = "size must be between 0 and 2048",
-                    field = "description",
-                ),
-            ),
-        ),
-        gameDayArgument(
-            testDescription = "invalid game day with with multiple errors",
-            date = LocalDate.now().plusDays(1).toString(),
-            quote = faker.lorem().characters(256),
-            expectedException = setOf(
-                ExpectedException(
-                    message = "must be a date in the past or in the present",
-                    field = "date",
-                ),
-                ExpectedException(
-                    message = "size must be between 0 and 255",
-                    field = "quote",
-                ),
-            ),
-        ),
+        // MATCHES
         gameDayArgument(
             testDescription = "invalid game day with null matches",
             matches = null,

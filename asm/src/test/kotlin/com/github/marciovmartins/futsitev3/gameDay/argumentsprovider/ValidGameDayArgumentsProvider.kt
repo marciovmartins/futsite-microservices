@@ -1,6 +1,5 @@
 package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 
-import com.github.marciovmartins.futsitev3.MyFaker.faker
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.matchDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
@@ -24,36 +23,7 @@ object ValidGameDayArgumentsProvider : ArgumentsProvider {
             testDescription = "valid game day with date in the past",
             date = LocalDate.now().minusDays(1).toString(),
         ),
-
-        // QUOTE
-        gameDayArgument(
-            testDescription = "valid game day with quote with minimum of 1 character",
-            quote = faker.lorem().characters(1),
-        ),
-        gameDayArgument(
-            testDescription = "valid game day with quote with maximum of 255 character",
-            quote = faker.lorem().characters(255),
-        ),
-
-        // AUTHOR
-        gameDayArgument(
-            testDescription = "valid game day with author with minimum of 1 character",
-            author = faker.lorem().characters(1),
-        ),
-        gameDayArgument(
-            testDescription = "valid game day with author with maximum of 50 character",
-            author = faker.lorem().characters(50),
-        ),
-
-        // DESCRIPTION
-        gameDayArgument(
-            testDescription = "valid game day with description with minimum of 1 character",
-            description = faker.lorem().characters(1),
-        ),
-        gameDayArgument(
-            testDescription = "valid game day with description with maximum of 2048 character",
-            description = faker.lorem().characters(2048),
-        ),
+        // MATCHES
         gameDayArgument(
             testDescription = "valid game day with one valid match",
             matches = setOf(matchDTO()),

@@ -21,7 +21,6 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.PastOrPresent
 import javax.validation.constraints.PositiveOrZero
-import javax.validation.constraints.Size
 
 @Suppress("unused")
 @Entity(name = "gameDays")
@@ -36,15 +35,6 @@ class GameDay(
 
     @field:PastOrPresent
     var date: LocalDate,
-
-    @field:Size(max = 255)
-    var quote: String?,
-
-    @field:Size(max = 50)
-    var author: String?,
-
-    @field:Size(max = 2048)
-    var description: String?,
 
     @field:Valid
     @field:NotEmpty

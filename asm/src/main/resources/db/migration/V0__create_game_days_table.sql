@@ -1,11 +1,8 @@
 create table game_days
 (
     id                      int unsigned auto_increment primary key,
-    amateur_soccer_group_id varchar(36)   not null,
-    date                    date          not null,
-    quote                   varchar(255)  null,
-    author                  varchar(50)   null,
-    description             varchar(2048) null,
+    amateur_soccer_group_id varchar(36) not null,
+    date                    date        not null,
     constraint game_days_amateur_soccer_group_id_date_uindex
         unique (amateur_soccer_group_id, date)
 );
