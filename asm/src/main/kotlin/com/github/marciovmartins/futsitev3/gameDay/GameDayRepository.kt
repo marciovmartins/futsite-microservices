@@ -6,9 +6,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.data.rest.core.annotation.RestResource
-import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Repository
-import org.springframework.web.server.MethodNotAllowedException
 import java.util.UUID
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceException
@@ -39,15 +37,6 @@ class CustomizedGameDayRepositoryImpl(private val em: EntityManager) : Customize
         }
         return entity
     }
-
-    /**
-     * Disabled because of this bug:
-     * https://stackoverflow.com/questions/71041196/how-to-update-an-aggregate-with-nested-lists-using-spring-boot-data-rest-jpa-and
-     */
-    private fun throwPutMethodNotAllowed(): Unit = throw MethodNotAllowedException(
-        HttpMethod.PUT,
-        listOf(HttpMethod.GET, HttpMethod.POST, HttpMethod.DELETE, HttpMethod.HEAD, HttpMethod.OPTIONS)
-    )
 
     private fun throwPersistenceException(e: PersistenceException) {
         when (val cause = e.cause) {
