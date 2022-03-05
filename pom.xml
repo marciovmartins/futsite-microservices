@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.3</version>
+        <version>2.6.4</version>
     </parent>
 
     <groupId>com.github.marciovmartins.futsitev3</groupId>
@@ -27,7 +27,6 @@
         <maven-plugin.version>3.0.0-M5</maven-plugin.version>
         <maven-surefire-plugin.version>${maven-plugin.version}</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>${maven-plugin.version}</maven-failsafe-plugin.version>
-        <zalando-problem-spring-web.version>0.27.0</zalando-problem-spring-web.version>
     </properties>
 
     <repositories>
@@ -55,15 +54,18 @@
                 <groupId>com.github.javafaker</groupId>
                 <artifactId>javafaker</artifactId>
                 <version>1.0.2</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>com.github.marciovmartins.springframework.data.rest.expanded</groupId>
+                <artifactId>spring-boot-starter-data-rest-expanded</artifactId>
+                <version>2.6.3</version>
+                <optional>true</optional>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <pluginRepositories>
-        <pluginRepository>
-            <id>spring-snapshots</id>
-            <url>https://repo.spring.io/snapshot</url>
-        </pluginRepository>
         <pluginRepository>
             <id>spring-milestones</id>
             <url>https://repo.spring.io/milestone</url>
@@ -90,6 +92,27 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

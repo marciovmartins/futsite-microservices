@@ -14,36 +14,20 @@
 
     <properties>
         <jackson-deserializer-enum-modifier.version>1.0.0</jackson-deserializer-enum-modifier.version>
-        <problem-spring-web-starter-expanded.version>1.0.0</problem-spring-web-starter-expanded.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.marciovmartins.springframework.data.rest.expanded</groupId>
+            <artifactId>spring-boot-starter-data-rest-expanded</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-rest</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.marciovmartins.jackson.databind.deser</groupId>
-            <artifactId>spring-boot-jackson-deserializer-enum-modifier</artifactId>
-            <version>${jackson-deserializer-enum-modifier.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.marciovmartins.problem.spring.web</groupId>
-            <artifactId>problem-spring-web-starter-expanded</artifactId>
-            <version>${problem-spring-web-starter-expanded.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.zalando</groupId>
-            <artifactId>problem-spring-web-starter</artifactId>
-            <version>${zalando-problem-spring-web.version}</version>
         </dependency>
 
         <dependency>
@@ -53,27 +37,6 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.javafaker</groupId>
-            <artifactId>javafaker</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

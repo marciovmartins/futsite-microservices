@@ -7,6 +7,10 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.data.rest.core.annotation.RestResource
 import org.springframework.stereotype.Repository
+import org.zalando.problem.AbstractThrowableProblem
+import org.zalando.problem.Exceptional
+import org.zalando.problem.Status
+import org.zalando.problem.violations.Violation
 import java.util.UUID
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceException
@@ -45,5 +49,17 @@ class CustomizedGameDayRepositoryImpl(private val em: EntityManager) : Customize
             }
         }
         throw e
+    }
+
+    private class GameDayDateNotUniqueConstraintViolation : AbstractThrowableProblem(
+        null,
+        "Constraint Violation",
+        Status.BAD_REQUEST,
+        null
+    ) {
+        override fun getCause(): Exceptional? = super.cause
+
+        @Suppress("unused")
+        val violations = setOf(Violation("date", "A game day for this date already exists"))
     }
 }
