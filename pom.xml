@@ -11,7 +11,7 @@
 
     <groupId>com.github.marciovmartins.futsitev3</groupId>
     <artifactId>futsite-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>futsite-parent</name>
     <packaging>pom</packaging>
 
@@ -20,7 +20,7 @@
     </modules>
 
     <properties>
-        <java.version>16</java.version>
+        <java.version>17</java.version>
         <kotlin.version>1.6.10</kotlin.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
