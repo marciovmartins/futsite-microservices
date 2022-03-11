@@ -12,10 +12,6 @@
     <version>1.0.0</version>
     <name>futsite-amateur-soccer-match</name>
 
-    <properties>
-        <jackson-deserializer-enum-modifier.version>1.0.0</jackson-deserializer-enum-modifier.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.github.marciovmartins.springframework.data.rest.expanded</groupId>
@@ -32,6 +28,18 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-data-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-kotlin</artifactId>
         </dependency>
 
         <dependency>
@@ -51,6 +59,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

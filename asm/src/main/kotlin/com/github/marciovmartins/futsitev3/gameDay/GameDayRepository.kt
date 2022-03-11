@@ -1,10 +1,12 @@
 package com.github.marciovmartins.futsitev3.gameDay
 
 import org.hibernate.exception.ConstraintViolationException
+import org.springdoc.api.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
+import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import org.springframework.data.rest.core.annotation.RestResource
 import org.springframework.stereotype.Repository
 import org.zalando.problem.AbstractThrowableProblem
@@ -15,7 +17,7 @@ import java.util.UUID
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceException
 
-@Suppress("unused")
+@RepositoryRestResource
 interface GameDayRepository : CrudRepository<GameDay, UUID>, CustomizedGameDayRepository {
     @RestResource(exported = false)
     override fun findAll(): MutableIterable<GameDay>
@@ -23,7 +25,7 @@ interface GameDayRepository : CrudRepository<GameDay, UUID>, CustomizedGameDayRe
     @RestResource(path = "byAmateurSoccerGroupId", rel = "byAmateurSoccerGroupId", exported = true)
     fun findByAmateurSoccerGroupId(
         @Param("amateurSoccerGroupId") amateurSoccerGroupId: UUID,
-        p: Pageable
+        @ParameterObject p: Pageable
     ): Page<GameDay>
 }
 

@@ -1,6 +1,7 @@
 package com.github.marciovmartins.futsitev3.gameDay
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.Type
 import java.time.LocalDate
 import java.util.UUID
@@ -23,14 +24,13 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.PastOrPresent
 import javax.validation.constraints.PositiveOrZero
 
-@Suppress("unused")
 @SameAmateurSoccerGroupId
 @Entity(name = "gameDays")
 class GameDay(
     @Id
-    @Suppress("unused")
     @Type(type = "uuid-char")
     @Column(length = 36, unique = true, nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     var id: UUID? = null,
 
     @Type(type = "uuid-char")
@@ -49,6 +49,7 @@ class GameDay(
     var matches: Set<Match>,
 
     @Version
+    @JsonIgnore
     var version: Long? = null,
 
     @JsonIgnore
