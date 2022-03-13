@@ -11,7 +11,7 @@
 
     <groupId>com.github.marciovmartins.futsitev3</groupId>
     <artifactId>futsite-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <name>futsite-parent</name>
     <packaging>pom</packaging>
 
