@@ -1,11 +1,39 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {v4 as uuidV4} from "uuid";
 
 class CreateGameDay extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            date: null
+            gameDayId: uuidV4(),
+            amateurSoccerGroupId: uuidV4(),
+            date: "",
+            matches: [
+                {
+                    order: 1,
+                    players: [
+                        {
+                            userId: uuidV4(),
+                            team: "",
+                            goalsInFavor: "",
+                            goalsAgainst: "",
+                            yellowCards: "",
+                            blueCards: "",
+                            redCards: ""
+                        },
+                        {
+                            userId: uuidV4(),
+                            team: "",
+                            goalsInFavor: "",
+                            goalsAgainst: "",
+                            yellowCards: "",
+                            blueCards: "",
+                            redCards: ""
+                        },
+                    ]
+                }
+            ]
         }
     }
 
@@ -15,17 +43,45 @@ class CreateGameDay extends React.Component {
                 <h1>Create Game Day</h1>
                 <form>
                     <div className="row mb-3">
-                        <label htmlFor="game-day-date" className="col-sm-2 col-form-label">Date:</label>
+                        <label htmlFor="game-day-id" className="col-sm-2 col-form-label">Game Day Id</label>
                         <div className="col-sm-10">
-                            <input name="date"
-                                   type="date"
-                                   placeholder="date"
+                            <input name="gameDayId"
+                                   type="text"
+                                   value={this.state.gameDayId}
                                    className="form-control"
                                    onChange={this.handleInputChange}/>
                         </div>
                     </div>
-                    <AddMatch/>
-                    <button className="btn btn-success">Add Game Day</button>
+                    <div className="row mb-3">
+                        <label htmlFor="game-day-id" className="col-sm-2 col-form-label">Amateur Soccer Group Id</label>
+                        <div className="col-sm-10">
+                            <input name="amateurSoccerGroupId"
+                                   type="text"
+                                   value={this.state.amateurSoccerGroupId}
+                                   className="form-control"
+                                   onChange={this.handleInputChange}/>
+                        </div>
+                    </div>
+                    <div className="row mb-3">
+                        <label htmlFor="game-day-date" className="col-sm-2 col-form-label">Date</label>
+                        <div className="col-sm-10">
+                            <input name="date"
+                                   type="date"
+                                   value={this.state.date}
+                                   className="form-control"
+                                   onChange={this.handleInputChange}/>
+                        </div>
+                    </div>
+                    <ul>
+                        {this.state.matches.map((match, index) => <li key={index}>
+                            <AddMatch
+                                prefix={"matches." + index}
+                                data={match}
+                                handleInputChange={this.handleInputChange}
+                            />
+                        </li>)}
+                    </ul>
+                    <button type="submit" className="btn btn-success" onClick={this.handleSubmit}>Add Game Day</button>
                 </form>
             </div>
         );
@@ -35,9 +91,28 @@ class CreateGameDay extends React.Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-        this.setState({
-            [name]: value
-        });
+        let currentState = {...this.state};
+        setNestedKey(currentState, name.split('.'), value);
+        this.setState(currentState);
+    }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        let requestBody = {
+            amateurSoccerGroupId: this.state.amateurSoccerGroupId,
+            date: this.state.date,
+            matches: this.state.matches,
+        }
+        fetch('http://localhost:8080/gameDays/' + this.state.gameDayId, {
+            method: 'PUT',
+            headers: {
+                "content-type": "application/hal+json",
+                "crnk-compact": "true"
+            },
+            body: JSON.stringify(requestBody)
+        }).then(function () {
+            console.log('Sent!')
+        })
     }
 }
 
@@ -45,10 +120,17 @@ class AddMatch extends React.Component {
     render() {
         return (
             <div>
-                <h2>Match</h2>
+                <h2>Match #{this.props.data.order}</h2>
                 <ol>
-                    <li><AddPlayer index="0"/></li>
-                    <li><AddPlayer index="1"/></li>
+                    {this.props.data.players.map((player, index) =>
+                        <li key={index}>
+                            <AddPlayer
+                                prefix={this.props.prefix + ".players." + index}
+                                data={player}
+                                handleInputChange={this.props.handleInputChange}
+                            />
+                        </li>
+                    )}
                 </ol>
             </div>
         );
@@ -56,31 +138,18 @@ class AddMatch extends React.Component {
 }
 
 class AddPlayer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            userId: "",
-            team: "",
-            goalsInFavor: null,
-            goalsAgainst: null,
-            yellowCards: null,
-            blueCards: null,
-            redCards: null
-        };
-    }
-
     render() {
-        const index = this.props.index
+        const prefix = this.props.prefix + ".";
         return (
             <div>
                 <div className="row mb-3">
                     <label htmlFor="userId" className="col-sm-2 col-form-label">User Id</label>
                     <div className="col-sm-10">
-                        <input name={"player." + index + ".userId"}
+                        <input name={prefix + "userId"}
                                type="text"
                                className="form-control"
-                               value={this.state.userId}
-                               onChange={this.handleInputChange}
+                               value={this.props.data.userId}
+                               onChange={this.props.handleInputChange}
                                required/>
                     </div>
                 </div>
@@ -91,9 +160,10 @@ class AddPlayer extends React.Component {
                             <label className="form-check-label">
                                 <input className="form-check-input"
                                        type="radio"
-                                       name={"player." + index + ".team"}
+                                       name={prefix + "team"}
                                        value="A"
-                                       onChange={this.handleInputChange}/>
+                                       checked={this.props.data.team === 'A'}
+                                       onChange={this.props.handleInputChange}/>
                                 A
                             </label>
                         </div>
@@ -101,9 +171,10 @@ class AddPlayer extends React.Component {
                             <label className="form-check-label">
                                 <input className="form-check-input"
                                        type="radio"
-                                       name={"player." + index + ".team"}
+                                       name={prefix + "team"}
                                        value="B"
-                                       onChange={this.handleInputChange}/>
+                                       checked={this.props.data.team === 'B'}
+                                       onChange={this.props.handleInputChange}/>
                                 B
                             </label>
                         </div>
@@ -112,63 +183,79 @@ class AddPlayer extends React.Component {
                 <div className="row mb-3">
                     <label htmlFor="goalsInFavor" className="col-sm-2 col-form-label">Goals in favor</label>
                     <div className="col-sm-10">
-                        <input name={"player." + index + ".goalsInFavor"}
+                        <input name={prefix + "goalsInFavor"}
                                type="number"
+                               value={this.props.data.goalsInFavor}
                                className="form-control"
-                               onChange={this.handleInputChange}/>
+                               onChange={this.props.handleInputChange}/>
                     </div>
                 </div>
                 <div className="row mb-3">
                     <label htmlFor="goalsAgainst" className="col-sm-2 col-form-label">Goals against</label>
                     <div className="col-sm-10">
-                        <input name={"player." + index + ".goalsAgainst"}
+                        <input name={prefix + "goalsAgainst"}
                                type="number"
+                               value={this.props.data.goalsAgainst}
                                className="form-control"
-                               onChange={this.handleInputChange}/>
+                               onChange={this.props.handleInputChange}/>
                     </div>
                 </div>
                 <div className="row mb-3">
                     <label htmlFor="yellowCards" className="col-sm-2 col-form-label">Yellow cards</label>
                     <div className="col-sm-10">
-                        <input name={"player." + index + ".yellowCards"}
+                        <input name={prefix + "yellowCards"}
                                type="number"
+                               value={this.props.data.yellowCards}
                                className="form-control"
-                               onChange={this.handleInputChange}/>
+                               onChange={this.props.handleInputChange}/>
                     </div>
                 </div>
                 <div className="row mb-3">
                     <label htmlFor="blueCards" className="col-sm-2 col-form-label">Blue cards</label>
                     <div className="col-sm-10">
-                        <input name={"player." + index + ".blueCards"}
+                        <input name={prefix + "blueCards"}
                                type="number"
+                               value={this.props.data.blueCards}
                                className="form-control"
-                               onChange={this.handleInputChange}/>
+                               onChange={this.props.handleInputChange}/>
                     </div>
                 </div>
                 <div className="row mb-3">
                     <label htmlFor="redCards" className="col-sm-2 col-form-label">Red cards</label>
                     <div className="col-sm-10">
-                        <input name={"player." + index + ".redCards"}
+                        <input name={prefix + "redCards"}
                                type="number"
+                               value={this.props.data.redCards}
                                className="form-control"
-                               onChange={this.handleInputChange}/>
+                               onChange={this.props.handleInputChange}/>
                     </div>
                 </div>
             </div>
         );
     }
+}
 
-    handleInputChange = (event) => {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name.replace(/player\.\d+\./, '');
-        this.setState({
-            [name]: value
-        });
+/**
+ * Sets a value of nested key string descriptor inside a Object.
+ * It changes the passed object.
+ * Ex:
+ *    let obj = {a: {b:{c:'initial'}}}
+ *    setNestedKey(obj, ['a', 'b', 'c'], 'changed-value')
+ *    assert(obj === {a: {b:{c:'changed-value'}}})
+ *
+ * @param {object} obj   Object to set the nested key
+ * @param {string[]} path  An array to describe the path(Ex: ['a', 'b', 'c'])
+ * @param {object} value Any value
+ */
+export const setNestedKey = (obj, path, value) => {
+    if (path.length === 1) {
+        obj[path] = value
+        return
     }
+    return setNestedKey(obj[path[0]], path.slice(1), value)
 }
 
 ReactDOM.render(
-    <CreateGameDay/>,
+    <CreateGameDay gameDayId={uuidV4()}/>,
     document.getElementById('root')
 );
