@@ -2,12 +2,60 @@ import React from "react";
 import {v4 as uuidV4} from "uuid";
 import {setNestedKey} from "../helper-functions";
 
+export class ListGameDay extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {gameDays: []}
+    }
+
+    componentDidMount() {
+        this.fetchGameDays(this.props.amateurSoccerGroupId)
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>
+                    List Game Days
+                    <a href="#" onClick={(e) => this.openCreateGameDay(e)}>Add</a>
+                </h1>
+                <ul>
+                    {this.state.gameDays.map(gameDay =>
+                        <li><a href={gameDay._links.self.href}>{gameDay.date}</a></li>
+                    )}
+                </ul>
+            </div>
+        );
+    }
+
+    fetchGameDays(amateurSoccerGroupId) {
+        fetch('http://localhost:8080/gameDays/search/byAmateurSoccerGroupId?amateurSoccerGroupId=' + amateurSoccerGroupId, {
+            method: 'GET',
+            headers: {"Accept": "application/hal+json"},
+            mode: "cors"
+        })
+            .then(response => response.json())
+            .then(data => data._embedded.gameDays)
+            .then(gameDays => this.setState({gameDays}))
+    }
+
+    openCreateGameDay(e) {
+        e.preventDefault();
+        this.props.updateAppContent(
+            <CreateGameDay
+                amateurSoccerGroupId={this.props.amateurSoccerGroupId}
+                updateAppContent={this.props.updateAppContent}
+            />
+        )
+    }
+}
+
 export class CreateGameDay extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             gameDayId: uuidV4(),
-            amateurSoccerGroupId: uuidV4(),
+            amateurSoccerGroupId: this.props.amateurSoccerGroupId || uuidV4(),
             date: "",
             matches: [
                 {
@@ -40,7 +88,10 @@ export class CreateGameDay extends React.Component {
     render() {
         return (
             <div>
-                <h1>Create Game Day</h1>
+                <h1>
+                    Create Game Day
+                    <a href="#" onClick={(e) => this.openGameDayList(e)}>List</a>
+                </h1>
                 <form>
                     <div className="row mb-3">
                         <label htmlFor="game-day-id" className="col-sm-2 col-form-label">Game Day Id</label>
@@ -107,9 +158,23 @@ export class CreateGameDay extends React.Component {
             method: 'PUT',
             headers: {"content-type": "application/hal+json"},
             body: JSON.stringify(requestBody)
-        }).then(function () {
-            console.log('Sent!')
+        }).then(() => {
+            this.updateAppContent();
         })
+    }
+
+    openGameDayList(e) {
+        e.preventDefault();
+        this.updateAppContent();
+    }
+
+    updateAppContent() {
+        this.props.updateAppContent(
+            <ListGameDay
+                amateurSoccerGroupId={this.state.amateurSoccerGroupId}
+                updateAppContent={this.props.updateAppContent}
+            />
+        )
     }
 }
 
