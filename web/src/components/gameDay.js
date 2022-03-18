@@ -5,11 +5,14 @@ import {setNestedKey} from "../helper-functions";
 export class ListGameDay extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {gameDays: []}
+        this.state = {
+            amateurSoccerGroupId: this.props.amateurSoccerGroupId,
+            gameDays: []
+        }
     }
 
     componentDidMount() {
-        this.fetchGameDays(this.props.amateurSoccerGroupId)
+        this.fetchGameDays(this.state.amateurSoccerGroupId)
     }
 
     render() {
@@ -19,9 +22,21 @@ export class ListGameDay extends React.Component {
                     List Game Days
                     <a href="#" onClick={(e) => this.openCreateGameDay(e)}>Add</a>
                 </h1>
+                <form>
+                    <div className="row mb-3">
+                        <label htmlFor="game-day-id" className="col-sm-2 col-form-label">Amateur Soccer Group Id</label>
+                        <div className="col-sm-10">
+                            <input name="amateurSoccerGroupId"
+                                   type="text"
+                                   value={this.state.amateurSoccerGroupId}
+                                   className="form-control"
+                                   onChange={this.handleAmateurSoccerGroupIdChange}/>
+                        </div>
+                    </div>
+                </form>
                 <ul>
                     {this.state.gameDays.map(gameDay =>
-                        <li><a href={gameDay._links.self.href}>{gameDay.date}</a></li>
+                        <li key={gameDay.date}><a href={gameDay._links.self.href}>{gameDay.date}</a></li>
                     )}
                 </ul>
             </div>
@@ -39,11 +54,16 @@ export class ListGameDay extends React.Component {
             .then(gameDays => this.setState({gameDays}))
     }
 
+    handleAmateurSoccerGroupIdChange = event => {
+        this.setState({amateurSoccerGroupId: event.target.value})
+        this.fetchGameDays(event.target.value);
+    }
+
     openCreateGameDay(e) {
         e.preventDefault();
         this.props.updateAppContent(
             <CreateGameDay
-                amateurSoccerGroupId={this.props.amateurSoccerGroupId}
+                amateurSoccerGroupId={this.state.amateurSoccerGroupId}
                 updateAppContent={this.props.updateAppContent}
             />
         )
