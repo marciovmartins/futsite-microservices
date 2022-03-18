@@ -1,5 +1,6 @@
 import React from "react";
 import {AddGameDay} from "./addGameDay";
+import {ViewGameDay} from "./viewGameDay";
 
 export class ListGameDay extends React.Component {
     constructor(props) {
@@ -35,10 +36,13 @@ export class ListGameDay extends React.Component {
                 <ul>
                     {this.state.gameDays.map(gameDay =>
                         <li key={gameDay.date}>
-                            <a href={gameDay._links.self.href}>{gameDay.date}</a>&nbsp;
-                            <a
-                                href={gameDay._links.self.href}
-                                onClick={(e) => this.removeGameDay(e, gameDay._links.self.href)}
+                            <a href={gameDay._links.self.href}
+                               onClick={(e) => this.viewGameDay(e, gameDay._links.self.href)}
+                            >{gameDay.date}</a>
+
+                            &nbsp;
+                            <a href={gameDay._links.self.href}
+                               onClick={(e) => this.removeGameDay(e, gameDay._links.self.href)}
                             >[remove]</a>
                         </li>
                     )}
@@ -80,5 +84,16 @@ export class ListGameDay extends React.Component {
             mode: "cors"
         })
             .then(() => this.fetchGameDays(this.props.amateurSoccerGroupId));
+    }
+
+    viewGameDay(e, href) {
+        e.preventDefault();
+        this.props.updateAppContent(
+            <ViewGameDay
+                href={href}
+                amateurSoccerGroupId={this.state.amateurSoccerGroupId}
+                updateAppContent={this.props.updateAppContent}
+            />
+        )
     }
 }
