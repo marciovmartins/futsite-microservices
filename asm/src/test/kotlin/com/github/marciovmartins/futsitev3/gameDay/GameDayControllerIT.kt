@@ -272,4 +272,14 @@ class GameDayControllerIT : BaseIT() {
                 )
             )
     }
+
+    @Test
+    fun `do not allow http post root game day resource`() {
+        TODO("need to be implemented")
+    }
+
+    @Test
+    fun `do not allow http post to game day with uuid resource`() {
+        TODO("need to be implemented")
+    }
 }

@@ -5,11 +5,11 @@
     <parent>
         <groupId>com.github.marciovmartins.futsitev3</groupId>
         <artifactId>futsite-parent</artifactId>
-        <version>1.0.2</version>
+        <version>1.1.0</version>
     </parent>
     <artifactId>futsite-asm</artifactId>
 
-    <version>1.0.2</version>
+    <version>1.1.0</version>
     <name>futsite-amateur-soccer-match</name>
 
     <dependencies>
