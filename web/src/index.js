@@ -49,7 +49,7 @@ class CreateGameDay extends React.Component {
                                    type="text"
                                    value={this.state.gameDayId}
                                    className="form-control"
-                                   onChange={this.handleInputChange}/>
+                                   readOnly/>
                         </div>
                     </div>
                     <div className="row mb-3">
