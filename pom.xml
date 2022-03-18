@@ -148,11 +148,7 @@
         </repository>
         <repository>
             <id>gitlab-maven</id>
-            <url>https://gitlab.com/api/v4/projects/30509565/packages/maven</url>
-        </repository>
-        <repository>
-            <id>gitlab-maven-docker-images</id>
-            <url>https://gitlab.com/api/v4/projects/30398025/packages/maven</url>
+            <url>https://gitlab.com/api/v4/packages/maven</url>
         </repository>
     </repositories>
 
