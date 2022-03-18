@@ -1,13 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {v4 as uuidV4} from "uuid";
-import {ListGameDay} from "./components/gameDay";
+import {ListGameDay} from "./components/gameDay/listGameDay";
 
 class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            content: <ListGameDay amateurSoccerGroupId={uuidV4()} updateAppContent={(e) => this.updateAppContent(e)}/>
+            content: <ListGameDay
+                amateurSoccerGroupId={uuidV4()}
+                updateAppContent={(e) => this.updateAppContent(e)}
+            />
         }
     }
 
