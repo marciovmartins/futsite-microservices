@@ -399,8 +399,28 @@ class GameDayControllerIT : BaseIT() {
 
     @Test
     fun `graceful error finding game days with invalid amateurSoccerGroupId`() {
-        // http://localhost:8080/gameDays/search/byAmateurSoccerGroupId?amateurSoccerGroupId=undefined
-        TODO("need to be implemented")
+        // setup
+        val amateurSoccerGroupId = "undefined"
+
+        // execution
+        val response = webTestClient.get()
+            .uri("gameDays/search/byAmateurSoccerGroupId?amateurSoccerGroupId={id}", amateurSoccerGroupId)
+            .exchange()
+
+        // assertions
+        val actualException = response.expectStatus().isNotFound
+            .expectBody(ExpectedResponseBody::class.java)
+            .returnResult().responseBody
+        assertThat(actualException)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(
+                ExpectedResponseBody(
+                    title = "Not Found",
+                    status = 404,
+                    detail = "No handler found for POST /gameDays/search/byAmateurSoccerGroupId?amateurSoccerGroupId=$amateurSoccerGroupId"
+                )
+            )
     }
 
     private fun createGameDay(amateurSoccerGroupId: Any? = null, date: Any? = null): GameDayDTO {
