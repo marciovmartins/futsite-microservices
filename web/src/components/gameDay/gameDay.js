@@ -74,6 +74,7 @@ export class GameDay extends React.Component {
                                     handleInputChange={this.handleInputChange}
                                     handleRemoveMatch={this.handleRemoveMatch}
                                     handleAddPlayer={this.handleAddPlayer}
+                                    handleRemovePlayer={this.handleRemovePlayer}
                                     disableRemoveButton={this.state.data.matches.length === 1}
                                     mode={this.props.mode}
                                 />
@@ -118,9 +119,7 @@ export class GameDay extends React.Component {
 
     handleRemoveMatch = (order) => {
         let currentState = {...this.state};
-        const value = this.state.data.matches.filter(function (value) {
-            return value.order !== order;
-        });
+        const value = this.state.data.matches.filter(value => value.order !== order);
         value.map((match, index) => match.order = index + 1)
         currentState.data.matches = value
         this.setState({currentState});
@@ -132,6 +131,18 @@ export class GameDay extends React.Component {
         let value = getNestedValue(currentState, path);
         value.push(this.createEmptyPlayer());
         setNestedKey(currentState, path, value);
+        this.setState(currentState);
+    }
+
+    handleRemovePlayer = (key) => {
+        let currentState = {...this.state};
+        const path = ("data." + key).split('.');
+        const playerToRemove = getNestedValue(currentState, path);
+        let players = path.slice(0, path.length - 2);
+        players.push("players");
+        let value = getNestedValue(currentState, players)
+            .filter(player => playerToRemove.userId !== player.userId);
+        setNestedKey(currentState, players, value);
         this.setState(currentState);
     }
 
@@ -228,7 +239,9 @@ class Match extends React.Component {
                                 prefix={this.props.prefix + ".players." + index}
                                 data={player}
                                 handleInputChange={this.props.handleInputChange}
+                                handleRemovePlayer={this.props.handleRemovePlayer}
                                 mode={this.props.mode}
+                                disableRemovePlayerButton={this.props.data.players.length < 3}
                             />
                         </li>
                     )}
@@ -242,11 +255,26 @@ class Match extends React.Component {
 class Player extends React.Component {
     render() {
         const prefix = this.props.prefix + ".";
+
+        let removePlayerButton = '';
+        if (this.props.mode !== 'view' && !this.props.disableRemovePlayerButton) {
+            removePlayerButton = <button
+                type="submit"
+                className="btn btn-success"
+                onClick={(e) => {
+                    e.preventDefault();
+                    return this.props.handleRemovePlayer(this.props.prefix);
+                }}
+            >
+                Remove
+            </button>
+        }
+
         return (
             <div>
                 <div className="row mb-3">
                     <label htmlFor="userId" className="col-sm-2 col-form-label">User Id</label>
-                    <div className="col-sm-10">
+                    <div className="col-1 col-sm-8">
                         <input name={prefix + "userId"}
                                type="text"
                                className="form-control"
@@ -255,6 +283,9 @@ class Player extends React.Component {
                                required
                                readOnly={this.props.mode === 'view'}
                         />
+                    </div>
+                    <div className="col-2 col-sm-2">
+                        {removePlayerButton}
                     </div>
                 </div>
                 <fieldset className="row mb-3">
