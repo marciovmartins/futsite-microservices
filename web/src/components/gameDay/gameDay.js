@@ -3,80 +3,69 @@ import {v4 as uuidV4} from "uuid";
 import {setNestedKey} from "../../helper-functions";
 import {ListGameDay} from "./listGameDay";
 
-export class AddGameDay extends React.Component {
+export class GameDay extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            gameDayId: uuidV4(),
-            amateurSoccerGroupId: this.props.amateurSoccerGroupId || uuidV4(),
-            date: "",
-            matches: [
-                {
-                    order: 1,
-                    players: [
-                        {
-                            userId: uuidV4(),
-                            team: "",
-                            goalsInFavor: "",
-                            goalsAgainst: "",
-                            yellowCards: "",
-                            blueCards: "",
-                            redCards: ""
-                        },
-                        {
-                            userId: uuidV4(),
-                            team: "",
-                            goalsInFavor: "",
-                            goalsAgainst: "",
-                            yellowCards: "",
-                            blueCards: "",
-                            redCards: ""
-                        },
-                    ]
-                }
-            ]
+            data: {
+                amateurSoccerGroupId: this.props.amateurSoccerGroupId || uuidV4(),
+                date: "",
+                matches: [
+                    {
+                        order: 1,
+                        players: [
+                            {
+                                userId: uuidV4(),
+                                team: "",
+                                goalsInFavor: "",
+                                goalsAgainst: "",
+                                yellowCards: "",
+                                blueCards: "",
+                                redCards: ""
+                            },
+                            {
+                                userId: uuidV4(),
+                                team: "",
+                                goalsInFavor: "",
+                                goalsAgainst: "",
+                                yellowCards: "",
+                                blueCards: "",
+                                redCards: ""
+                            },
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.mode !== 'add') {
+            this.fetchGameDay(this.props.href)
         }
     }
 
     render() {
+        let titles = {'add': 'Create', 'edit': 'Edit'}
+        let title = titles[this.props.mode];
         return (
             <div>
                 <h1>
-                    Create Game Day | <a href="#" onClick={(e) => this.openGameDayList(e)}>List</a>
+                    {title} Game Day | <a href="#" onClick={(e) => this.openGameDayList(e)}>List</a>
                 </h1>
                 <form>
-                    <div className="row mb-3">
-                        <label htmlFor="game-day-id" className="col-sm-2 col-form-label">Game Day Id</label>
-                        <div className="col-sm-10">
-                            <input name="gameDayId"
-                                   type="text"
-                                   value={this.state.gameDayId}
-                                   className="form-control"
-                                   readOnly/>
-                        </div>
-                    </div>
-                    <div className="row mb-3">
-                        <label htmlFor="game-day-id" className="col-sm-2 col-form-label">Amateur Soccer Group Id</label>
-                        <div className="col-sm-10">
-                            <input name="amateurSoccerGroupId"
-                                   type="text"
-                                   value={this.state.amateurSoccerGroupId}
-                                   className="form-control"
-                                   onChange={this.handleInputChange}/>
-                        </div>
-                    </div>
                     <div className="row mb-3">
                         <label htmlFor="game-day-date" className="col-sm-2 col-form-label">Date</label>
                         <div className="col-sm-10">
                             <input name="date"
                                    type="date"
-                                   value={this.state.date}
+                                   value={this.state.data.date}
                                    className="form-control"
                                    onChange={this.handleInputChange}/>
                         </div>
                     </div>
                     <ul>
-                        {this.state.matches.map((match, index) => <li key={index}>
+                        {this.state.data.matches.map((match, index) => <li key={index}>
                             <AddMatch
                                 prefix={"matches." + index}
                                 data={match}
@@ -84,16 +73,28 @@ export class AddGameDay extends React.Component {
                             />
                         </li>)}
                     </ul>
-                    <button type="submit" className="btn btn-success" onClick={this.handleSubmit}>Add Game Day</button>
+                    <button type="submit" className="btn btn-success" onClick={this.handleSubmit}>{title} Game Day</button>
                 </form>
             </div>
         );
     }
 
+    fetchGameDay() {
+        fetch(this.props.href, {
+            method: 'GET',
+            headers: {"Accept": "application/hal+json"},
+            mode: "cors"
+        })
+            .then(response => response.json())
+            .then(data => this.setState({data}))
+        ;
+    }
+
+
     handleInputChange = (event) => {
         const target = event.target;
+        const name = "data." + target.name;
         const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
         let currentState = {...this.state};
         setNestedKey(currentState, name.split('.'), value);
         this.setState(currentState);
@@ -102,11 +103,11 @@ export class AddGameDay extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
         const requestBody = {
-            amateurSoccerGroupId: this.state.amateurSoccerGroupId,
-            date: this.state.date,
-            matches: this.state.matches,
+            amateurSoccerGroupId: this.state.data.amateurSoccerGroupId,
+            date: this.state.data.date,
+            matches: this.state.data.matches,
         }
-        fetch('http://localhost:8080/gameDays/' + this.state.gameDayId, {
+        fetch(this.props.href, {
             method: 'PUT',
             headers: {"content-type": "application/hal+json"},
             body: JSON.stringify(requestBody)
@@ -123,7 +124,7 @@ export class AddGameDay extends React.Component {
     updateAppContent() {
         this.props.updateAppContent(
             <ListGameDay
-                amateurSoccerGroupId={this.state.amateurSoccerGroupId}
+                amateurSoccerGroupId={this.state.data.amateurSoccerGroupId}
                 updateAppContent={this.props.updateAppContent}
             />
         )

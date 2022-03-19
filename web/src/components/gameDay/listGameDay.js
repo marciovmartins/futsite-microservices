@@ -1,5 +1,6 @@
 import React from "react";
-import {AddGameDay} from "./addGameDay";
+import {v4 as uuidV4} from "uuid";
+import {GameDay} from "./gameDay";
 import {ViewGameDay} from "./viewGameDay";
 
 export class ListGameDay extends React.Component {
@@ -16,10 +17,11 @@ export class ListGameDay extends React.Component {
     }
 
     render() {
+        let addGameDayHref = 'http://localhost:8080/gameDays/' + uuidV4()
         return (
             <div>
                 <h1>
-                    List Game Days | <a href="#" onClick={(e) => this.openCreateGameDay(e)}>Add</a>
+                    List Game Days | <a href="#" onClick={(e) => this.openCreateGameDay(e, addGameDayHref)}>Add</a>
                 </h1>
                 <form>
                     <div className="row mb-3">
@@ -39,6 +41,11 @@ export class ListGameDay extends React.Component {
                             <a href={gameDay._links.self.href}
                                onClick={(e) => this.viewGameDay(e, gameDay._links.self.href)}
                             >{gameDay.date}</a>
+
+                            &nbsp;
+                            <a href={gameDay._links.self.href}
+                               onClick={(e) => this.openEditGameDay(e, gameDay._links.self.href)}
+                            >[edit]</a>
 
                             &nbsp;
                             <a href={gameDay._links.self.href}
@@ -67,12 +74,26 @@ export class ListGameDay extends React.Component {
         this.fetchGameDays(event.target.value);
     }
 
-    openCreateGameDay(e) {
+    openCreateGameDay(e, href) {
         e.preventDefault();
         this.props.updateAppContent(
-            <AddGameDay
+            <GameDay
+                href={href}
                 amateurSoccerGroupId={this.state.amateurSoccerGroupId}
                 updateAppContent={this.props.updateAppContent}
+                mode="add"
+            />
+        )
+    }
+
+    openEditGameDay(e, href) {
+        e.preventDefault();
+        this.props.updateAppContent(
+            <GameDay
+                href={href}
+                amateurSoccerGroupId={this.state.amateurSoccerGroupId}
+                updateAppContent={this.props.updateAppContent}
+                mode="edit"
             />
         )
     }
