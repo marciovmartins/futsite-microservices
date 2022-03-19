@@ -10,17 +10,39 @@ import java.util.stream.Stream
 class ValidGameDayArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         gameDayArgument(
+            testDescription = "valid game day without any property",
+        ),
+        gameDayArgument(
             testDescription = "valid game day with quote only",
-            quote = faker.howIMetYourMother().quote(),
+            quote = faker.howIMetYourMother().quote().take(255),
         ),
         gameDayArgument(
             testDescription = "valid game day with quote and author only",
-            quote = faker.howIMetYourMother().quote(),
-            author = faker.howIMetYourMother().character()
+            quote = faker.howIMetYourMother().quote().take(255),
+            author = faker.howIMetYourMother().character().take(45)
         ),
         gameDayArgument(
             testDescription = "valid game day with description only",
-            description = faker.howIMetYourMother().catchPhrase(),
+            description = faker.howIMetYourMother().catchPhrase().take(2048),
+        ),
+        gameDayArgument(
+            testDescription = "valid game day with all properties",
+            quote = faker.howIMetYourMother().quote().take(255),
+            author = faker.howIMetYourMother().character().take(45),
+            description = faker.howIMetYourMother().catchPhrase().take(2048),
+        ),
+        gameDayArgument(
+            testDescription = "valid game day with quote with maximum of 255 characters",
+            quote = faker.lorem().characters(255),
+        ),
+        gameDayArgument(
+            testDescription = "valid game day with author with maximum of 45 characters",
+            quote = faker.howIMetYourMother().quote().take(255),
+            author = faker.lorem().characters(45),
+        ),
+        gameDayArgument(
+            testDescription = "valid game day with description with maximum of 2048 characters",
+            description = faker.lorem().characters(2048),
         ),
     )
 }

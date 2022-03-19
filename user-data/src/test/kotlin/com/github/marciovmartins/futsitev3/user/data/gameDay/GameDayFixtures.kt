@@ -4,9 +4,9 @@ import org.junit.jupiter.params.provider.Arguments
 
 fun gameDayArgument(
     testDescription: String,
-    quote: String? = null,
-    author: String? = null,
-    description: String? = null
+    quote: Any? = null,
+    author: Any? = null,
+    description: Any? = null
 ): Arguments = Arguments.of(testDescription, GameDayDTO(quote, author, description))
 
 data class GameDayDTO(
