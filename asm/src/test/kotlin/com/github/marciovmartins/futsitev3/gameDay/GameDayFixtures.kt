@@ -54,6 +54,31 @@ data class PlayerDTO(
     val redCards: Any?,
 )
 
+data class GameDayCollection(
+    val _embedded: EmbeddedGameDays,
+    val _links: Links,
+    val page: Page,
+) {
+    data class EmbeddedGameDays(
+        val gameDays: List<GameDayDTO>,
+    )
+}
+
+data class Links(
+    val self: Link,
+) {
+    data class Link(
+        val href: String,
+    )
+}
+
+data class Page(
+    val size: Long,
+    val totalElements: Long,
+    val totalPages: Long,
+    val number: Long
+)
+
 data class ExpectedResponseBody(
     val title: String,
     val status: Int,

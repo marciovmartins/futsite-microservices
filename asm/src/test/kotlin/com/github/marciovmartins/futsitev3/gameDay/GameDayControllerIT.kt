@@ -307,7 +307,39 @@ class GameDayControllerIT : BaseIT() {
     }
 
     @Test
-    fun `validate finding 0, 1 and many game days by amateurSoccerGroupId`() {
+    fun `validate finding 0 game days by amateurSoccerGroupId`() {
+        // setup
+        val amateurSoccerGroupId = UUID.randomUUID().toString()
+
+        // execution
+        val response = webTestClient.get()
+            .uri("gameDays/search/byAmateurSoccerGroupId?amateurSoccerGroupId={id}", amateurSoccerGroupId)
+            .exchange()
+
+        // assertions
+        val actualException = response.expectStatus().isOk
+            .expectBody(GameDayCollection::class.java)
+            .returnResult().responseBody
+        assertThat(actualException)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .ignoringFields("_links.self.href")
+            .isEqualTo(
+                GameDayCollection(
+                    _embedded = GameDayCollection.EmbeddedGameDays(emptyList()),
+                    _links = Links(self = Links.Link("something")),
+                    page = Page(size = 20, totalElements = 0, totalPages = 0, number = 0)
+                )
+            )
+    }
+
+    @Test
+    fun `validate finding 1 day by amateurSoccerGroupId`() {
+        TODO("need to be implemented")
+    }
+
+    @Test
+    fun `validate finding many game days by amateurSoccerGroupId`() {
         TODO("need to be implemented")
     }
 
