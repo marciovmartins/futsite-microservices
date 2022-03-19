@@ -3,6 +3,8 @@ import {v4 as uuidV4} from "uuid";
 import {getNestedValue, setNestedKey} from "../../helper-functions";
 import {ListGameDay} from "./listGameDay";
 
+const titles = {'add': 'Create', 'edit': 'Edit', 'view': 'View'}
+
 export class GameDay extends React.Component {
     constructor(props) {
         super(props);
@@ -22,7 +24,6 @@ export class GameDay extends React.Component {
     }
 
     render() {
-        const titles = {'add': 'Create', 'edit': 'Edit', 'view': 'View'}
         const title = titles[this.props.mode];
 
         let saveButton = '';
@@ -36,7 +37,7 @@ export class GameDay extends React.Component {
         if (this.props.mode !== 'view') {
             addMatchButton = <button
                 type="submit"
-                className="btn btn-success"
+                className="btn btn-primary"
                 onClick={(e) => {
                     e.preventDefault();
                     this.handleAddMatch();
@@ -201,29 +202,32 @@ export class GameDay extends React.Component {
 
 class Match extends React.Component {
     render() {
+        const title = titles[this.props.mode];
+
         let addPlayerButton = '';
         if (this.props.mode !== 'view') {
             addPlayerButton = <button
                 type="submit"
-                className="btn btn-success"
+                className="btn btn-primary"
                 onClick={(e) => {
                     e.preventDefault();
                     return this.props.handleAddPlayer(this.props.prefix + ".players");
                 }}
             >
-                Add player
+                {title} player
             </button>
         }
 
         let removeMatchButton = '';
-        if (this.props.mode !== 'view' && !this.props.disableRemoveButton) {
+        if (this.props.mode !== 'view') {
             removeMatchButton = <button
                 type="submit"
-                className="btn btn-success"
+                className="btn btn-primary"
                 onClick={(e) => {
                     e.preventDefault();
                     this.props.handleRemoveMatch(this.props.data.order);
                 }}
+                disabled={this.props.disableRemoveButton}
             >
                 Remove
             </button>
@@ -257,14 +261,15 @@ class Player extends React.Component {
         const prefix = this.props.prefix + ".";
 
         let removePlayerButton = '';
-        if (this.props.mode !== 'view' && !this.props.disableRemovePlayerButton) {
+        if (this.props.mode !== 'view') {
             removePlayerButton = <button
                 type="submit"
-                className="btn btn-success"
+                className="btn btn-primary"
                 onClick={(e) => {
                     e.preventDefault();
                     return this.props.handleRemovePlayer(this.props.prefix);
                 }}
+                disabled={this.props.disableRemovePlayerButton}
             >
                 Remove
             </button>
