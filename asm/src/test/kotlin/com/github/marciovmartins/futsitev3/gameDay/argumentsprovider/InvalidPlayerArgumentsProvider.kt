@@ -12,6 +12,30 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         // TEAM
         singleMatchArgument(
+            testDescription = "invalid game day with invalid empty match player team value",
+            players = setOf(
+                playerDTO(team = A),
+                playerDTO(team = B),
+                playerDTO(team = ""),
+            ),
+            expectedExceptions = singleExpectedException(
+                message = "Cannot coerce empty String",
+                field = "matches[].players[].team",
+            ),
+        ),
+        singleMatchArgument(
+            testDescription = "invalid game day with invalid empty match player team value",
+            players = setOf(
+                playerDTO(team = A),
+                playerDTO(team = B),
+                playerDTO(team = " "),
+            ),
+            expectedExceptions = singleExpectedException(
+                message = "Cannot coerce empty String",
+                field = "matches[].players[].team",
+            ),
+        ),
+        singleMatchArgument(
             testDescription = "invalid game day with invalid match player team value",
             players = setOf(
                 playerDTO(team = A),
