@@ -337,18 +337,7 @@ class GameDayControllerIT : BaseIT() {
     fun `validate finding 1 game day by amateurSoccerGroupId`() {
         // setup
         val amateurSoccerGroupId = UUID.randomUUID().toString()
-        val gameDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId)
-        val gameDayLocationUrl = webTestClient.put()
-            .uri("gameDays/{id}", UUID.randomUUID().toString())
-            .bodyValue(gameDayToCreate)
-            .exchange()
-            .returnResult(Unit::class.java)
-            .responseHeaders.location.toString()
-        val gameDay = webTestClient.get()
-            .uri(gameDayLocationUrl)
-            .exchange()
-            .expectBody(GameDayDTO::class.java)
-            .returnResult().responseBody!!
+        val gameDay = createGameDay(amateurSoccerGroupId)
 
         // execution
         val response = webTestClient.get()
@@ -373,13 +362,59 @@ class GameDayControllerIT : BaseIT() {
     }
 
     @Test
-    fun `validate finding many game days by amateurSoccerGroupId`() {
-        TODO("need to be implemented")
+    fun `validate finding multiple game days by amateurSoccerGroupId`() {
+        // setup
+        val amateurSoccerGroupId = UUID.randomUUID().toString()
+        val gameDay1 = createGameDay(amateurSoccerGroupId, LocalDate.now())
+        val gameDay2 = createGameDay(amateurSoccerGroupId, LocalDate.now().minusDays(1))
+        val gameDay3 = createGameDay(amateurSoccerGroupId, LocalDate.now().minusDays(2))
+        val gameDay4 = createGameDay(amateurSoccerGroupId, LocalDate.now().minusDays(3))
+        val gameDay5 = createGameDay(amateurSoccerGroupId, LocalDate.now().minusDays(4))
+
+        // execution
+        val response = webTestClient.get()
+            .uri("gameDays/search/byAmateurSoccerGroupId?amateurSoccerGroupId={id}", amateurSoccerGroupId)
+            .exchange()
+
+        // assertions
+        val actualException = response.expectStatus().isOk
+            .expectBody(GameDayCollection::class.java)
+            .returnResult().responseBody
+        assertThat(actualException)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .ignoringFields("_links.self.href")
+            .isEqualTo(
+                GameDayCollection(
+                    _embedded = GameDayCollection.EmbeddedGameDays(
+                        listOf(
+                            gameDay1, gameDay2, gameDay3, gameDay4, gameDay5,
+                        )
+                    ),
+                    _links = Links(self = Links.Link("something")),
+                    page = Page(size = 20, totalElements = 5, totalPages = 1, number = 0)
+                )
+            )
     }
 
     @Test
     fun `graceful error finding game days with invalid amateurSoccerGroupId`() {
         // http://localhost:8080/gameDays/search/byAmateurSoccerGroupId?amateurSoccerGroupId=undefined
         TODO("need to be implemented")
+    }
+
+    private fun createGameDay(amateurSoccerGroupId: Any? = null, date: Any? = null): GameDayDTO {
+        val gameDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
+        val gameDayLocationUrl = webTestClient.put()
+            .uri("gameDays/{id}", UUID.randomUUID().toString())
+            .bodyValue(gameDayToCreate)
+            .exchange()
+            .returnResult(Unit::class.java)
+            .responseHeaders.location.toString()
+        return webTestClient.get()
+            .uri(gameDayLocationUrl)
+            .exchange()
+            .expectBody(GameDayDTO::class.java)
+            .returnResult().responseBody!!
     }
 }
