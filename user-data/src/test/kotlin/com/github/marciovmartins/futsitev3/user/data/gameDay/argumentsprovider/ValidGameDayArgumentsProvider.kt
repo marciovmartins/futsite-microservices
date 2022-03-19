@@ -11,18 +11,26 @@ class ValidGameDayArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         gameDayArgument(
             testDescription = "valid game day without any property",
+            quote = null,
+            author = null,
+            description = null,
         ),
         gameDayArgument(
             testDescription = "valid game day with quote only",
             quote = faker.howIMetYourMother().quote().take(255),
+            author = null,
+            description = null,
         ),
         gameDayArgument(
             testDescription = "valid game day with quote and author only",
             quote = faker.howIMetYourMother().quote().take(255),
-            author = faker.howIMetYourMother().character().take(45)
+            author = faker.howIMetYourMother().character().take(45),
+            description = null,
         ),
         gameDayArgument(
             testDescription = "valid game day with description only",
+            quote = null,
+            author = null,
             description = faker.howIMetYourMother().catchPhrase().take(2048),
         ),
         gameDayArgument(
@@ -37,7 +45,6 @@ class ValidGameDayArgumentsProvider : ArgumentsProvider {
         ),
         gameDayArgument(
             testDescription = "valid game day with author with maximum of 45 characters",
-            quote = faker.howIMetYourMother().quote().take(255),
             author = faker.lorem().characters(45),
         ),
         gameDayArgument(
