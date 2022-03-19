@@ -280,7 +280,30 @@ class GameDayControllerIT : BaseIT() {
 
     @Test
     fun `do not allow http post to game day with uuid resource`() {
-        TODO("need to be implemented")
+        // setup
+        val gameDayId = UUID.randomUUID().toString()
+        val gameDayToCreate = gameDayDTO()
+
+        // execution
+        val response = webTestClient.post()
+            .uri("gameDays/{id}", gameDayId)
+            .bodyValue(gameDayToCreate)
+            .exchange()
+
+        // assertions
+        val actualException = response.expectStatus().isNotFound
+            .expectBody(ExpectedResponseBody::class.java)
+            .returnResult().responseBody
+        assertThat(actualException)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(
+                ExpectedResponseBody(
+                    title = "Not Found",
+                    status = 404,
+                    detail = "No handler found for POST /gameDays/$gameDayId"
+                )
+            )
     }
 
     @Test
