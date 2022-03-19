@@ -17,11 +17,11 @@ export class ListGameDay extends React.Component {
     }
 
     render() {
-        let addGameDayHref = 'http://localhost:8080/gameDays/' + uuidV4()
+        let gameDayHref = 'http://localhost:8080/gameDays/' + uuidV4()
         return (
             <div>
                 <h1>
-                    List Game Days | <a href="#" onClick={(e) => this.openCreateGameDay(e, addGameDayHref)}>Add</a>
+                    List Game Days | <a href="#" onClick={(e) => this.openGameDay(e, gameDayHref, 'add')}>Add</a>
                 </h1>
                 <form>
                     <div className="row mb-3">
@@ -44,7 +44,7 @@ export class ListGameDay extends React.Component {
 
                             &nbsp;
                             <a href={gameDay._links.self.href}
-                               onClick={(e) => this.openEditGameDay(e, gameDay._links.self.href)}
+                               onClick={(e) => this.openGameDay(e, gameDay._links.self.href, 'edit')}
                             >[edit]</a>
 
                             &nbsp;
@@ -74,26 +74,14 @@ export class ListGameDay extends React.Component {
         this.fetchGameDays(event.target.value);
     }
 
-    openCreateGameDay(e, href) {
+    openGameDay(e, href, mode) {
         e.preventDefault();
         this.props.updateAppContent(
             <GameDay
                 href={href}
                 amateurSoccerGroupId={this.state.amateurSoccerGroupId}
                 updateAppContent={this.props.updateAppContent}
-                mode="add"
-            />
-        )
-    }
-
-    openEditGameDay(e, href) {
-        e.preventDefault();
-        this.props.updateAppContent(
-            <GameDay
-                href={href}
-                amateurSoccerGroupId={this.state.amateurSoccerGroupId}
-                updateAppContent={this.props.updateAppContent}
-                mode="edit"
+                mode={mode}
             />
         )
     }
