@@ -46,8 +46,16 @@ export class GameDay extends React.Component {
     }
 
     render() {
-        let titles = {'add': 'Create', 'edit': 'Edit'}
+        let titles = {'add': 'Create', 'edit': 'Edit', 'view': 'View'}
         let title = titles[this.props.mode];
+
+        let saveButton = '';
+        if (this.props.mode !== 'view') {
+            saveButton = <button type="submit" className="btn btn-success" onClick={this.handleSubmit}>
+                {title} Game Day
+            </button>
+        }
+
         return (
             <div>
                 <h1>
@@ -61,19 +69,22 @@ export class GameDay extends React.Component {
                                    type="date"
                                    value={this.state.data.date}
                                    className="form-control"
-                                   onChange={this.handleInputChange}/>
+                                   onChange={this.handleInputChange}
+                                   readOnly={this.props.mode === 'view'}
+                            />
                         </div>
                     </div>
                     <ul>
                         {this.state.data.matches.map((match, index) => <li key={index}>
-                            <AddMatch
+                            <Match
                                 prefix={"matches." + index}
                                 data={match}
                                 handleInputChange={this.handleInputChange}
+                                mode={this.props.mode}
                             />
                         </li>)}
                     </ul>
-                    <button type="submit" className="btn btn-success" onClick={this.handleSubmit}>{title} Game Day</button>
+                    {saveButton}
                 </form>
             </div>
         );
@@ -131,7 +142,7 @@ export class GameDay extends React.Component {
     }
 }
 
-class AddMatch extends React.Component {
+class Match extends React.Component {
     render() {
         return (
             <div>
@@ -139,10 +150,11 @@ class AddMatch extends React.Component {
                 <ol>
                     {this.props.data.players.map((player, index) =>
                         <li key={index}>
-                            <AddPlayer
+                            <Player
                                 prefix={this.props.prefix + ".players." + index}
                                 data={player}
                                 handleInputChange={this.props.handleInputChange}
+                                mode={this.props.mode}
                             />
                         </li>
                     )}
@@ -152,7 +164,7 @@ class AddMatch extends React.Component {
     }
 }
 
-class AddPlayer extends React.Component {
+class Player extends React.Component {
     render() {
         const prefix = this.props.prefix + ".";
         return (
@@ -165,7 +177,9 @@ class AddPlayer extends React.Component {
                                className="form-control"
                                value={this.props.data.userId}
                                onChange={this.props.handleInputChange}
-                               required/>
+                               required
+                               readOnly={this.props.mode === 'view'}
+                        />
                     </div>
                 </div>
                 <fieldset className="row mb-3">
@@ -178,7 +192,9 @@ class AddPlayer extends React.Component {
                                        name={prefix + "team"}
                                        value="A"
                                        checked={this.props.data.team === 'A'}
-                                       onChange={this.props.handleInputChange}/>
+                                       onChange={this.props.handleInputChange}
+                                       readOnly={this.props.mode === 'view'}
+                                />
                                 A
                             </label>
                         </div>
@@ -189,7 +205,9 @@ class AddPlayer extends React.Component {
                                        name={prefix + "team"}
                                        value="B"
                                        checked={this.props.data.team === 'B'}
-                                       onChange={this.props.handleInputChange}/>
+                                       onChange={this.props.handleInputChange}
+                                       readOnly={this.props.mode === 'view'}
+                                />
                                 B
                             </label>
                         </div>
@@ -202,7 +220,9 @@ class AddPlayer extends React.Component {
                                type="number"
                                value={this.props.data.goalsInFavor}
                                className="form-control"
-                               onChange={this.props.handleInputChange}/>
+                               onChange={this.props.handleInputChange}
+                               readOnly={this.props.mode === 'view'}
+                        />
                     </div>
                 </div>
                 <div className="row mb-3">
@@ -212,7 +232,9 @@ class AddPlayer extends React.Component {
                                type="number"
                                value={this.props.data.goalsAgainst}
                                className="form-control"
-                               onChange={this.props.handleInputChange}/>
+                               onChange={this.props.handleInputChange}
+                               readOnly={this.props.mode === 'view'}
+                        />
                     </div>
                 </div>
                 <div className="row mb-3">
@@ -222,7 +244,9 @@ class AddPlayer extends React.Component {
                                type="number"
                                value={this.props.data.yellowCards}
                                className="form-control"
-                               onChange={this.props.handleInputChange}/>
+                               onChange={this.props.handleInputChange}
+                               readOnly={this.props.mode === 'view'}
+                        />
                     </div>
                 </div>
                 <div className="row mb-3">
@@ -232,7 +256,9 @@ class AddPlayer extends React.Component {
                                type="number"
                                value={this.props.data.blueCards}
                                className="form-control"
-                               onChange={this.props.handleInputChange}/>
+                               onChange={this.props.handleInputChange}
+                               readOnly={this.props.mode === 'view'}
+                        />
                     </div>
                 </div>
                 <div className="row mb-3">
@@ -242,7 +268,9 @@ class AddPlayer extends React.Component {
                                type="number"
                                value={this.props.data.redCards}
                                className="form-control"
-                               onChange={this.props.handleInputChange}/>
+                               onChange={this.props.handleInputChange}
+                               readOnly={this.props.mode === 'view'}
+                        />
                     </div>
                 </div>
             </div>

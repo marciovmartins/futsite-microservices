@@ -1,7 +1,6 @@
 import React from "react";
 import {v4 as uuidV4} from "uuid";
 import {GameDay} from "./gameDay";
-import {ViewGameDay} from "./viewGameDay";
 
 export class ListGameDay extends React.Component {
     constructor(props) {
@@ -39,7 +38,7 @@ export class ListGameDay extends React.Component {
                     {this.state.gameDays.map(gameDay =>
                         <li key={gameDay.date}>
                             <a href={gameDay._links.self.href}
-                               onClick={(e) => this.viewGameDay(e, gameDay._links.self.href)}
+                               onClick={(e) => this.openGameDay(e, gameDay._links.self.href, 'view')}
                             >{gameDay.date}</a>
 
                             &nbsp;
@@ -93,16 +92,5 @@ export class ListGameDay extends React.Component {
             mode: "cors"
         })
             .then(() => this.fetchGameDays(this.props.amateurSoccerGroupId));
-    }
-
-    viewGameDay(e, href) {
-        e.preventDefault();
-        this.props.updateAppContent(
-            <ViewGameDay
-                href={href}
-                amateurSoccerGroupId={this.state.amateurSoccerGroupId}
-                updateAppContent={this.props.updateAppContent}
-            />
-        )
     }
 }
