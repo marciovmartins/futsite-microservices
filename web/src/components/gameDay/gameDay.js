@@ -70,6 +70,7 @@ export class GameDay extends React.Component {
                             <input name="date"
                                    type="date"
                                    value={this.state.data.date}
+                                   required
                                    className="form-control"
                                    onChange={this.handleInputChange}
                                    readOnly={this.props.mode === 'view'}
@@ -326,6 +327,8 @@ class Player extends React.Component {
                                        name={prefix + "team"}
                                        value="A"
                                        checked={this.props.data.team === 'A'}
+                                       min="0"
+                                       max="99"
                                        onChange={this.props.handleInputChange}
                                        readOnly={this.props.mode === 'view'}
                                 />
@@ -339,6 +342,8 @@ class Player extends React.Component {
                                        name={prefix + "team"}
                                        value="B"
                                        checked={this.props.data.team === 'B'}
+                                       min="0"
+                                       max="99"
                                        onChange={this.props.handleInputChange}
                                        readOnly={this.props.mode === 'view'}
                                 />
@@ -353,6 +358,8 @@ class Player extends React.Component {
                         <input name={prefix + "goalsInFavor"}
                                type="number"
                                value={this.props.data.goalsInFavor}
+                               min="0"
+                               max="99"
                                className="form-control"
                                onChange={this.props.handleInputChange}
                                readOnly={this.props.mode === 'view'}
@@ -365,6 +372,8 @@ class Player extends React.Component {
                         <input name={prefix + "goalsAgainst"}
                                type="number"
                                value={this.props.data.goalsAgainst}
+                               min="0"
+                               max="99"
                                className="form-control"
                                onChange={this.props.handleInputChange}
                                readOnly={this.props.mode === 'view'}
@@ -377,6 +386,8 @@ class Player extends React.Component {
                         <input name={prefix + "yellowCards"}
                                type="number"
                                value={this.props.data.yellowCards}
+                               min="0"
+                               max="99"
                                className="form-control"
                                onChange={this.props.handleInputChange}
                                readOnly={this.props.mode === 'view'}
@@ -389,6 +400,8 @@ class Player extends React.Component {
                         <input name={prefix + "blueCards"}
                                type="number"
                                value={this.props.data.blueCards}
+                               min="0"
+                               max="99"
                                className="form-control"
                                onChange={this.props.handleInputChange}
                                readOnly={this.props.mode === 'view'}
@@ -401,6 +414,8 @@ class Player extends React.Component {
                         <input name={prefix + "redCards"}
                                type="number"
                                value={this.props.data.redCards}
+                               min="0"
+                               max="99"
                                className="form-control"
                                onChange={this.props.handleInputChange}
                                readOnly={this.props.mode === 'view'}
