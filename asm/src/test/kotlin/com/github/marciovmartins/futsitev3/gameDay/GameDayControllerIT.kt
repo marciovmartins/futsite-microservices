@@ -282,4 +282,15 @@ class GameDayControllerIT : BaseIT() {
     fun `do not allow http post to game day with uuid resource`() {
         TODO("need to be implemented")
     }
+
+    @Test
+    fun `validate finding 0, 1 and many game days by amateurSoccerGroupId`() {
+        TODO("need to be implemented")
+    }
+
+    @Test
+    fun `graceful error finding game days with invalid amateurSoccerGroupId`() {
+        // http://localhost:8080/gameDays/search/byAmateurSoccerGroupId?amateurSoccerGroupId=undefined
+        TODO("need to be implemented")
+    }
 }

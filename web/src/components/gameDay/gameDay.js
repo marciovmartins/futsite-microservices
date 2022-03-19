@@ -1,6 +1,6 @@
 import React from "react";
 import {v4 as uuidV4} from "uuid";
-import {setNestedKey} from "../../helper-functions";
+import {getNestedValue, setNestedKey} from "../../helper-functions";
 import {ListGameDay} from "./listGameDay";
 
 export class GameDay extends React.Component {
@@ -8,30 +8,14 @@ export class GameDay extends React.Component {
         super(props);
         this.state = {
             data: {
-                amateurSoccerGroupId: this.props.amateurSoccerGroupId || uuidV4(),
+                amateurSoccerGroupId: this.props.amateurSoccerGroupId,
                 date: "",
                 matches: [
                     {
                         order: 1,
                         players: [
-                            {
-                                userId: uuidV4(),
-                                team: "",
-                                goalsInFavor: "",
-                                goalsAgainst: "",
-                                yellowCards: "",
-                                blueCards: "",
-                                redCards: ""
-                            },
-                            {
-                                userId: uuidV4(),
-                                team: "",
-                                goalsInFavor: "",
-                                goalsAgainst: "",
-                                yellowCards: "",
-                                blueCards: "",
-                                redCards: ""
-                            },
+                            this.createEmptyPlayer(),
+                            this.createEmptyPlayer(),
                         ]
                     }
                 ]
@@ -46,8 +30,8 @@ export class GameDay extends React.Component {
     }
 
     render() {
-        let titles = {'add': 'Create', 'edit': 'Edit', 'view': 'View'}
-        let title = titles[this.props.mode];
+        const titles = {'add': 'Create', 'edit': 'Edit', 'view': 'View'}
+        const title = titles[this.props.mode];
 
         let saveButton = '';
         if (this.props.mode !== 'view') {
@@ -80,6 +64,7 @@ export class GameDay extends React.Component {
                                 prefix={"matches." + index}
                                 data={match}
                                 handleInputChange={this.handleInputChange}
+                                handleAddPlayer={this.handleAddPlayer}
                                 mode={this.props.mode}
                             />
                         </li>)}
@@ -108,6 +93,15 @@ export class GameDay extends React.Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         let currentState = {...this.state};
         setNestedKey(currentState, name.split('.'), value);
+        this.setState(currentState);
+    }
+
+    handleAddPlayer = (key) => {
+        let currentState = {...this.state};
+        const path = ("data." + key).split('.');
+        let value = getNestedValue(currentState, path);
+        value.push(this.createEmptyPlayer());
+        setNestedKey(currentState, path, value);
         this.setState(currentState);
     }
 
@@ -140,10 +134,35 @@ export class GameDay extends React.Component {
             />
         )
     }
+
+    createEmptyPlayer() {
+        return {
+            userId: uuidV4(),
+            team: "",
+            goalsInFavor: "",
+            goalsAgainst: "",
+            yellowCards: "",
+            blueCards: "",
+            redCards: ""
+        };
+    }
 }
 
 class Match extends React.Component {
     render() {
+        let addPlayerButton = '';
+        if (this.props.mode !== 'view') {
+            addPlayerButton = <button
+                type="submit"
+                className="btn btn-success"
+                onClick={(e) => {
+                    e.preventDefault();
+                    return this.props.handleAddPlayer(this.props.prefix + ".players");
+                }}
+            >
+                Add player
+            </button>
+        }
         return (
             <div>
                 <h2>Match #{this.props.data.order}</h2>
@@ -159,6 +178,7 @@ class Match extends React.Component {
                         </li>
                     )}
                 </ol>
+                {addPlayerButton}
             </div>
         );
     }

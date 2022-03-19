@@ -6,7 +6,7 @@ export class ListGameDay extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            amateurSoccerGroupId: this.props.amateurSoccerGroupId,
+            amateurSoccerGroupId: this.props.amateurSoccerGroupId || uuidV4(),
             gameDays: []
         }
     }

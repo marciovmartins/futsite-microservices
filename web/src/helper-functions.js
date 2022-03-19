@@ -17,3 +17,20 @@ export const setNestedKey = (obj, path, value) => {
     }
     return setNestedKey(obj[path[0]], path.slice(1), value)
 }
+
+/**
+ * Gets a value of nested key string descriptor inside a Object.
+ * Ex:
+ *    let obj = {a: {b:{c:'initial'}}}
+ *    getNestedValue(obj, ['a', 'b'])
+ *    assert(obj === {c:'changed-value'})
+ *
+ * @param {object} obj   Object to get the nested value
+ * @param {string[]} path  An array to describe the path(Ex: ['a', 'b'])
+ */
+export const getNestedValue = (obj, path) => {
+    if (path.length === 1) {
+        return obj[path];
+    }
+    return getNestedValue(obj[path[0]], path.slice(1))
+}
