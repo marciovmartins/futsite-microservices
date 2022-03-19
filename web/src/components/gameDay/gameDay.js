@@ -72,7 +72,9 @@ export class GameDay extends React.Component {
                                     prefix={"matches." + index}
                                     data={match}
                                     handleInputChange={this.handleInputChange}
+                                    handleRemoveMatch={this.handleRemoveMatch}
                                     handleAddPlayer={this.handleAddPlayer}
+                                    disableRemoveButton={this.state.data.matches.length === 1}
                                     mode={this.props.mode}
                                 />
                             </li>)}
@@ -112,6 +114,16 @@ export class GameDay extends React.Component {
         value.push(this.createEmptyMatch(value.length + 1));
         setNestedKey(currentState, path, value);
         this.setState(currentState);
+    }
+
+    handleRemoveMatch = (order) => {
+        let currentState = {...this.state};
+        const value = this.state.data.matches.filter(function (value) {
+            return value.order !== order;
+        });
+        value.map((match, index) => match.order = index + 1)
+        currentState.data.matches = value
+        this.setState({currentState});
     }
 
     handleAddPlayer = (key) => {
@@ -191,9 +203,24 @@ class Match extends React.Component {
                 Add player
             </button>
         }
+
+        let removeMatchButton = '';
+        if (this.props.mode !== 'view' && !this.props.disableRemoveButton) {
+            removeMatchButton = <button
+                type="submit"
+                className="btn btn-success"
+                onClick={(e) => {
+                    e.preventDefault();
+                    this.props.handleRemoveMatch(this.props.data.order);
+                }}
+            >
+                Remove
+            </button>
+        }
+
         return (
             <div>
-                <h2>Match #{this.props.data.order}</h2>
+                <h2>Match #{this.props.data.order} {removeMatchButton}</h2>
                 <ol>
                     {this.props.data.players.map((player, index) =>
                         <li key={index}>
