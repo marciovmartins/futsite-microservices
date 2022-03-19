@@ -10,15 +10,7 @@ export class GameDay extends React.Component {
             data: {
                 amateurSoccerGroupId: this.props.amateurSoccerGroupId,
                 date: "",
-                matches: [
-                    {
-                        order: 1,
-                        players: [
-                            this.createEmptyPlayer(),
-                            this.createEmptyPlayer(),
-                        ]
-                    }
-                ]
+                matches: [this.createEmptyMatch(1)]
             }
         }
     }
@@ -37,6 +29,20 @@ export class GameDay extends React.Component {
         if (this.props.mode !== 'view') {
             saveButton = <button type="submit" className="btn btn-success" onClick={this.handleSubmit}>
                 {title} Game Day
+            </button>
+        }
+
+        let addMatchButton = '';
+        if (this.props.mode !== 'view') {
+            addMatchButton = <button
+                type="submit"
+                className="btn btn-success"
+                onClick={(e) => {
+                    e.preventDefault();
+                    this.handleAddMatch();
+                }}
+            >
+                Add Another Match
             </button>
         }
 
@@ -59,16 +65,19 @@ export class GameDay extends React.Component {
                         </div>
                     </div>
                     <ul>
-                        {this.state.data.matches.map((match, index) => <li key={index}>
-                            <Match
-                                prefix={"matches." + index}
-                                data={match}
-                                handleInputChange={this.handleInputChange}
-                                handleAddPlayer={this.handleAddPlayer}
-                                mode={this.props.mode}
-                            />
-                        </li>)}
+                        {this.state.data.matches
+                            .sort((a, b) => a.order > b.order ? 1 : (a.order === b.order ? 0 : -1))
+                            .map((match, index) => <li key={index}>
+                                <Match
+                                    prefix={"matches." + index}
+                                    data={match}
+                                    handleInputChange={this.handleInputChange}
+                                    handleAddPlayer={this.handleAddPlayer}
+                                    mode={this.props.mode}
+                                />
+                            </li>)}
                     </ul>
+                    {addMatchButton}
                     {saveButton}
                 </form>
             </div>
@@ -93,6 +102,15 @@ export class GameDay extends React.Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         let currentState = {...this.state};
         setNestedKey(currentState, name.split('.'), value);
+        this.setState(currentState);
+    }
+
+    handleAddMatch = () => {
+        let currentState = {...this.state};
+        const path = ("data.matches").split('.');
+        let value = getNestedValue(currentState, path);
+        value.push(this.createEmptyMatch(value.length + 1));
+        setNestedKey(currentState, path, value);
         this.setState(currentState);
     }
 
@@ -133,6 +151,16 @@ export class GameDay extends React.Component {
                 updateAppContent={this.props.updateAppContent}
             />
         )
+    }
+
+    createEmptyMatch(order) {
+        return {
+            order: order,
+            players: [
+                this.createEmptyPlayer(),
+                this.createEmptyPlayer(),
+            ]
+        };
     }
 
     createEmptyPlayer() {
