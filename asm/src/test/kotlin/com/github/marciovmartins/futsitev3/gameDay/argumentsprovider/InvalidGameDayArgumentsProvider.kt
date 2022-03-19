@@ -103,5 +103,7 @@ object InvalidGameDayArgumentsProvider : ArgumentsProvider {
                 )
             ),
         ),
+        // TODO: invalid game day with empty player team
+        // TODO: invalid game day with blank player team
     )
 }

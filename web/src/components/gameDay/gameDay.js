@@ -2,6 +2,8 @@ import React from "react";
 import {v4 as uuidV4} from "uuid";
 import {getNestedValue, setNestedKey} from "../../helper-functions";
 import {ListGameDay} from "./listGameDay";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const titles = {'add': 'Create', 'edit': 'Edit', 'view': 'View'}
 
@@ -49,6 +51,15 @@ export class GameDay extends React.Component {
 
         return (
             <div>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                />
                 <h1>
                     {title} Game Day | <a href="#" onClick={(e) => this.openGameDayList(e)}>List</a>
                 </h1>
@@ -158,8 +169,20 @@ export class GameDay extends React.Component {
             method: 'PUT',
             headers: {"content-type": "application/hal+json"},
             body: JSON.stringify(requestBody)
-        }).then(() => {
-            this.updateAppContent();
+        }).then((response) => {
+            if (response.ok) {
+                return this.updateAppContent();
+            }
+
+            switch (response.status) {
+                case 400:
+                    response.json().then(body => body.violations
+                        .map(violation => toast.warn("field: " + violation.field + ", message: " + violation.message)));
+                    break;
+                case 404:
+                case 500:
+                    response.json().then(body => toast.error("title: " + body.title + ", detail: " + body.detail))
+            }
         })
     }
 
