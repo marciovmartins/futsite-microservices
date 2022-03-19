@@ -7,10 +7,10 @@
         <artifactId>futsite-parent</artifactId>
         <version>1.2.0</version>
     </parent>
-    <artifactId>futsite-asm</artifactId>
 
+    <artifactId>futsite-user-data</artifactId>
     <version>1.2.0</version>
-    <name>futsite-amateur-soccer-match</name>
+    <name>futsite-user-data</name>
 
     <dependencies>
         <dependency>
