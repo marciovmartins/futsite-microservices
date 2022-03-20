@@ -2,6 +2,8 @@ import React from "react";
 import {v4 as uuidV4} from "uuid";
 import {GameDay} from "./gameDay";
 
+const asmGameDaysHref = 'http://localhost:8080/gameDays';
+
 export class ListGameDay extends React.Component {
     constructor(props) {
         super(props);
@@ -16,11 +18,10 @@ export class ListGameDay extends React.Component {
     }
 
     render() {
-        let gameDayHref = 'http://localhost:8080/gameDays/' + uuidV4()
         return (
             <div>
                 <h1>
-                    List Game Days | <a href="#" onClick={(e) => this.openGameDay(e, gameDayHref, 'add')}>Add</a>
+                    List Game Days | <a href="#" onClick={(e) => this.openGameDay(e, uuidV4(), 'add')}>Add</a>
                 </h1>
                 <form>
                     <div className="row mb-3">
@@ -38,17 +39,17 @@ export class ListGameDay extends React.Component {
                     {this.state.gameDays.map(gameDay =>
                         <li key={gameDay.date}>
                             <a href={gameDay._links.self.href}
-                               onClick={(e) => this.openGameDay(e, gameDay._links.self.href, 'view')}
+                               onClick={(e) => this.openGameDay(e, this.extractGameDayId(gameDay._links.self.href), 'view')}
                             >{gameDay.date}</a>
 
                             &nbsp;
                             <a href={gameDay._links.self.href}
-                               onClick={(e) => this.openGameDay(e, gameDay._links.self.href, 'edit')}
+                               onClick={(e) => this.openGameDay(e, this.extractGameDayId(gameDay._links.self.href), 'edit')}
                             >[edit]</a>
 
                             &nbsp;
                             <a href={gameDay._links.self.href}
-                               onClick={(e) => this.removeGameDay(e, gameDay._links.self.href)}
+                               onClick={(e) => this.removeGameDay(e, this.extractGameDayId(gameDay._links.self.href))}
                             >[remove]</a>
                         </li>
                     )}
@@ -58,7 +59,7 @@ export class ListGameDay extends React.Component {
     }
 
     fetchGameDays(amateurSoccerGroupId) {
-        fetch('http://localhost:8080/gameDays/search/byAmateurSoccerGroupId?amateurSoccerGroupId=' + amateurSoccerGroupId, {
+        fetch(asmGameDaysHref + '/search/byAmateurSoccerGroupId?amateurSoccerGroupId=' + amateurSoccerGroupId, {
             method: 'GET',
             headers: {"Accept": "application/hal+json"},
             mode: "cors"
@@ -73,11 +74,11 @@ export class ListGameDay extends React.Component {
         this.fetchGameDays(event.target.value);
     }
 
-    openGameDay(e, href, mode) {
+    openGameDay(e, gameDayId, mode) {
         e.preventDefault();
         this.props.updateAppContent(
             <GameDay
-                href={href}
+                gameDayId={gameDayId}
                 amateurSoccerGroupId={this.state.amateurSoccerGroupId}
                 updateAppContent={this.props.updateAppContent}
                 mode={mode}
@@ -85,12 +86,17 @@ export class ListGameDay extends React.Component {
         )
     }
 
-    removeGameDay(e, href) {
+    removeGameDay(e, gameDayId) {
         e.preventDefault();
-        fetch(href, {
+        fetch(asmGameDaysHref + "/" + gameDayId, {
             method: 'DELETE',
             mode: "cors"
         })
             .then(() => this.fetchGameDays(this.props.amateurSoccerGroupId));
+    }
+
+    extractGameDayId(href) {
+        let hrefArray = href.split('/');
+        return hrefArray[hrefArray.length - 1];
     }
 }

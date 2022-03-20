@@ -7,6 +7,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const titles = {'add': 'Create', 'edit': 'Edit', 'view': 'View'}
 
+const asmGameDaysHref = "http://localhost:8080/gameDays";
+const userDataGameDaysHref = "http://localhost:8081/gameDays";
+
 export class GameDay extends React.Component {
     constructor(props) {
         super(props);
@@ -14,6 +17,9 @@ export class GameDay extends React.Component {
             data: {
                 amateurSoccerGroupId: this.props.amateurSoccerGroupId,
                 date: "",
+                quote: "",
+                author: "",
+                description: "",
                 matches: [this.createEmptyMatch(1)]
             }
         }
@@ -21,7 +27,7 @@ export class GameDay extends React.Component {
 
     componentDidMount() {
         if (this.props.mode !== 'add') {
-            this.fetchGameDay(this.props.href)
+            this.fetchGameDay(this.props.gameDayId)
         }
     }
 
@@ -71,9 +77,48 @@ export class GameDay extends React.Component {
                                    type="date"
                                    value={this.state.data.date}
                                    required
+                                   id="game-day-date"
                                    className="form-control"
                                    onChange={this.handleInputChange}
                                    readOnly={this.props.mode === 'view'}
+                            />
+                        </div>
+                    </div>
+                    <div className="row mb-3">
+                        <label htmlFor="game-day-quote" className="col-sm-2 col-form-label">Quote</label>
+                        <div className="col-sm-10">
+                            <input name="quote"
+                                   type="text"
+                                   value={this.state.data.quote}
+                                   id="game-day-quote"
+                                   className="form-control"
+                                   onChange={this.handleInputChange}
+                                   readOnly={this.props.mode === 'view'}
+                            />
+                        </div>
+                    </div>
+                    <div className="row mb-3">
+                        <label htmlFor="game-day-author" className="col-sm-2 col-form-label">Author</label>
+                        <div className="col-sm-10">
+                            <input name="author"
+                                   type="text"
+                                   value={this.state.data.author}
+                                   id="game-day-author"
+                                   className="form-control"
+                                   onChange={this.handleInputChange}
+                                   readOnly={this.props.mode === 'view'}
+                            />
+                        </div>
+                    </div>
+                    <div className="row mb-3">
+                        <label htmlFor="game-day-description" className="col-sm-2 col-form-label">Description</label>
+                        <div className="col-sm-10">
+                            <textarea name="description"
+                                      value={this.state.data.description}
+                                      id="game-day-description"
+                                      className="form-control"
+                                      onChange={this.handleInputChange}
+                                      readOnly={this.props.mode === 'view'}
                             />
                         </div>
                     </div>
@@ -101,16 +146,33 @@ export class GameDay extends React.Component {
     }
 
     fetchGameDay() {
-        fetch(this.props.href, {
+        Promise.all([
+            this.fetchAsmGameDay(),
+            this.fetchUserDataGameDay(),
+        ]).then(([asmGameDay, userDataGameDay]) => {
+            this.setState({
+                data: {...asmGameDay, ...userDataGameDay}
+            });
+        });
+    }
+
+    fetchAsmGameDay() {
+        return fetch(asmGameDaysHref + "/" + this.props.gameDayId, {
             method: 'GET',
             headers: {"Accept": "application/hal+json"},
             mode: "cors"
         })
-            .then(response => response.json())
-            .then(data => this.setState({data}))
-        ;
+            .then(response => response.json());
     }
 
+    fetchUserDataGameDay() {
+        return fetch(userDataGameDaysHref + "/" + this.props.gameDayId, {
+            method: 'GET',
+            headers: {"Accept": "application/hal+json"},
+            mode: "cors"
+        })
+            .then(response => response.json());
+    }
 
     handleInputChange = (event) => {
         const target = event.target;
@@ -161,21 +223,31 @@ export class GameDay extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        Promise.all([
+            this.saveAsmGameDay(),
+            this.saveUserDataGameDay()
+        ]).then(([asmGameDaySuccess, userDataGameDaySuccess]) => {
+            if (asmGameDaySuccess && userDataGameDaySuccess) {
+                this.updateAppContent();
+            }
+        });
+    }
+
+    saveAsmGameDay() {
         const requestBody = {
             amateurSoccerGroupId: this.state.data.amateurSoccerGroupId,
             date: this.state.data.date,
             matches: this.state.data.matches,
         }
-        fetch(this.props.href, {
+        return fetch(asmGameDaysHref + "/" + this.props.gameDayId, {
             method: 'PUT',
             headers: {"content-type": "application/hal+json"},
             body: JSON.stringify(requestBody)
         }).then((response) => {
-            if (response.ok) {
-                return this.updateAppContent();
-            }
-
             switch (response.status) {
+                case 200:
+                case 201:
+                    return true;
                 case 400:
                     response.json().then(body => body.violations
                         .map(violation => toast.warn("field: " + violation.field + ", message: " + violation.message)));
@@ -183,7 +255,29 @@ export class GameDay extends React.Component {
                 case 404:
                 case 500:
                     response.json().then(body => toast.error("title: " + body.title + ", detail: " + body.detail))
+                    break;
             }
+            return false;
+        })
+    }
+
+    saveUserDataGameDay() {
+        const requestBody = {
+            quote: this.state.data.quote,
+            author: this.state.data.author,
+            description: this.state.data.description,
+        }
+        return fetch(userDataGameDaysHref + "/" + this.props.gameDayId, {
+            method: 'PUT',
+            headers: {'content-type': 'application/hal+json'},
+            body: JSON.stringify(requestBody)
+        }).then(response => {
+            switch (response.status) {
+                case 200:
+                case 201:
+                    return true;
+            }
+            return false;
         })
     }
 
