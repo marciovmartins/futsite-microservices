@@ -6,8 +6,9 @@ import java.util.UUID
 
 fun createPlayer(
     amateurSoccerGroupId: Any? = UUID.randomUUID().toString(),
+    userId: Any? = UUID.randomUUID().toString(),
     nickname: Any? = MyFaker.faker.funnyName().name().take(45)
-) = PlayerDTO(amateurSoccerGroupId = amateurSoccerGroupId, nickname = nickname)
+) = PlayerDTO(amateurSoccerGroupId = amateurSoccerGroupId, userId = userId, nickname = nickname)
 
 fun playerArgument(
     testDescription: String,
@@ -16,5 +17,6 @@ fun playerArgument(
 
 class PlayerDTO(
     val amateurSoccerGroupId: Any? = null,
+    val userId: Any? = null,
     val nickname: Any? = null
 )
