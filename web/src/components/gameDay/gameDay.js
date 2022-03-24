@@ -33,28 +33,6 @@ export class GameDay extends React.Component {
 
     render() {
         const title = titles[this.props.mode];
-
-        let saveButton = '';
-        if (this.props.mode !== 'view') {
-            saveButton = <button type="submit" className="btn btn-success" onClick={this.handleSubmit}>
-                {title} Game Day
-            </button>
-        }
-
-        let addMatchButton = '';
-        if (this.props.mode !== 'view') {
-            addMatchButton = <button
-                type="submit"
-                className="btn btn-primary"
-                onClick={(e) => {
-                    e.preventDefault();
-                    this.handleAddMatch();
-                }}
-            >
-                Add Another Match
-            </button>
-        }
-
         return (
             <div>
                 <ToastContainer
@@ -138,8 +116,25 @@ export class GameDay extends React.Component {
                                 />
                             </li>)}
                     </ul>
-                    {addMatchButton}
-                    {saveButton}
+
+                    <Button
+                        mode={this.props.mode}
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            this.handleAddMatch();
+                        }}
+                        text="Add Another Match"
+                    />
+
+                    <Button
+                        mode={this.props.mode}
+                        type="submit"
+                        className="btn btn-success"
+                        onClick={this.handleSubmit}
+                        text={title + " Game Day"}
+                    />
                 </form>
             </div>
         );
@@ -320,40 +315,22 @@ export class GameDay extends React.Component {
 
 class Match extends React.Component {
     render() {
-        const title = titles[this.props.mode];
-
-        let addPlayerButton = '';
-        if (this.props.mode !== 'view') {
-            addPlayerButton = <button
-                type="submit"
-                className="btn btn-primary"
-                onClick={(e) => {
-                    e.preventDefault();
-                    return this.props.handleAddPlayer(this.props.prefix + ".playerStatistics");
-                }}
-            >
-                {title} player
-            </button>
-        }
-
-        let removeMatchButton = '';
-        if (this.props.mode !== 'view') {
-            removeMatchButton = <button
-                type="submit"
-                className="btn btn-primary"
-                onClick={(e) => {
-                    e.preventDefault();
-                    this.props.handleRemoveMatch(this.props.data.order);
-                }}
-                disabled={this.props.disableRemoveButton}
-            >
-                Remove
-            </button>
-        }
-
         return (
             <div>
-                <h2>Match #{this.props.data.order} {removeMatchButton}</h2>
+                <h2>
+                    Match #{this.props.data.order}
+                    <Button
+                        mode={this.props.mode}
+                        type="submit"
+                        className="btn btn-primary"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            this.props.handleRemoveMatch(this.props.data.order);
+                        }}
+                        disabled={this.props.disableRemoveButton}
+                        text="Remove"
+                    />
+                </h2>
                 <ol>
                     {this.props.data.playerStatistics.map((playerStatistic, index) =>
                         <li key={index}>
@@ -368,7 +345,17 @@ class Match extends React.Component {
                         </li>
                     )}
                 </ol>
-                {addPlayerButton}
+
+                <Button
+                    mode={this.props.mode}
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        return this.props.handleAddPlayer(this.props.prefix + ".playerStatistics");
+                    }}
+                    text="Add Another Player"
+                />
             </div>
         );
     }
@@ -377,22 +364,6 @@ class Match extends React.Component {
 class Player extends React.Component {
     render() {
         const prefix = this.props.prefix + ".";
-
-        let removePlayerButton = '';
-        if (this.props.mode !== 'view') {
-            removePlayerButton = <button
-                type="submit"
-                className="btn btn-primary"
-                onClick={(e) => {
-                    e.preventDefault();
-                    return this.props.handleRemovePlayer(this.props.prefix);
-                }}
-                disabled={this.props.disableRemovePlayerButton}
-            >
-                Remove
-            </button>
-        }
-
         return (
             <div>
                 <div className="row mb-3">
@@ -408,7 +379,16 @@ class Player extends React.Component {
                         />
                     </div>
                     <div className="col-2 col-sm-2">
-                        {removePlayerButton}
+                        <Button
+                            type="submit"
+                            className="btn btn-primary"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                return this.props.handleRemovePlayer(this.props.prefix);
+                            }}
+                            disabled={this.props.disableRemovePlayerButton}
+                            text="Remove"
+                        />
                     </div>
                 </div>
                 <fieldset className="row mb-3">
@@ -517,6 +497,28 @@ class Player extends React.Component {
                     </div>
                 </div>
             </div>
+        );
+    }
+}
+
+class Button extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        if (this.props.mode === 'view') {
+            return '';
+        }
+        return (
+            <button
+                type={this.props.type}
+                className={this.props.className}
+                onClick={this.props.onClick}
+                disabled={this.props.disabled}
+            >
+                {this.props.text}
+            </button>
         );
     }
 }
