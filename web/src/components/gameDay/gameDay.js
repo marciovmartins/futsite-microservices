@@ -213,11 +213,11 @@ export class GameDay extends React.Component {
         let currentState = {...this.state};
         const path = ("data." + key).split('.');
         const playerToRemove = getNestedValue(currentState, path);
-        let players = path.slice(0, path.length - 2);
-        players.push("players");
-        let value = getNestedValue(currentState, players)
-            .filter(player => playerToRemove.userId !== player.userId);
-        setNestedKey(currentState, players, value);
+        let playerStatistics = path.slice(0, path.length - 2);
+        playerStatistics.push("playerStatistics");
+        let value = getNestedValue(currentState, playerStatistics)
+            .filter(playerStatistic => playerToRemove.playerId !== playerStatistic.playerId);
+        setNestedKey(currentState, playerStatistics, value);
         this.setState(currentState);
     }
 
@@ -298,7 +298,7 @@ export class GameDay extends React.Component {
     createEmptyMatch(order) {
         return {
             order: order,
-            players: [
+            playerStatistics: [
                 this.createEmptyPlayer(),
                 this.createEmptyPlayer(),
             ]
@@ -307,7 +307,7 @@ export class GameDay extends React.Component {
 
     createEmptyPlayer() {
         return {
-            userId: uuidV4(),
+            playerId: uuidV4(),
             team: "",
             goalsInFavor: "",
             goalsAgainst: "",
@@ -329,7 +329,7 @@ class Match extends React.Component {
                 className="btn btn-primary"
                 onClick={(e) => {
                     e.preventDefault();
-                    return this.props.handleAddPlayer(this.props.prefix + ".players");
+                    return this.props.handleAddPlayer(this.props.prefix + ".playerStatistics");
                 }}
             >
                 {title} player
@@ -355,15 +355,15 @@ class Match extends React.Component {
             <div>
                 <h2>Match #{this.props.data.order} {removeMatchButton}</h2>
                 <ol>
-                    {this.props.data.players.map((player, index) =>
+                    {this.props.data.playerStatistics.map((playerStatistic, index) =>
                         <li key={index}>
                             <Player
-                                prefix={this.props.prefix + ".players." + index}
-                                data={player}
+                                prefix={this.props.prefix + ".playerStatistics." + index}
+                                data={playerStatistic}
                                 handleInputChange={this.props.handleInputChange}
                                 handleRemovePlayer={this.props.handleRemovePlayer}
                                 mode={this.props.mode}
-                                disableRemovePlayerButton={this.props.data.players.length < 3}
+                                disableRemovePlayerButton={this.props.data.playerStatistics.length < 3}
                             />
                         </li>
                     )}
@@ -396,12 +396,12 @@ class Player extends React.Component {
         return (
             <div>
                 <div className="row mb-3">
-                    <label htmlFor="userId" className="col-sm-2 col-form-label">User Id</label>
+                    <label htmlFor="playerId" className="col-sm-2 col-form-label">Player Id</label>
                     <div className="col-1 col-sm-8">
-                        <input name={prefix + "userId"}
+                        <input name={prefix + "playerId"}
                                type="text"
                                className="form-control"
-                               value={this.props.data.userId}
+                               value={this.props.data.playerId}
                                onChange={this.props.handleInputChange}
                                required
                                readOnly={this.props.mode === 'view'}
