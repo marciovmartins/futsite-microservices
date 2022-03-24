@@ -274,11 +274,6 @@ class GameDayControllerIT : BaseIT() {
     }
 
     @Test
-    fun `do not allow http post root game day resource`() {
-        TODO("need to be implemented")
-    }
-
-    @Test
     fun `do not allow http post to game day with uuid resource`() {
         // setup
         val gameDayId = UUID.randomUUID().toString()
@@ -393,32 +388,6 @@ class GameDayControllerIT : BaseIT() {
                     ),
                     _links = Links(self = Links.Link("something")),
                     page = Page(size = 20, totalElements = 5, totalPages = 1, number = 0)
-                )
-            )
-    }
-
-    @Test
-    fun `graceful error finding game days with invalid amateurSoccerGroupId`() {
-        // setup
-        val amateurSoccerGroupId = "undefined"
-
-        // execution
-        val response = webTestClient.get()
-            .uri("gameDays/search/byAmateurSoccerGroupId?amateurSoccerGroupId={id}", amateurSoccerGroupId)
-            .exchange()
-
-        // assertions
-        val actualException = response.expectStatus().isNotFound
-            .expectBody(ExpectedResponseBody::class.java)
-            .returnResult().responseBody
-        assertThat(actualException)
-            .usingRecursiveComparison()
-            .ignoringCollectionOrder()
-            .isEqualTo(
-                ExpectedResponseBody(
-                    title = "Not Found",
-                    status = 404,
-                    detail = "No handler found for POST /gameDays/search/byAmateurSoccerGroupId?amateurSoccerGroupId=$amateurSoccerGroupId"
                 )
             )
     }
