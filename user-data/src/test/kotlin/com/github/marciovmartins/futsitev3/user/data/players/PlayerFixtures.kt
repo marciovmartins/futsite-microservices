@@ -20,3 +20,28 @@ class PlayerDTO(
     val userId: Any? = null,
     val nickname: Any? = null
 )
+
+data class PlayerCollection(
+    val _embedded: EmbeddedPlayers,
+    val _links: Links,
+    val page: Page,
+) {
+    data class EmbeddedPlayers(
+        val players: List<PlayerDTO>,
+    )
+}
+
+data class Links(
+    val self: Link,
+) {
+    data class Link(
+        val href: String,
+    )
+}
+
+data class Page(
+    val size: Long,
+    val totalElements: Long,
+    val totalPages: Long,
+    val number: Long
+)
