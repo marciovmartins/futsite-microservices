@@ -2,7 +2,7 @@ package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 
 import com.github.marciovmartins.futsitev3.gameDay.A
 import com.github.marciovmartins.futsitev3.gameDay.B
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerStatisticDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
@@ -29,68 +29,68 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         ),
         // MATCH PLAYERS
         singleMatchArgument(
-            testDescription = "invalid game day with exactly only one match player of team A",
-            players = setOf(
-                playerDTO(team = A),
+            testDescription = "invalid game day with exactly only one match player statistics of team A",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A),
             ),
             expectedExceptions = singleExpectedException(
-                message = "must have at least one player for team A and one player for team B",
-                field = "matches[].players",
+                message = "must have at least one player statistic for team A and one player statistic for team B",
+                field = "matches[].playerStatistics",
             ),
         ),
         singleMatchArgument(
-            testDescription = "invalid game day with exactly only one match player of team B",
-            players = setOf(
-                playerDTO(team = B),
+            testDescription = "invalid game day with exactly only one match player statistics of team B",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
-                message = "must have at least one player for team A and one player for team B",
-                field = "matches[].players",
+                message = "must have at least one player statistic for team A and one player statistic for team B",
+                field = "matches[].playerStatistics",
             ),
         ),
         singleMatchArgument(
-            testDescription = "invalid game day with only match players from team A",
-            players = setOf(
-                playerDTO(team = A),
-                playerDTO(team = A),
+            testDescription = "invalid game day with only match player statistics from team A",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A),
+                playerStatisticDTO(team = A),
             ),
             expectedExceptions = singleExpectedException(
-                message = "must have at least one player for team A and one player for team B",
-                field = "matches[].players",
+                message = "must have at least one player statistic for team A and one player statistic for team B",
+                field = "matches[].playerStatistics",
             ),
         ),
         singleMatchArgument(
-            testDescription = "invalid game day with only match players from team B",
-            players = setOf(
-                playerDTO(team = B),
-                playerDTO(team = B),
+            testDescription = "invalid game day with only match player statistics from team B",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = B),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
-                message = "must have at least one player for team A and one player for team B",
-                field = "matches[].players",
+                message = "must have at least one player statistic for team A and one player statistic for team B",
+                field = "matches[].playerStatistics",
             ),
         ),
         singleMatchArgument(
             testDescription = "invalid game day with duplicated player user id in different team",
-            players = setOf(
-                playerDTO(team = A, userId = "d636819a-7df6-4c07-90ff-e4a781530500"),
-                playerDTO(team = B, userId = "d636819a-7df6-4c07-90ff-e4a781530500"),
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, playerId = "d636819a-7df6-4c07-90ff-e4a781530500"),
+                playerStatisticDTO(team = B, playerId = "d636819a-7df6-4c07-90ff-e4a781530500"),
             ),
             expectedExceptions = singleExpectedException(
                 message = "cannot have duplicated player user id",
-                field = "matches[].players"
+                field = "matches[].playerStatistics"
             )
         ),
         singleMatchArgument(
             testDescription = "invalid game day with duplicated player user id on same team",
-            players = setOf(
-                playerDTO(team = A, userId = "f70897f4-497b-48f2-8094-18464886195b"),
-                playerDTO(team = A, userId = "f70897f4-497b-48f2-8094-18464886195b"),
-                playerDTO(team = B),
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, playerId = "f70897f4-497b-48f2-8094-18464886195b"),
+                playerStatisticDTO(team = A, playerId = "f70897f4-497b-48f2-8094-18464886195b"),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "cannot have duplicated player user id",
-                field = "matches[].players"
+                field = "matches[].playerStatistics"
             )
         ),
     )

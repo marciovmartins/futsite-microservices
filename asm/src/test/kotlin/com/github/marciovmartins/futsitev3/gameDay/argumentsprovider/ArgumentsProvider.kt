@@ -6,9 +6,9 @@ import com.github.marciovmartins.futsitev3.gameDay.ExpectedException
 import com.github.marciovmartins.futsitev3.gameDay.GameDayDTO
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.gameDayDTO
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.matchDTO
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerStatisticDTO
 import com.github.marciovmartins.futsitev3.gameDay.MatchDTO
-import com.github.marciovmartins.futsitev3.gameDay.PlayerDTO
+import com.github.marciovmartins.futsitev3.gameDay.PlayerStatisticDTO
 import org.junit.jupiter.params.provider.Arguments
 import java.time.LocalDate
 import java.util.UUID
@@ -31,13 +31,13 @@ internal fun gameDayArgument(
 internal fun singleMatchArgument(
     testDescription: String,
     order: Any? = 1,
-    players: Set<PlayerDTO> = setOf(playerDTO(team = A), playerDTO(team = B)),
+    playerStatistics: Set<PlayerStatisticDTO> = setOf(playerStatisticDTO(team = A), playerStatisticDTO(team = B)),
     expectedExceptions: Set<ExpectedException>? = null
 ): Arguments = Arguments.of(
     testDescription,
     gameDayDTO(
         matches = setOf(
-            matchDTO(order = order, players = players)
+            matchDTO(order = order, players = playerStatistics)
         ),
     ),
     expectedExceptions

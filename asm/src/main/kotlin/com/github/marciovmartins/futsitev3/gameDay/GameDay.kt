@@ -76,12 +76,12 @@ class Match(
     @field:UniquePlayers
     @JoinColumn(name = "match_id", nullable = false)
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-    var players: Set<Player>
+    var playerStatistics: Set<PlayerStatistic>
 )
 
 @Suppress("unused")
-@Entity(name = "players")
-class Player(
+@Entity(name = "player_statistics")
+class PlayerStatistic(
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,7 +92,7 @@ class Player(
 
     @field:NotNull
     @Type(type = "uuid-char")
-    var userId: UUID,
+    var playerId: UUID,
 
     @field:Max(99)
     @field:PositiveOrZero

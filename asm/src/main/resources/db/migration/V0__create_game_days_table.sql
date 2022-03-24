@@ -17,17 +17,17 @@ create table matches
         foreign key (game_day_id) references game_days (id)
 );
 
-create table players
+create table player_statistics
 (
     id             int unsigned auto_increment primary key,
     match_id       int unsigned     not null,
-    user_id        varchar(36)      not null,
+    player_id      varchar(36)      not null,
     team           enum ('A', 'B')  not null,
     goals_in_favor tinyint unsigned not null,
     goals_against  tinyint unsigned not null,
     yellow_cards   tinyint unsigned not null,
     blue_cards     tinyint unsigned not null,
     red_cards      tinyint unsigned not null,
-    constraint match_players_matches_id_fk
+    constraint match_player_statistics_matches_id_fk
         foreign key (match_id) references matches (id)
 );

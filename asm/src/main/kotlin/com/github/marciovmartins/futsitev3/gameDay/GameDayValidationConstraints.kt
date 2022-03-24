@@ -60,15 +60,16 @@ annotation class SequentialMatchOrder(
 @Target(AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
 @Constraint(validatedBy = [BothTeams.BothTeamsConstraintValidator::class])
 annotation class BothTeams(
-    val message: String = "must have at least one player for team A and one player for team B",
+    val message: String = "must have at least one player statistic for team A and one player statistic for team B",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<Payload>> = []
 ) {
-    class BothTeamsConstraintValidator : ConstraintValidator<BothTeams, Set<Player>> {
-        override fun isValid(value: Set<Player>?, context: ConstraintValidatorContext?) =
-            value == null || value.isEmpty() || hasMatchPlayersFromBothTeams(value)
+    class BothTeamsConstraintValidator : ConstraintValidator<BothTeams, Set<PlayerStatistic>> {
+        override fun isValid(value: Set<PlayerStatistic>?, context: ConstraintValidatorContext?) =
+            value == null || value.isEmpty() || hasMatchPlayerStatisticsFromBothTeams(value)
 
-        private fun hasMatchPlayersFromBothTeams(value: Set<Player>) = value.map { it.team }.toSet().size > 1
+        private fun hasMatchPlayerStatisticsFromBothTeams(value: Set<PlayerStatistic>) =
+            value.map { it.team }.toSet().size > 1
     }
 }
 
@@ -79,10 +80,11 @@ annotation class UniquePlayers(
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<Payload>> = []
 ) {
-    class UniquePlayersConstraintValidator : ConstraintValidator<UniquePlayers, Set<Player>> {
-        override fun isValid(value: Set<Player>?, context: ConstraintValidatorContext?) =
-            value == null || value.isEmpty() || hasUniquePlayers(value)
+    class UniquePlayersConstraintValidator : ConstraintValidator<UniquePlayers, Set<PlayerStatistic>> {
+        override fun isValid(value: Set<PlayerStatistic>?, context: ConstraintValidatorContext?) =
+            value == null || value.isEmpty() || hasUniquePlayerStatistics(value)
 
-        private fun hasUniquePlayers(value: Set<Player>) = value.map { it.userId }.toSet().size == value.size
+        private fun hasUniquePlayerStatistics(value: Set<PlayerStatistic>) =
+            value.map { it.playerId }.toSet().size == value.size
     }
 }

@@ -16,18 +16,18 @@ object GameDayFixture {
 
     fun matchDTO(
         order: Any? = 1,
-        players: Set<PlayerDTO>? = setOf(playerDTO(team = A), playerDTO(team = B))
+        players: Set<PlayerStatisticDTO>? = setOf(playerStatisticDTO(team = A), playerStatisticDTO(team = B))
     ) = MatchDTO(order, players)
 
-    fun playerDTO(
+    fun playerStatisticDTO(
         team: Any?,
-        userId: Any? = UUID.randomUUID().toString(),
+        playerId: Any? = UUID.randomUUID().toString(),
         goalsInFavor: Any? = faker.random().nextInt(0, 5),
         goalsAgainst: Any? = faker.random().nextInt(0, 1),
         yellowCards: Any? = faker.random().nextInt(0, 2),
         blueCards: Any? = faker.random().nextInt(0, 3),
         redCards: Any? = faker.random().nextInt(0, 1),
-    ) = PlayerDTO(team, userId, goalsInFavor, goalsAgainst, yellowCards, blueCards, redCards)
+    ) = PlayerStatisticDTO(team, playerId, goalsInFavor, goalsAgainst, yellowCards, blueCards, redCards)
 }
 
 data class GameDayDTO(
@@ -41,12 +41,12 @@ data class GameDayDTO(
 
 data class MatchDTO(
     val order: Any?,
-    val players: Set<PlayerDTO>?,
+    val playerStatistics: Set<PlayerStatisticDTO>?,
 )
 
-data class PlayerDTO(
+data class PlayerStatisticDTO(
     val team: Any?,
-    val userId: Any?,
+    val playerId: Any?,
     val goalsInFavor: Any?,
     val goalsAgainst: Any?,
     val yellowCards: Any?,
@@ -91,5 +91,5 @@ data class ExpectedException(
     val field: String? = null,
 )
 
-val A = Player.Team.A.name
-val B = Player.Team.B.name
+val A = PlayerStatistic.Team.A.name
+val B = PlayerStatistic.Team.B.name

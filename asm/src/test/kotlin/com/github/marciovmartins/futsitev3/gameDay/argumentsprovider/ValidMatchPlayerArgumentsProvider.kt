@@ -3,7 +3,7 @@ package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 import com.github.marciovmartins.futsitev3.gameDay.A
 import com.github.marciovmartins.futsitev3.gameDay.B
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.matchDTO
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerStatisticDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
@@ -17,8 +17,8 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, goalsInFavor = 0),
-                        playerDTO(team = B)
+                        playerStatisticDTO(team = A, goalsInFavor = 0),
+                        playerStatisticDTO(team = B)
                     ),
                 ),
             ),
@@ -28,8 +28,8 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, goalsInFavor = 99),
-                        playerDTO(team = B)
+                        playerStatisticDTO(team = A, goalsInFavor = 99),
+                        playerStatisticDTO(team = B)
                     ),
                 ),
             ),
@@ -40,8 +40,8 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, goalsAgainst = 0),
-                        playerDTO(team = B)
+                        playerStatisticDTO(team = A, goalsAgainst = 0),
+                        playerStatisticDTO(team = B)
                     ),
                 ),
             ),
@@ -51,8 +51,8 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, goalsAgainst = 99),
-                        playerDTO(team = B)
+                        playerStatisticDTO(team = A, goalsAgainst = 99),
+                        playerStatisticDTO(team = B)
                     ),
                 ),
             ),
@@ -63,8 +63,8 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, yellowCards = 0),
-                        playerDTO(team = B)
+                        playerStatisticDTO(team = A, yellowCards = 0),
+                        playerStatisticDTO(team = B)
                     ),
                 ),
             ),
@@ -74,8 +74,8 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, yellowCards = 99),
-                        playerDTO(team = B)
+                        playerStatisticDTO(team = A, yellowCards = 99),
+                        playerStatisticDTO(team = B)
                     ),
                 ),
             ),
@@ -85,8 +85,8 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, blueCards = 99),
-                        playerDTO(team = B)
+                        playerStatisticDTO(team = A, blueCards = 99),
+                        playerStatisticDTO(team = B)
                     ),
                 ),
             ),
@@ -96,8 +96,8 @@ object ValidMatchPlayerArgumentsProvider : ArgumentsProvider {
             matches = setOf(
                 matchDTO(
                     players = setOf(
-                        playerDTO(team = A, redCards = 99),
-                        playerDTO(team = B)
+                        playerStatisticDTO(team = A, redCards = 99),
+                        playerStatisticDTO(team = B)
                     ),
                 ),
             ),

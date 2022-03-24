@@ -2,119 +2,119 @@ package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 
 import com.github.marciovmartins.futsitev3.gameDay.A
 import com.github.marciovmartins.futsitev3.gameDay.B
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerStatisticDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import java.util.stream.Stream
 
-object InvalidPlayerArgumentsProvider : ArgumentsProvider {
+object InvalidPlayerStatisticsArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         // TEAM
         singleMatchArgument(
-            testDescription = "invalid game day with invalid empty match player team value",
-            players = setOf(
-                playerDTO(team = A),
-                playerDTO(team = B),
-                playerDTO(team = ""),
+            testDescription = "invalid game day with invalid empty match player statistics team value",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A),
+                playerStatisticDTO(team = B),
+                playerStatisticDTO(team = ""),
             ),
             expectedExceptions = singleExpectedException(
                 message = "Cannot coerce empty String",
-                field = "matches[].players[].team",
+                field = "matches[].playerStatistics[].team",
             ),
         ),
         singleMatchArgument(
-            testDescription = "invalid game day with invalid empty match player team value",
-            players = setOf(
-                playerDTO(team = A),
-                playerDTO(team = B),
-                playerDTO(team = " "),
+            testDescription = "invalid game day with invalid empty match player statistics team value",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A),
+                playerStatisticDTO(team = B),
+                playerStatisticDTO(team = " "),
             ),
             expectedExceptions = singleExpectedException(
                 message = "Cannot coerce empty String",
-                field = "matches[].players[].team",
+                field = "matches[].playerStatistics[].team",
             ),
         ),
         singleMatchArgument(
-            testDescription = "invalid game day with invalid match player team value",
-            players = setOf(
-                playerDTO(team = A),
-                playerDTO(team = B),
-                playerDTO(team = "C"),
+            testDescription = "invalid game day with invalid match player statistics team value",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A),
+                playerStatisticDTO(team = B),
+                playerStatisticDTO(team = "C"),
             ),
             expectedExceptions = singleExpectedException(
                 message = "\"C\" is not one of the values accepted: [A, B]",
-                field = "matches[].players[].team",
+                field = "matches[].playerStatistics[].team",
             ),
         ),
         singleMatchArgument(
-            testDescription = "invalid game day with match player team value in smallcase",
-            players = setOf(
-                playerDTO(team = "a"),
-                playerDTO(team = B),
+            testDescription = "invalid game day with match player statistics team value in smallcase",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = "a"),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "\"a\" is not one of the values accepted: [A, B]",
-                field = "matches[].players[].team",
+                field = "matches[].playerStatistics[].team",
             ),
         ),
         // USER_ID
         singleMatchArgument(
-            testDescription = "invalid game day with null match player userId",
-            players = setOf(
-                playerDTO(team = A, userId = null),
-                playerDTO(team = B),
+            testDescription = "invalid game day with null match player statistics userId",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, playerId = null),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "cannot be null",
-                field = "matches[].players[].userId"
+                field = "matches[].playerStatistics[].playerId"
             ),
         ),
         singleMatchArgument(
-            testDescription = "invalid game day with invalid match player userId",
-            players = setOf(
-                playerDTO(team = A, userId = "invalid-uuid"),
-                playerDTO(team = B),
+            testDescription = "invalid game day with invalid match player statistics userId",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, playerId = "invalid-uuid"),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "Invalid uuid format",
-                field = "matches[].players[].userId",
+                field = "matches[].playerStatistics[].playerId",
             )
         ),
         // GOALS IN FAVOR
         singleMatchArgument(
-            testDescription = "invalid game day with negative match player goals in favor",
-            players = setOf(
-                playerDTO(team = A, goalsInFavor = -1),
-                playerDTO(team = B),
+            testDescription = "invalid game day with negative match player statistics goals in favor",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, goalsInFavor = -1),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must be greater than or equal to 0",
-                field = "matches[].players[].goalsInFavor",
+                field = "matches[].playerStatistics[].goalsInFavor",
             ),
         ),
         singleMatchArgument(
-            testDescription = "invalid game day with match player goals in favor value exceeding 9",
-            players = setOf(
-                playerDTO(team = A, goalsInFavor = 100),
-                playerDTO(team = B),
+            testDescription = "invalid game day with match player statistics goals in favor value exceeding 9",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, goalsInFavor = 100),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must be less than or equal to 99",
-                field = "matches[].players[].goalsInFavor",
+                field = "matches[].playerStatistics[].goalsInFavor",
             ),
         ),
 //        matchArgument( // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
-//            description = "invalid game day with null match player goals in favor",
+//            description = "invalid game day with null match player statistics goals in favor",
 //            matchPlayers = setOf(
 //                matchPlayerArgument(team = A, goalsInFavor = null),
 //                matchPlayerArgument(team = B),
 //            ),
 //            exceptionMessage = "cannot be null",
-//            exceptionField = "matches[].players[].goalsInFavor",
+//            exceptionField = "matches[].playerStatistics[].goalsInFavor",
 //        ),
 //        matchArgument( // kotlin automatically converts from double to short rounding down
-//            description = "invalid game day with match player goals in favor value as double",
+//            description = "invalid game day with match player statistics goals in favor value as double",
 //            matchPlayers = setOf(
 //                matchPlayerArgument(team = A, goalsInFavor = 2.9),
 //                matchPlayerArgument(team = B),
@@ -125,38 +125,38 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
 
         // GOALS AGAINST
         singleMatchArgument(
-            testDescription = "invalid game day with negative match player goals against",
-            players = setOf(
-                playerDTO(team = A, goalsAgainst = -1),
-                playerDTO(team = B),
+            testDescription = "invalid game day with negative match player statistics goals against",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, goalsAgainst = -1),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must be greater than or equal to 0",
-                field = "matches[].players[].goalsAgainst",
+                field = "matches[].playerStatistics[].goalsAgainst",
             ),
         ),
         singleMatchArgument(
-            testDescription = "invalid game day with match player goals against value exceeding 9",
-            players = setOf(
-                playerDTO(team = A, goalsAgainst = 100),
-                playerDTO(team = B),
+            testDescription = "invalid game day with match player statistics goals against value exceeding 9",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, goalsAgainst = 100),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must be less than or equal to 99",
-                field = "matches[].players[].goalsAgainst",
+                field = "matches[].playerStatistics[].goalsAgainst",
             ),
         ),
 //        matchArgument( // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
-//            description = "invalid game day with null match player goals against",
+//            description = "invalid game day with null match player statistics goals against",
 //            matchPlayers = setOf(
 //                matchPlayerArgument(team = A, goalsAgainst = null),
 //                matchPlayerArgument(team = B),
 //            ),
 //            exceptionMessage = "cannot be null",
-//            exceptionField = "matches[].players[].goalsAgainst",
+//            exceptionField = "matches[].playerStatistics[].goalsAgainst",
 //        ),
 //        matchArgument( // kotlin automatically converts from double to short rounding down
-//            description = "invalid game day with match player goals against value as double",
+//            description = "invalid game day with match player statistics goals against value as double",
 //            matchPlayers = setOf(
 //                matchPlayerArgument(team = A, goalsAgainst = 2.9),
 //                matchPlayerArgument(team = B),
@@ -167,38 +167,38 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
 
         // YELLOW CARDS
         singleMatchArgument(
-            testDescription = "invalid game day with negative match player yellow cards",
-            players = setOf(
-                playerDTO(team = A, yellowCards = -1),
-                playerDTO(team = B),
+            testDescription = "invalid game day with negative match player statistics yellow cards",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, yellowCards = -1),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must be greater than or equal to 0",
-                field = "matches[].players[].yellowCards",
+                field = "matches[].playerStatistics[].yellowCards",
             ),
         ),
         singleMatchArgument(
-            testDescription = "invalid game day with match player yellow cards value exceeding 9",
-            players = setOf(
-                playerDTO(team = A, yellowCards = 100),
-                playerDTO(team = B),
+            testDescription = "invalid game day with match player statistics yellow cards value exceeding 9",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, yellowCards = 100),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must be less than or equal to 99",
-                field = "matches[].players[].yellowCards",
+                field = "matches[].playerStatistics[].yellowCards",
             ),
         ),
 //        matchArgument( // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
-//            description = "invalid game day with null match player yellow cards",
+//            description = "invalid game day with null match player statistics yellow cards",
 //            matchPlayers = setOf(
 //                matchPlayerArgument(team = A, yellowCards = null),
 //                matchPlayerArgument(team = B),
 //            ),
 //            exceptionMessage = "cannot be null",
-//            exceptionField = "matches[].players[].yellowCards",
+//            exceptionField = "matches[].playerStatistics[].yellowCards",
 //        ),
 //        matchArgument( //Kotlin automatically converts from double to short rounding down
-//            description = "invalid game day with match player yellow cards value as double",
+//            description = "invalid game day with match player statistics yellow cards value as double",
 //            matchPlayers = setOf(
 //                matchPlayerArgument(team = A, yellowCards = 2.9),
 //                matchPlayerArgument(team = B),
@@ -209,38 +209,38 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
 
         // BLUE CARDS
         singleMatchArgument(
-            testDescription = "invalid game day with negative match player blue cards",
-            players = setOf(
-                playerDTO(team = A, blueCards = -1),
-                playerDTO(team = B),
+            testDescription = "invalid game day with negative match player statistics blue cards",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, blueCards = -1),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must be greater than or equal to 0",
-                field = "matches[].players[].blueCards",
+                field = "matches[].playerStatistics[].blueCards",
             ),
         ),
         singleMatchArgument(
-            testDescription = "invalid game day with match player blue cards value exceeding 9",
-            players = setOf(
-                playerDTO(team = A, blueCards = 100),
-                playerDTO(team = B),
+            testDescription = "invalid game day with match player statistics blue cards value exceeding 9",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, blueCards = 100),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must be less than or equal to 99",
-                field = "matches[].players[].blueCards",
+                field = "matches[].playerStatistics[].blueCards",
             ),
         ),
 //        matchArgument( // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
-//            description = "invalid game day with null match player blue cards",
+//            description = "invalid game day with null match player statistics blue cards",
 //            matchPlayers = setOf(
 //                matchPlayerArgument(team = A, blueCards = null),
 //                matchPlayerArgument(team = B),
 //            ),
 //            exceptionMessage = "cannot be null",
-//            exceptionField = "matches[].players[].blueCards",
+//            exceptionField = "matches[].playerStatistics[].blueCards",
 //        ),
 //        matchArgument( //Kotlin automatically converts from double to short rounding down
-//            description = "invalid game day with match player blue cards value as double",
+//            description = "invalid game day with match player statistics blue cards value as double",
 //            matchPlayers = setOf(
 //                matchPlayerArgument(team = A, blueCards = 2.9),
 //                matchPlayerArgument(team = B),
@@ -251,38 +251,38 @@ object InvalidPlayerArgumentsProvider : ArgumentsProvider {
 
         // RED CARDS
         singleMatchArgument(
-            testDescription = "invalid game day with negative match player red cards",
-            players = setOf(
-                playerDTO(team = A, redCards = -1),
-                playerDTO(team = B),
+            testDescription = "invalid game day with negative match player statistics red cards",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, redCards = -1),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must be greater than or equal to 0",
-                field = "matches[].players[].redCards",
+                field = "matches[].playerStatistics[].redCards",
             ),
         ),
         singleMatchArgument(
-            testDescription = "invalid game day with match player red cards value exceeding 9",
-            players = setOf(
-                playerDTO(team = A, redCards = 100),
-                playerDTO(team = B),
+            testDescription = "invalid game day with match player statistics red cards value exceeding 9",
+            playerStatistics = setOf(
+                playerStatisticDTO(team = A, redCards = 100),
+                playerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must be less than or equal to 99",
-                field = "matches[].players[].redCards",
+                field = "matches[].playerStatistics[].redCards",
             ),
         ),
 //        matchArgument( // https://stackoverflow.com/questions/49900920/kotlin-can-i-force-not-nullable-long-to-be-represented-as-non-primitive-type-in
-//            description = "invalid game day with null match player red cards",
+//            description = "invalid game day with null match player statistics red cards",
 //            matchPlayers = setOf(
 //                matchPlayerArgument(team = A, redCards = null),
 //                matchPlayerArgument(team = B),
 //            ),
 //            exceptionMessage = "cannot be null",
-//            exceptionField = "matches[].players[].redCards",
+//            exceptionField = "matches[].playerStatistics[].redCards",
 //        ),
 //        matchArgument( //Kotlin automatically converts from double to short rounding down
-//            description = "invalid game day with match player red cards value as double",
+//            description = "invalid game day with match player statistics red cards value as double",
 //            matchPlayers = setOf(
 //                matchPlayerArgument(team = A, redCards = 2.9),
 //                matchPlayerArgument(team = B),

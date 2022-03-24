@@ -4,7 +4,7 @@ import com.github.marciovmartins.futsitev3.BaseIT
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.gameDayDTO
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidGameDayArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidMatchArgumentsProvider
-import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidPlayerArgumentsProvider
+import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidPlayerStatisticsArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ValidGameDayArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ValidMatchPlayerArgumentsProvider
 import org.assertj.core.api.Assertions.assertThat
@@ -112,7 +112,7 @@ class GameDayControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(InvalidGameDayArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
-    @ArgumentsSource(InvalidPlayerArgumentsProvider::class)
+    @ArgumentsSource(InvalidPlayerStatisticsArgumentsProvider::class)
     fun `create game day with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
         gameDayToCreate: GameDayDTO,
@@ -146,7 +146,7 @@ class GameDayControllerIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(InvalidGameDayArgumentsProvider::class)
     @ArgumentsSource(InvalidMatchArgumentsProvider::class)
-    @ArgumentsSource(InvalidPlayerArgumentsProvider::class)
+    @ArgumentsSource(InvalidPlayerStatisticsArgumentsProvider::class)
     fun `update game day with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
         gameDayToUpdate: GameDayDTO,
@@ -423,16 +423,15 @@ class GameDayControllerIT : BaseIT() {
             )
     }
 
-    private fun createGameDay(amateurSoccerGroupId: Any? = null, date: Any? = null): GameDayDTO {
+    private fun createGameDay(amateurSoccerGroupId: Any? = null, date: Any? = LocalDate.now()): GameDayDTO {
         val gameDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
-        val gameDayLocationUrl = webTestClient.put()
-            .uri("gameDays/{id}", UUID.randomUUID().toString())
+        val gameDayId = UUID.randomUUID().toString()
+        webTestClient.put()
+            .uri("gameDays/{id}", gameDayId)
             .bodyValue(gameDayToCreate)
             .exchange()
-            .returnResult(Unit::class.java)
-            .responseHeaders.location.toString()
         return webTestClient.get()
-            .uri(gameDayLocationUrl)
+            .uri("gameDays/{id}", gameDayId)
             .exchange()
             .expectBody(GameDayDTO::class.java)
             .returnResult().responseBody!!
