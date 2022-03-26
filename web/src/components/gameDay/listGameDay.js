@@ -1,6 +1,7 @@
 import React from "react";
 import {v4 as uuidV4} from "uuid";
 import {GameDay} from "./gameDay";
+import {extractId} from "../helper";
 
 const asmGameDaysHref = 'http://localhost:8080/gameDays';
 
@@ -39,17 +40,17 @@ export class ListGameDay extends React.Component {
                     {this.state.gameDays.map(gameDay =>
                         <li key={gameDay.date}>
                             <a href={gameDay._links.self.href}
-                               onClick={(e) => this.openGameDay(e, this.extractGameDayId(gameDay._links.self.href), 'view')}
+                               onClick={(e) => this.openGameDay(e, extractId(gameDay._links.self.href), 'view')}
                             >{gameDay.date}</a>
 
                             &nbsp;
                             <a href={gameDay._links.self.href}
-                               onClick={(e) => this.openGameDay(e, this.extractGameDayId(gameDay._links.self.href), 'edit')}
+                               onClick={(e) => this.openGameDay(e, extractId(gameDay._links.self.href), 'edit')}
                             >[edit]</a>
 
                             &nbsp;
                             <a href={gameDay._links.self.href}
-                               onClick={(e) => this.removeGameDay(e, this.extractGameDayId(gameDay._links.self.href))}
+                               onClick={(e) => this.removeGameDay(e, extractId(gameDay._links.self.href))}
                             >[remove]</a>
                         </li>
                     )}
@@ -93,10 +94,5 @@ export class ListGameDay extends React.Component {
             mode: "cors"
         })
             .then(() => this.fetchGameDays(this.props.amateurSoccerGroupId));
-    }
-
-    extractGameDayId(href) {
-        let hrefArray = href.split('/');
-        return hrefArray[hrefArray.length - 1];
     }
 }

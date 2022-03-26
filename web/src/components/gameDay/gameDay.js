@@ -4,11 +4,13 @@ import {getNestedValue, setNestedKey} from "../../helper-functions";
 import {ListGameDay} from "./listGameDay";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {extractId} from "../helper";
 
 const titles = {'add': 'Create', 'edit': 'Edit', 'view': 'View'}
 
 const asmGameDaysHref = "http://localhost:8080/gameDays";
 const userDataGameDaysHref = "http://localhost:8081/gameDays";
+const userDataPlayersDaysHref = "http://localhost:8081/players";
 
 export class GameDay extends React.Component {
     constructor(props) {
@@ -22,26 +24,13 @@ export class GameDay extends React.Component {
                 description: '',
                 matches: [this.createEmptyMatch(1)],
             },
-            players: [
-                {
-                    id: '6ef70370-61cd-4c53-9746-940c6b5edcae',
-                    nickname: 'John Doe'
-                },
-                {
-                    id: 'a540879d-697e-4bdf-a48d-a0ec6eb8b4cc',
-                    nickname: 'Jane Doe'
-                },
-                {
-                    id: 'a9f02eb3-0417-49f2-9e48-9ec01441fa52',
-                    nickname: 'Marcio Doe'
-                },
-            ],
+            players: [],
         }
     }
 
     componentDidMount() {
         if (this.props.mode !== 'add') {
-            this.fetchGameDay(this.props.gameDayId)
+            this.fetchGameDay(this.props.gameDayId, this.props.amateurSoccerGroupId)
         }
     }
 
@@ -155,13 +144,15 @@ export class GameDay extends React.Component {
         );
     }
 
-    fetchGameDay() {
+    fetchGameDay(gameDayId, amateurSoccerGroupId) {
         Promise.all([
             this.fetchAsmGameDay(),
             this.fetchUserDataGameDay(),
-        ]).then(([asmGameDay, userDataGameDay]) => {
+            this.fetchUserDataPlayers(amateurSoccerGroupId),
+        ]).then(([asmGameDay, userDataGameDay, userDataPlayers]) => {
             this.setState({
-                data: {...asmGameDay, ...userDataGameDay}
+                data: {...asmGameDay, ...userDataGameDay},
+                    ...userDataPlayers
             });
         });
     }
@@ -186,6 +177,26 @@ export class GameDay extends React.Component {
                 quote: json.quote || "",
                 author: json.author || "",
                 description: json.description || "",
+            }));
+    }
+
+    fetchUserDataPlayers(amateurSoccerGroupId) {
+        function map(players) {
+            return (players || []).map(player => ({
+                id: extractId(player._links.player.href) || '',
+                nickname: player.nickname || '',
+            }));
+        }
+
+        return fetch(userDataPlayersDaysHref + "/search/byAmateurSoccerGroupId?amateurSoccerGroupId=" + amateurSoccerGroupId, {
+            method: 'GET',
+            headers: {"Accept": "application/hal+json"},
+            mode: "cors"
+        })
+            .then(response => response.json())
+            .then(json => json._embedded || {players: []})
+            .then(embedded => ({
+                players: map(embedded.players)
             }));
     }
 
