@@ -16,12 +16,26 @@ export class GameDay extends React.Component {
         this.state = {
             data: {
                 amateurSoccerGroupId: this.props.amateurSoccerGroupId,
-                date: "",
-                quote: "",
-                author: "",
-                description: "",
-                matches: [this.createEmptyMatch(1)]
-            }
+                date: '',
+                quote: '',
+                author: '',
+                description: '',
+                matches: [this.createEmptyMatch(1)],
+            },
+            players: [
+                {
+                    id: '6ef70370-61cd-4c53-9746-940c6b5edcae',
+                    nickname: 'John Doe'
+                },
+                {
+                    id: 'a540879d-697e-4bdf-a48d-a0ec6eb8b4cc',
+                    nickname: 'Jane Doe'
+                },
+                {
+                    id: 'a9f02eb3-0417-49f2-9e48-9ec01441fa52',
+                    nickname: 'Marcio Doe'
+                },
+            ],
         }
     }
 
@@ -113,6 +127,7 @@ export class GameDay extends React.Component {
                                     handleRemovePlayer={this.handleRemovePlayer}
                                     disableRemoveButton={this.state.data.matches.length === 1}
                                     mode={this.props.mode}
+                                    players={this.state.players}
                                 />
                             </li>)}
                     </ul>
@@ -166,7 +181,12 @@ export class GameDay extends React.Component {
             headers: {"Accept": "application/hal+json"},
             mode: "cors"
         })
-            .then(response => response.json());
+            .then(response => response.json())
+            .then(json => ({
+                quote: json.quote || "",
+                author: json.author || "",
+                description: json.description || "",
+            }));
     }
 
     handleInputChange = (event) => {
@@ -335,12 +355,14 @@ class Match extends React.Component {
                     {this.props.data.playerStatistics.map((playerStatistic, index) =>
                         <li key={index}>
                             <Player
+                                index={index}
                                 prefix={this.props.prefix + ".playerStatistics." + index}
                                 data={playerStatistic}
                                 handleInputChange={this.props.handleInputChange}
                                 handleRemovePlayer={this.props.handleRemovePlayer}
                                 mode={this.props.mode}
                                 disableRemovePlayerButton={this.props.data.playerStatistics.length < 3}
+                                players={this.props.players}
                             />
                         </li>
                     )}
@@ -367,15 +389,15 @@ class Player extends React.Component {
         return (
             <div>
                 <div className="row mb-3">
-                    <label htmlFor="playerId" className="col-sm-2 col-form-label">Player Id</label>
+                    <label htmlFor={prefix + "playerId"} className="col-sm-2 col-form-label">Player</label>
                     <div className="col-1 col-sm-8">
-                        <input name={prefix + "playerId"}
-                               type="text"
-                               className="form-control"
-                               value={this.props.data.playerId}
-                               onChange={this.props.handleInputChange}
-                               required
-                               readOnly={this.props.mode === 'view'}
+                        <PlayerId
+                            prefix={prefix}
+                            playerId={this.props.data.playerId}
+                            handleInputChange={this.props.handleInputChange}
+                            mode={this.props.mode}
+                            index={this.props.index}
+                            players={this.props.players}
                         />
                     </div>
                     <div className="col-2 col-sm-2">
@@ -497,6 +519,74 @@ class Player extends React.Component {
                     </div>
                 </div>
             </div>
+        );
+    }
+}
+
+class PlayerId extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        if (this.props.mode === 'view') {
+            return <PlayerIdView
+                playerId={this.props.playerId}
+                prefix={this.props.prefix}
+                players={this.props.players}
+            />
+        }
+        return (
+            <PlayerIdEdit
+                playerId={this.props.playerId}
+                prefix={this.props.prefix}
+                players={this.props.players}
+                handleInputChange={this.props.handleInputChange}
+            />
+        );
+    }
+}
+
+class PlayerIdEdit extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div>
+                <select value={this.props.playerId}
+                        className="form-select"
+                        name={this.props.prefix + "playerId"}
+                        id={this.props.prefix + "playerId"}
+                        onChange={this.props.handleInputChange}
+                >
+                    <option key='new-player' value={uuidV4()}>-- New player --</option>
+                    {this.props.players.map((player, index) => (
+                        <option key={index} value={player.id}>
+                            {player.nickname}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        );
+    }
+}
+
+class PlayerIdView extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        const player = this.props.players.filter(player => player.id === this.props.playerId)[0] || {nickname: ''};
+        return (
+            <input name={this.props.prefix + "playerId"}
+                   value={player.nickname}
+                   type="text"
+                   className="form-control"
+                   readOnly='true'
+            />
         );
     }
 }
