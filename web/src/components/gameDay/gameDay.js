@@ -29,8 +29,10 @@ export class GameDay extends React.Component {
     }
 
     componentDidMount() {
+        this.fetchUserDataPlayers(this.props.amateurSoccerGroupId)
+            .then(players => this.setState({players: players}))
         if (this.props.mode !== 'add') {
-            this.fetchGameDay(this.props.gameDayId, this.props.amateurSoccerGroupId)
+            this.fetchGameDay()
         }
     }
 
@@ -144,15 +146,13 @@ export class GameDay extends React.Component {
         );
     }
 
-    fetchGameDay(gameDayId, amateurSoccerGroupId) {
+    fetchGameDay() {
         Promise.all([
             this.fetchAsmGameDay(),
             this.fetchUserDataGameDay(),
-            this.fetchUserDataPlayers(amateurSoccerGroupId),
-        ]).then(([asmGameDay, userDataGameDay, userDataPlayers]) => {
+        ]).then(([asmGameDay, userDataGameDay]) => {
             this.setState({
                 data: {...asmGameDay, ...userDataGameDay},
-                    ...userDataPlayers
             });
         });
     }
@@ -195,9 +195,7 @@ export class GameDay extends React.Component {
         })
             .then(response => response.json())
             .then(json => json._embedded || {players: []})
-            .then(embedded => ({
-                players: map(embedded.players)
-            }));
+            .then(embedded => map(embedded.players));
     }
 
     handleInputChange = (event) => {
@@ -596,7 +594,7 @@ class PlayerIdView extends React.Component {
                    value={player.nickname}
                    type="text"
                    className="form-control"
-                   readOnly='true'
+                   readOnly={true}
             />
         );
     }
