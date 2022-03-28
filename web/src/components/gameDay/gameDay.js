@@ -118,7 +118,6 @@ export class GameDay extends React.Component {
                                     handleRemovePlayer={this.handleRemovePlayer}
                                     disableRemoveButton={this.state.data.matches.length === 1}
                                     mode={this.props.mode}
-                                    players={this.state.players}
                                 />
                             </li>)}
                     </ul>
@@ -147,10 +146,21 @@ export class GameDay extends React.Component {
     }
 
     fetchGameDay() {
+        function findPlayer(playerId) {
+            return this.state.players.filter(player => player.id === playerId)[0] || {nickname: '', userId: ''};
+        }
+
         Promise.all([
             this.fetchAsmGameDay(),
             this.fetchUserDataGameDay(),
         ]).then(([asmGameDay, userDataGameDay]) => {
+            asmGameDay.matches.forEach(match =>
+                match.playerStatistics.forEach(playerStatistic => {
+                    const player = findPlayer(playerStatistic.playerId);
+                    console.log(player);
+                    playerStatistic.nickname = player.nickname
+                    playerStatistic.userId = player.userId
+                }));
             this.setState({
                 data: {...asmGameDay, ...userDataGameDay},
             });
@@ -184,6 +194,7 @@ export class GameDay extends React.Component {
         function map(players) {
             return (players || []).map(player => ({
                 id: extractId(player._links.player.href) || '',
+                userId: player.userId || '',
                 nickname: player.nickname || '',
             }));
         }
@@ -249,9 +260,10 @@ export class GameDay extends React.Component {
         e.preventDefault();
         Promise.all([
             this.saveAsmGameDay(),
-            this.saveUserDataGameDay()
-        ]).then(([asmGameDaySuccess, userDataGameDaySuccess]) => {
-            if (asmGameDaySuccess && userDataGameDaySuccess) {
+            this.saveUserDataGameDay(),
+            this.saveUserDataPlayers()
+        ]).then(([asmGameDaySuccess, userDataGameDaySuccess, userDataPlayers]) => {
+            if (asmGameDaySuccess && userDataGameDaySuccess && userDataPlayers) {
                 this.updateAppContent();
             }
         });
@@ -305,6 +317,32 @@ export class GameDay extends React.Component {
         })
     }
 
+    saveUserDataPlayers() {
+        let requests = [];
+        this.state.data.matches.forEach(match =>
+            match.playerStatistics.forEach(playerStatistic => {
+                const requestBody = {
+                    amateurSoccerGroupId: this.state.data.amateurSoccerGroupId,
+                    userId: playerStatistic.userId,
+                    nickname: playerStatistic.nickname
+                }
+                const request = fetch(userDataPlayersDaysHref + "/" + playerStatistic.playerId, {
+                    method: 'PUT',
+                    headers: {'content-type': 'application/hal+json'},
+                    body: JSON.stringify(requestBody)
+                }).then(response => {
+                    switch (response.status) {
+                        case 200:
+                        case 201:
+                            return true;
+                    }
+                    return false;
+                })
+                requests.push(request);
+            }));
+        Promise.all(requests).then(result => console.log(result));
+    }
+
     openGameDayList(e) {
         e.preventDefault();
         this.updateAppContent();
@@ -332,12 +370,14 @@ export class GameDay extends React.Component {
     createEmptyPlayer() {
         return {
             playerId: uuidV4(),
-            team: "",
-            goalsInFavor: "",
-            goalsAgainst: "",
-            yellowCards: "",
-            blueCards: "",
-            redCards: ""
+            nickname: '',
+            userId: '',
+            team: '',
+            goalsInFavor: '',
+            goalsAgainst: '',
+            yellowCards: '',
+            blueCards: '',
+            redCards: ''
         };
     }
 }
@@ -360,22 +400,33 @@ class Match extends React.Component {
                         text="Remove"
                     />
                 </h2>
-                <ol>
+                <table className='table'>
+                    <thead>
+                    <tr>
+                        <th scope='col'>Nickname</th>
+                        <th scope='col'>Team</th>
+                        <th scope='col'>Goals in Favor</th>
+                        <th scope='col'>Goals Against</th>
+                        <th scope='col'>Yellow Cards</th>
+                        <th scope='col'>Blue Cards</th>
+                        <th scope='col'>Red Cards</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     {this.props.data.playerStatistics.map((playerStatistic, index) =>
-                        <li key={index}>
-                            <Player
-                                index={index}
-                                prefix={this.props.prefix + ".playerStatistics." + index}
-                                data={playerStatistic}
-                                handleInputChange={this.props.handleInputChange}
-                                handleRemovePlayer={this.props.handleRemovePlayer}
-                                mode={this.props.mode}
-                                disableRemovePlayerButton={this.props.data.playerStatistics.length < 3}
-                                players={this.props.players}
-                            />
-                        </li>
+                        <PlayerStatistic
+                            key={index}
+                            index={index}
+                            prefix={this.props.prefix + ".playerStatistics." + index}
+                            data={playerStatistic}
+                            handleInputChange={this.props.handleInputChange}
+                            handleRemovePlayer={this.props.handleRemovePlayer}
+                            mode={this.props.mode}
+                            disableRemovePlayerButton={this.props.data.playerStatistics.length < 3}
+                        />
                     )}
-                </ol>
+                    </tbody>
+                </table>
 
                 <Button
                     mode={this.props.mode}
@@ -392,209 +443,131 @@ class Match extends React.Component {
     }
 }
 
-class Player extends React.Component {
+class PlayerStatistic extends React.Component {
     render() {
         const prefix = this.props.prefix + ".";
         return (
-            <div>
-                <div className="row mb-3">
-                    <label htmlFor={prefix + "playerId"} className="col-sm-2 col-form-label">Player</label>
-                    <div className="col-1 col-sm-8">
-                        <PlayerId
-                            prefix={prefix}
-                            playerId={this.props.data.playerId}
-                            handleInputChange={this.props.handleInputChange}
-                            mode={this.props.mode}
-                            index={this.props.index}
-                            players={this.props.players}
-                        />
+            <tr key={this.props.index}>
+                <td>
+                    <PlayerNickname
+                        prefix={prefix}
+                        nickname={this.props.data.nickname}
+                        handleInputChange={this.props.handleInputChange}
+                        mode={this.props.mode}
+                    />
+                </td>
+                <td className='col-3'>
+                    <div className="form-check form-check-inline">
+                        <label className="form-check-label">
+                            <input className="form-check-input"
+                                   type="radio"
+                                   name={prefix + "team"}
+                                   value="A"
+                                   checked={this.props.data.team === 'A'}
+                                   min="0"
+                                   max="99"
+                                   onChange={this.props.handleInputChange}
+                                   readOnly={this.props.mode === 'view'}
+                            />
+                            A
+                        </label>
                     </div>
-                    <div className="col-2 col-sm-2">
-                        <Button
-                            type="submit"
-                            className="btn btn-primary"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                return this.props.handleRemovePlayer(this.props.prefix);
-                            }}
-                            disabled={this.props.disableRemovePlayerButton}
-                            text="Remove"
-                        />
+                    <div className="form-check form-check-inline">
+                        <label className="form-check-label">
+                            <input className="form-check-input"
+                                   type="radio"
+                                   name={prefix + "team"}
+                                   value="B"
+                                   checked={this.props.data.team === 'B'}
+                                   onChange={this.props.handleInputChange}
+                                   readOnly={this.props.mode === 'view'}
+                            />
+                            B
+                        </label>
                     </div>
-                </div>
-                <fieldset className="row mb-3">
-                    <legend className="col-form-label col-sm-2 pt-0">Team</legend>
-                    <div className="col-sm-10">
-                        <div className="form-check form-check-inline">
-                            <label className="form-check-label">
-                                <input className="form-check-input"
-                                       type="radio"
-                                       name={prefix + "team"}
-                                       value="A"
-                                       checked={this.props.data.team === 'A'}
-                                       min="0"
-                                       max="99"
-                                       onChange={this.props.handleInputChange}
-                                       readOnly={this.props.mode === 'view'}
-                                />
-                                A
-                            </label>
-                        </div>
-                        <div className="form-check form-check-inline">
-                            <label className="form-check-label">
-                                <input className="form-check-input"
-                                       type="radio"
-                                       name={prefix + "team"}
-                                       value="B"
-                                       checked={this.props.data.team === 'B'}
-                                       min="0"
-                                       max="99"
-                                       onChange={this.props.handleInputChange}
-                                       readOnly={this.props.mode === 'view'}
-                                />
-                                B
-                            </label>
-                        </div>
+                    <div className="form-check form-check-inline">
+                        <label className="form-check-label">
+                            <input className="form-check-input"
+                                   type="radio"
+                                   name={prefix + "team"}
+                                   value=""
+                                   checked={this.props.data.team === ''}
+                                   onChange={this.props.handleInputChange}
+                                   readOnly={this.props.mode === 'view'}
+                            />
+                            N/A
+                        </label>
                     </div>
-                </fieldset>
-                <div className="row mb-3">
-                    <label htmlFor="goalsInFavor" className="col-sm-2 col-form-label">Goals in favor</label>
-                    <div className="col-sm-10">
-                        <input name={prefix + "goalsInFavor"}
-                               type="number"
-                               value={this.props.data.goalsInFavor}
-                               min="0"
-                               max="99"
-                               className="form-control"
-                               onChange={this.props.handleInputChange}
-                               readOnly={this.props.mode === 'view'}
-                        />
-                    </div>
-                </div>
-                <div className="row mb-3">
-                    <label htmlFor="goalsAgainst" className="col-sm-2 col-form-label">Goals against</label>
-                    <div className="col-sm-10">
-                        <input name={prefix + "goalsAgainst"}
-                               type="number"
-                               value={this.props.data.goalsAgainst}
-                               min="0"
-                               max="99"
-                               className="form-control"
-                               onChange={this.props.handleInputChange}
-                               readOnly={this.props.mode === 'view'}
-                        />
-                    </div>
-                </div>
-                <div className="row mb-3">
-                    <label htmlFor="yellowCards" className="col-sm-2 col-form-label">Yellow cards</label>
-                    <div className="col-sm-10">
-                        <input name={prefix + "yellowCards"}
-                               type="number"
-                               value={this.props.data.yellowCards}
-                               min="0"
-                               max="99"
-                               className="form-control"
-                               onChange={this.props.handleInputChange}
-                               readOnly={this.props.mode === 'view'}
-                        />
-                    </div>
-                </div>
-                <div className="row mb-3">
-                    <label htmlFor="blueCards" className="col-sm-2 col-form-label">Blue cards</label>
-                    <div className="col-sm-10">
-                        <input name={prefix + "blueCards"}
-                               type="number"
-                               value={this.props.data.blueCards}
-                               min="0"
-                               max="99"
-                               className="form-control"
-                               onChange={this.props.handleInputChange}
-                               readOnly={this.props.mode === 'view'}
-                        />
-                    </div>
-                </div>
-                <div className="row mb-3">
-                    <label htmlFor="redCards" className="col-sm-2 col-form-label">Red cards</label>
-                    <div className="col-sm-10">
-                        <input name={prefix + "redCards"}
-                               type="number"
-                               value={this.props.data.redCards}
-                               min="0"
-                               max="99"
-                               className="form-control"
-                               onChange={this.props.handleInputChange}
-                               readOnly={this.props.mode === 'view'}
-                        />
-                    </div>
-                </div>
-            </div>
+                </td>
+                <td className='col-1'>
+                    <input name={prefix + "goalsInFavor"}
+                           type="number"
+                           value={this.props.data.goalsInFavor}
+                           min="0"
+                           max="99"
+                           className="form-control"
+                           onChange={this.props.handleInputChange}
+                           readOnly={this.props.mode === 'view'}
+                    />
+                </td>
+                <td className='col-1'>
+                    <input name={prefix + "goalsAgainst"}
+                           type="number"
+                           value={this.props.data.goalsAgainst}
+                           min="0"
+                           max="99"
+                           className="form-control"
+                           onChange={this.props.handleInputChange}
+                           readOnly={this.props.mode === 'view'}
+                    />
+                </td>
+                <td className='col-1'>
+                    <input name={prefix + "yellowCards"}
+                           type="number"
+                           value={this.props.data.yellowCards}
+                           min="0"
+                           max="99"
+                           className="form-control"
+                           onChange={this.props.handleInputChange}
+                           readOnly={this.props.mode === 'view'}
+                    />
+                </td>
+                <td className='col-1'>
+                    <input name={prefix + "blueCards"}
+                           type="number"
+                           value={this.props.data.blueCards}
+                           min="0"
+                           max="99"
+                           className="form-control"
+                           onChange={this.props.handleInputChange}
+                           readOnly={this.props.mode === 'view'}
+                    />
+                </td>
+                <td className='col-1'>
+                    <input name={prefix + "redCards"}
+                           type="number"
+                           value={this.props.data.redCards}
+                           min="0"
+                           max="99"
+                           className="form-control"
+                           onChange={this.props.handleInputChange}
+                           readOnly={this.props.mode === 'view'}
+                    />
+                </td>
+            </tr>
         );
     }
 }
 
-class PlayerId extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        if (this.props.mode === 'view') {
-            return <PlayerIdView
-                playerId={this.props.playerId}
-                prefix={this.props.prefix}
-                players={this.props.players}
-            />
-        }
-        return (
-            <PlayerIdEdit
-                playerId={this.props.playerId}
-                prefix={this.props.prefix}
-                players={this.props.players}
-                handleInputChange={this.props.handleInputChange}
-            />
-        );
-    }
-}
-
-class PlayerIdEdit extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
+class PlayerNickname extends React.Component {
     render() {
         return (
-            <div>
-                <select value={this.props.playerId}
-                        className="form-select"
-                        name={this.props.prefix + "playerId"}
-                        id={this.props.prefix + "playerId"}
-                        onChange={this.props.handleInputChange}
-                >
-                    <option key='new-player' value={uuidV4()}>-- New player --</option>
-                    {this.props.players.map((player, index) => (
-                        <option key={index} value={player.id}>
-                            {player.nickname}
-                        </option>
-                    ))}
-                </select>
-            </div>
-        );
-    }
-}
-
-class PlayerIdView extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        const player = this.props.players.filter(player => player.id === this.props.playerId)[0] || {nickname: ''};
-        return (
-            <input name={this.props.prefix + "playerId"}
-                   value={player.nickname}
+            <input name={this.props.prefix + "nickname"}
+                   value={this.props.nickname}
+                   onChange={this.props.handleInputChange}
                    type="text"
                    className="form-control"
-                   readOnly={true}
+                   readOnly={this.props.mode === 'view'}
             />
         );
     }

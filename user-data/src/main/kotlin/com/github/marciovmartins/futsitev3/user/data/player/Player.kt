@@ -18,7 +18,7 @@ class Player(
     var amateurSoccerGroupId: UUID,
 
     @Type(type = "uuid-char")
-    var userId: UUID,
+    var userId: UUID?,
 
     var nickname: String?,
 )

@@ -11,6 +11,10 @@ import java.util.stream.Stream
 class ValidPlayersArgumentsProvider : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         playerArgument(
+            testDescription = "valid player with null userId",
+            player = createPlayer(userId = null),
+        ),
+        playerArgument(
             testDescription = "valid player with nickname with null value",
             player = createPlayer(nickname = null),
         ),
