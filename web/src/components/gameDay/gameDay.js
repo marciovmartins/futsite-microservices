@@ -149,6 +149,11 @@ export class GameDay extends React.Component {
             this.fetchAsmGameDay(),
             this.fetchUserDataGameDay(),
         ]).then(([asmGameDay, userDataGameDay]) => {
+            asmGameDay.matches.forEach(match => {
+                const playersWithStatistics = match.playerStatistics.map(playerStatistics => playerStatistics.playerId);
+                const playersWithoutStatistics = this.state.players.map(player => player.id).filter(playerId => !playersWithStatistics.includes(playerId));
+                playersWithoutStatistics.forEach(playerId => match.playerStatistics.push(this.createEmptyPlayer(playerId)))
+            })
             this.setState({data: {...asmGameDay, ...userDataGameDay}});
         });
     }
@@ -313,14 +318,13 @@ export class GameDay extends React.Component {
     createEmptyMatch(order, players) {
         return {
             order: order,
-            playerStatistics: players.map(player => this.createEmptyPlayer(player.id, player.nickname)),
+            playerStatistics: players.map(player => this.createEmptyPlayer(player.id)),
         };
     }
 
-    createEmptyPlayer(playerId, nickname) {
+    createEmptyPlayer(playerId) {
         return {
             playerId: playerId,
-            nickname: nickname,
             userId: '',
             team: '',
             goalsInFavor: '',
