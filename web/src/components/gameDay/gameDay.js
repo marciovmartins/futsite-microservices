@@ -1,5 +1,4 @@
 import React from "react";
-import {v4 as uuidV4} from "uuid";
 import {getNestedValue, setNestedKey} from "../../helper-functions";
 import {ListGameDay} from "./listGameDay";
 import {toast, ToastContainer} from "react-toastify";
@@ -22,7 +21,7 @@ export class GameDay extends React.Component {
                 quote: '',
                 author: '',
                 description: '',
-                matches: [this.createEmptyMatch(1)],
+                matches: [],
             },
             players: [],
         }
@@ -114,10 +113,10 @@ export class GameDay extends React.Component {
                                     data={match}
                                     handleInputChange={this.handleInputChange}
                                     handleRemoveMatch={this.handleRemoveMatch}
-                                    handleAddPlayer={this.handleAddPlayer}
                                     handleRemovePlayer={this.handleRemovePlayer}
                                     disableRemoveButton={this.state.data.matches.length === 1}
                                     mode={this.props.mode}
+                                    players={this.state.players}
                                 />
                             </li>)}
                     </ul>
@@ -146,24 +145,11 @@ export class GameDay extends React.Component {
     }
 
     fetchGameDay() {
-        function findPlayer(playerId) {
-            return this.state.players.filter(player => player.id === playerId)[0] || {nickname: '', userId: ''};
-        }
-
         Promise.all([
             this.fetchAsmGameDay(),
             this.fetchUserDataGameDay(),
         ]).then(([asmGameDay, userDataGameDay]) => {
-            asmGameDay.matches.forEach(match =>
-                match.playerStatistics.forEach(playerStatistic => {
-                    const player = findPlayer(playerStatistic.playerId);
-                    console.log(player);
-                    playerStatistic.nickname = player.nickname
-                    playerStatistic.userId = player.userId
-                }));
-            this.setState({
-                data: {...asmGameDay, ...userDataGameDay},
-            });
+            this.setState({data: {...asmGameDay, ...userDataGameDay}});
         });
     }
 
@@ -222,7 +208,7 @@ export class GameDay extends React.Component {
         let currentState = {...this.state};
         const path = ("data.matches").split('.');
         let value = getNestedValue(currentState, path);
-        value.push(this.createEmptyMatch(value.length + 1));
+        value.push(this.createEmptyMatch(value.length + 1, this.state.players));
         setNestedKey(currentState, path, value);
         this.setState(currentState);
     }
@@ -233,15 +219,6 @@ export class GameDay extends React.Component {
         value.map((match, index) => match.order = index + 1)
         currentState.data.matches = value
         this.setState({currentState});
-    }
-
-    handleAddPlayer = (key) => {
-        let currentState = {...this.state};
-        const path = ("data." + key).split('.');
-        let value = getNestedValue(currentState, path);
-        value.push(this.createEmptyPlayer());
-        setNestedKey(currentState, path, value);
-        this.setState(currentState);
     }
 
     handleRemovePlayer = (key) => {
@@ -261,7 +238,6 @@ export class GameDay extends React.Component {
         Promise.all([
             this.saveAsmGameDay(),
             this.saveUserDataGameDay(),
-            this.saveUserDataPlayers()
         ]).then(([asmGameDaySuccess, userDataGameDaySuccess, userDataPlayers]) => {
             if (asmGameDaySuccess && userDataGameDaySuccess && userDataPlayers) {
                 this.updateAppContent();
@@ -273,7 +249,10 @@ export class GameDay extends React.Component {
         const requestBody = {
             amateurSoccerGroupId: this.state.data.amateurSoccerGroupId,
             date: this.state.data.date,
-            matches: this.state.data.matches,
+            matches: this.state.data.matches.map(match => ({
+                order: match.order,
+                playerStatistics: match.playerStatistics.filter(playerStatistics => ['A', 'B'].includes(playerStatistics.team))
+            })),
         }
         return fetch(asmGameDaysHref + "/" + this.props.gameDayId, {
             method: 'PUT',
@@ -317,32 +296,6 @@ export class GameDay extends React.Component {
         })
     }
 
-    saveUserDataPlayers() {
-        let requests = [];
-        this.state.data.matches.forEach(match =>
-            match.playerStatistics.forEach(playerStatistic => {
-                const requestBody = {
-                    amateurSoccerGroupId: this.state.data.amateurSoccerGroupId,
-                    userId: playerStatistic.userId,
-                    nickname: playerStatistic.nickname
-                }
-                const request = fetch(userDataPlayersDaysHref + "/" + playerStatistic.playerId, {
-                    method: 'PUT',
-                    headers: {'content-type': 'application/hal+json'},
-                    body: JSON.stringify(requestBody)
-                }).then(response => {
-                    switch (response.status) {
-                        case 200:
-                        case 201:
-                            return true;
-                    }
-                    return false;
-                })
-                requests.push(request);
-            }));
-        Promise.all(requests).then(result => console.log(result));
-    }
-
     openGameDayList(e) {
         e.preventDefault();
         this.updateAppContent();
@@ -357,20 +310,17 @@ export class GameDay extends React.Component {
         )
     }
 
-    createEmptyMatch(order) {
+    createEmptyMatch(order, players) {
         return {
             order: order,
-            playerStatistics: [
-                this.createEmptyPlayer(),
-                this.createEmptyPlayer(),
-            ]
+            playerStatistics: players.map(player => this.createEmptyPlayer(player.id, player.nickname)),
         };
     }
 
-    createEmptyPlayer() {
+    createEmptyPlayer(playerId, nickname) {
         return {
-            playerId: uuidV4(),
-            nickname: '',
+            playerId: playerId,
+            nickname: nickname,
             userId: '',
             team: '',
             goalsInFavor: '',
@@ -423,21 +373,11 @@ class Match extends React.Component {
                             handleRemovePlayer={this.props.handleRemovePlayer}
                             mode={this.props.mode}
                             disableRemovePlayerButton={this.props.data.playerStatistics.length < 3}
+                            players={this.props.players}
                         />
                     )}
                     </tbody>
                 </table>
-
-                <Button
-                    mode={this.props.mode}
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        return this.props.handleAddPlayer(this.props.prefix + ".playerStatistics");
-                    }}
-                    text="Add Another Player"
-                />
             </div>
         );
     }
@@ -451,9 +391,10 @@ class PlayerStatistic extends React.Component {
                 <td>
                     <PlayerNickname
                         prefix={prefix}
-                        nickname={this.props.data.nickname}
+                        playerId={this.props.data.playerId}
                         handleInputChange={this.props.handleInputChange}
                         mode={this.props.mode}
+                        players={this.props.players}
                     />
                 </td>
                 <td className='col-3'>
@@ -561,15 +502,10 @@ class PlayerStatistic extends React.Component {
 
 class PlayerNickname extends React.Component {
     render() {
-        return (
-            <input name={this.props.prefix + "nickname"}
-                   value={this.props.nickname}
-                   onChange={this.props.handleInputChange}
-                   type="text"
-                   className="form-control"
-                   readOnly={this.props.mode === 'view'}
-            />
-        );
+        return this.props.players
+            .filter(player => player.id === this.props.playerId)
+            .map(player => player.nickname)
+            [0] || ''
     }
 }
 
