@@ -243,8 +243,8 @@ export class GameDay extends React.Component {
         Promise.all([
             this.saveAsmGameDay(),
             this.saveUserDataGameDay(),
-        ]).then(([asmGameDaySuccess, userDataGameDaySuccess, userDataPlayers]) => {
-            if (asmGameDaySuccess && userDataGameDaySuccess && userDataPlayers) {
+        ]).then(([asmGameDaySuccess, userDataGameDaySuccess]) => {
+            if (asmGameDaySuccess && userDataGameDaySuccess) {
                 this.updateAppContent();
             }
         });
@@ -389,6 +389,9 @@ class Match extends React.Component {
 
 class PlayerStatistic extends React.Component {
     render() {
+        if (this.props.mode === 'view' && !['A', 'B'].includes(this.props.data.team)) {
+            return null;
+        }
         const prefix = this.props.prefix + ".";
         return (
             <tr key={this.props.index}>
@@ -409,10 +412,8 @@ class PlayerStatistic extends React.Component {
                                    name={prefix + "team"}
                                    value="A"
                                    checked={this.props.data.team === 'A'}
-                                   min="0"
-                                   max="99"
                                    onChange={this.props.handleInputChange}
-                                   readOnly={this.props.mode === 'view'}
+                                   disabled={this.props.mode === 'view'}
                             />
                             A
                         </label>
@@ -425,7 +426,7 @@ class PlayerStatistic extends React.Component {
                                    value="B"
                                    checked={this.props.data.team === 'B'}
                                    onChange={this.props.handleInputChange}
-                                   readOnly={this.props.mode === 'view'}
+                                   disabled={this.props.mode === 'view'}
                             />
                             B
                         </label>
@@ -438,7 +439,7 @@ class PlayerStatistic extends React.Component {
                                    value=""
                                    checked={this.props.data.team === ''}
                                    onChange={this.props.handleInputChange}
-                                   readOnly={this.props.mode === 'view'}
+                                   disabled={this.props.mode === 'view'}
                             />
                             N/A
                         </label>
