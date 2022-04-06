@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link, Outlet} from "react-router-dom";
 
-export function GameDay() {
+export function GameDayPage() {
     return <main>
         <nav>
             <Link to="/gameDays/">List</Link> |{" "}

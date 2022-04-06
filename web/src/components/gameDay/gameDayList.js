@@ -5,6 +5,9 @@ import {extractId} from "../helper";
 const asmGameDaysHref = 'http://localhost:8080/gameDays';
 
 export function GameDayList() {
+    const amateurSoccerGroupId = sessionStorage.getItem("amateurSoccerGroupId");
+    const [state, setState] = useState({gameDays: []});
+
     const loadList = () => {
         fetch(asmGameDaysHref + '/search/byAmateurSoccerGroupId?amateurSoccerGroupId=' + amateurSoccerGroupId, {
             method: 'GET',
@@ -24,9 +27,6 @@ export function GameDayList() {
         })
         loadList();
     }
-
-    const amateurSoccerGroupId = sessionStorage.getItem("amateurSoccerGroupId");
-    const [state, setState] = useState({gameDays: []});
 
     useEffect(loadList, []);
 

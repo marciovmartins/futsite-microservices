@@ -7,7 +7,8 @@ export default function App() {
         <div>
             <nav>
                 <Link to="/">Home</Link>&nbsp;|&nbsp;
-                <Link to="/gameDays">Game Day</Link>
+                <Link to="/gameDays">Game Day</Link>&nbsp;|&nbsp;
+                <Link to="/players">Players</Link>
             </nav>
             <Outlet/>
         </div>
