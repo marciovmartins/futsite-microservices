@@ -7,6 +7,7 @@ import {GameDayPage} from "./components/gameDay/gameDayPage";
 import {GameDayList} from "./components/gameDay/gameDayList";
 import App, {Home} from "./components/app";
 import {PlayerList} from "./components/players/playerList";
+import {Player} from "./components/players/player";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -22,6 +23,7 @@ ReactDOM.render(
                     </Route>
                     <Route path="/players" element={<PlayerPage/>}>
                         <Route index element={<PlayerList/>}/>
+                        <Route path=":playerId" element={<Player/>}/>
                     </Route>
                 </Route>
             </Routes>

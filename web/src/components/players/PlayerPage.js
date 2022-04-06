@@ -6,8 +6,7 @@ export class PlayerPage extends React.Component {
         return (
             <main>
                 <nav>
-                    <Link to='/players'>List</Link> |{' '}
-                    <Link to='/players/new'>New</Link>
+                    <Link to='/players'>List</Link>
                 </nav>
                 <Outlet/>
             </main>
