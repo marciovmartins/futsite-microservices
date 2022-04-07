@@ -28,7 +28,6 @@ export function Player(props) {
                            id="player-nickname"
                            onChange={(event) => handleInputChange(event, state, setState)}
                            className="form-control"
-                           readOnly={props.mode === 'view'}
                     />
                 </div>
             </div>
@@ -78,7 +77,7 @@ const handleSubmit = (event, playerId, state, navigate) => {
         switch (response.status) {
             case 200:
             case 201:
-                navigate("/players/" + playerId)
+                navigate("/players")
                 return true;
         }
         return false;
