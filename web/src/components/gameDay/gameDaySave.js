@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {extractId} from "../helper";
 import {v4 as uuidV4} from 'uuid';
 import {Navigate, useParams} from "react-router-dom";
+import {Button} from "../shared/button";
 
 const titles = {'add': 'Create', 'edit': 'Edit', 'view': 'View'}
 
@@ -508,20 +509,4 @@ function PlayerNickname(props) {
         .filter(player => player.id === props.playerId)
         .map(player => player.nickname)
         [0] || ''
-}
-
-function Button(props) {
-    if (props.mode === 'view') {
-        return '';
-    }
-    return (
-        <button
-            type={props.type}
-            className={props.className}
-            onClick={props.onClick}
-            disabled={props.disabled}
-        >
-            {props.text}
-        </button>
-    );
 }

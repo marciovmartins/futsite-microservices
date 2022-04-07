@@ -23,7 +23,8 @@ ReactDOM.render(
                     </Route>
                     <Route path="/players" element={<PlayerPage/>}>
                         <Route index element={<PlayerList/>}/>
-                        <Route path=":playerId" element={<Player/>}/>
+                        <Route path="new" element={<Player mode='add'/>}/>
+                        <Route path=":playerId" element={<Player mode='view'/>}/>
                     </Route>
                 </Route>
             </Routes>
