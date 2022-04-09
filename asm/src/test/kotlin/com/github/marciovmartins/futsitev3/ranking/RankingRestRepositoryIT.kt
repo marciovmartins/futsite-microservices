@@ -3,8 +3,7 @@ package com.github.marciovmartins.futsitev3.ranking
 import com.github.marciovmartins.futsitev3.BaseIT
 import com.github.marciovmartins.futsitev3.gameDay.A
 import com.github.marciovmartins.futsitev3.gameDay.B
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.gameDayDTO
-import com.github.marciovmartins.futsitev3.gameDay.MatchDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.singleMatchGameDayDTO
 import com.github.marciovmartins.futsitev3.gameDay.PlayerStatisticDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -24,73 +23,58 @@ class RankingRestRepositoryIT : BaseIT() {
         val marcioPreto = UUID.randomUUID()
 
         webTestClient.put()
-            .uri("gameDays/" + UUID.randomUUID())
+            .uri("gameDays/{id}", UUID.randomUUID())
             .bodyValue(
-                gameDayDTO(
+                singleMatchGameDayDTO(
                     amateurSoccerGroupId = amateurSoccerGroupId,
                     date = LocalDate.of(2021, 5, 1).toString(),
-                    matches = setOf(
-                        MatchDTO(
-                            order = 1,
-                            playerStatistics = setOf(
-                                PlayerStatisticDTO(A, player1, 4, 0, 0, 0, 0),
-                                PlayerStatisticDTO(A, player2, 3, 0, 0, 0, 0),
-                                PlayerStatisticDTO(B, player3, 2, 1, 0, 0, 0),
-                                PlayerStatisticDTO(B, player4, 1, 0, 0, 0, 0),
-                            ),
-                        )
+                    playerStatistics = setOf(
+                        PlayerStatisticDTO(A, player1, 4, 0, 0, 0, 0),
+                        PlayerStatisticDTO(A, player2, 3, 0, 0, 0, 0),
+                        PlayerStatisticDTO(B, player3, 2, 1, 0, 0, 0),
+                        PlayerStatisticDTO(B, player4, 1, 0, 0, 0, 0),
                     ),
                 )
             )
             .exchange()
-            .expectStatus().isOk
+            .expectStatus().isCreated
         webTestClient.put()
-            .uri("gameDays/" + UUID.randomUUID())
+            .uri("gameDays/{id}", UUID.randomUUID())
             .bodyValue(
-                gameDayDTO(
+                singleMatchGameDayDTO(
                     amateurSoccerGroupId = amateurSoccerGroupId,
                     date = LocalDate.of(2021, 5, 2).toString(),
-                    matches = setOf(
-                        MatchDTO(
-                            order = 1,
-                            playerStatistics = setOf(
-                                PlayerStatisticDTO(A, player1, 4, 0, 0, 0, 0),
-                                PlayerStatisticDTO(A, player3, 3, 1, 0, 0, 0),
-                                PlayerStatisticDTO(B, player2, 1, 0, 0, 0, 0),
-                                PlayerStatisticDTO(B, player4, 2, 0, 0, 0, 0),
-                            ),
-                        )
+                    playerStatistics = setOf(
+                        PlayerStatisticDTO(A, player1, 4, 0, 0, 0, 0),
+                        PlayerStatisticDTO(A, player3, 3, 1, 0, 0, 0),
+                        PlayerStatisticDTO(B, player2, 1, 0, 0, 0, 0),
+                        PlayerStatisticDTO(B, player4, 2, 0, 0, 0, 0),
                     ),
                 )
             )
             .exchange()
-            .expectStatus().isOk
+            .expectStatus().isCreated
         webTestClient.put()
-            .uri("gameDays/" + UUID.randomUUID())
+            .uri("gameDays/{id}", UUID.randomUUID())
             .bodyValue(
-                gameDayDTO(
+                singleMatchGameDayDTO(
                     amateurSoccerGroupId = amateurSoccerGroupId,
                     date = LocalDate.of(2021, 5, 3).toString(),
-                    matches = setOf(
-                        MatchDTO(
-                            order = 1,
-                            playerStatistics = setOf(
-                                PlayerStatisticDTO(A, player1, 2, 0, 0, 0, 0),
-                                PlayerStatisticDTO(A, player5, 3, 0, 0, 0, 0),
-                                PlayerStatisticDTO(B, player2, 1, 0, 0, 0, 0),
-                                PlayerStatisticDTO(B, player3, 4, 0, 0, 0, 0),
-                            ),
-                        )
+                    playerStatistics = setOf(
+                        PlayerStatisticDTO(A, player1, 2, 0, 0, 0, 0),
+                        PlayerStatisticDTO(A, player5, 3, 0, 0, 0, 0),
+                        PlayerStatisticDTO(B, player2, 1, 0, 0, 0, 0),
+                        PlayerStatisticDTO(B, player3, 4, 0, 0, 0, 0),
                     ),
-                )
+                ),
             )
             .exchange()
-            .expectStatus().isOk
+            .expectStatus().isCreated
 
         val requestBody = RankingRequestBodyDTO(
             period = RankingRequestBodyDTO.Period(
-                from = LocalDate.of(2021, 5, 1),
-                to = LocalDate.of(2021, 5, 3),
+                from = "2021-05-01",
+                to = "2021-05-03",
             ),
             classificationMethod = RankingRequestBodyDTO.ClassificationMethod(
                 method = RankingRequestBodyDTO.ClassificationMethod.Method.AveragePointsPerMatch,
