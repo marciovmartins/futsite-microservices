@@ -18,7 +18,7 @@ import javax.persistence.EntityManager
 import javax.persistence.PersistenceException
 
 @RepositoryRestResource
-interface GameDayRepository : CrudRepository<GameDay, UUID>, CustomizedGameDayRepository {
+interface GameDayRestRepository : CrudRepository<GameDay, UUID>, CustomizedGameDayRestRepository {
     @RestResource(exported = false)
     override fun findAll(): MutableIterable<GameDay>
 
@@ -29,12 +29,12 @@ interface GameDayRepository : CrudRepository<GameDay, UUID>, CustomizedGameDayRe
     ): Page<GameDay>
 }
 
-interface CustomizedGameDayRepository {
+interface CustomizedGameDayRestRepository {
     fun <S : GameDay?> save(entity: S): S
 }
 
 @Repository
-class CustomizedGameDayRepositoryImpl(private val em: EntityManager) : CustomizedGameDayRepository {
+class CustomizedGameDayRestRepositoryImpl(private val em: EntityManager) : CustomizedGameDayRestRepository {
     override fun <S : GameDay?> save(entity: S): S {
         try {
             em.persist(entity)
