@@ -8,29 +8,9 @@ export function GameDayList() {
     const amateurSoccerGroupId = sessionStorage.getItem("amateurSoccerGroupId");
     const [state, setState] = useState({gameDays: []});
 
-    const loadList = () => {
-        fetch(asmGameDaysHref + '/search/byAmateurSoccerGroupId?amateurSoccerGroupId=' + amateurSoccerGroupId, {
-            method: 'GET',
-            headers: {"Accept": "application/hal+json"},
-            mode: "cors"
-        })
-            .then(response => response.json())
-            .then(data => data._embedded.gameDays)
-            .then(gameDays => setState({gameDays}))
-    };
+    useEffect(() => loadList(amateurSoccerGroupId, setState), []);
 
-    const removeGameDay = async function (e, gameDayId) {
-        e.preventDefault();
-        await fetch(asmGameDaysHref + "/" + gameDayId, {
-            method: 'DELETE',
-            mode: "cors"
-        })
-        loadList();
-    }
-
-    useEffect(loadList, []);
-
-    return <main>
+    return <div>
         <h1>Game Days</h1>
         <ul>
             {state.gameDays.map(gameDay => {
@@ -40,10 +20,31 @@ export function GameDayList() {
                         &nbsp;
                         <Link to={'/gameDays/' + gameDayId + '/edit'}>[edit]</Link>
                         &nbsp;
-                        <a href='#' onClick={(e) => removeGameDay(e, gameDayId)}>[remove]</a>
+                        <a href='#'
+                           onClick={(e) => removeGameDay(e, gameDayId, amateurSoccerGroupId, setState)}>[remove]</a>
                     </li>;
                 }
             )}
         </ul>
-    </main>;
+    </div>;
+}
+
+function loadList(amateurSoccerGroupId, setState) {
+    fetch(asmGameDaysHref + '/search/byAmateurSoccerGroupId?amateurSoccerGroupId=' + amateurSoccerGroupId, {
+        method: 'GET',
+        headers: {"Accept": "application/hal+json"},
+        mode: "cors"
+    })
+        .then(response => response.json())
+        .then(data => data._embedded.gameDays)
+        .then(gameDays => setState({gameDays}))
+}
+
+async function removeGameDay(e, gameDayId, amateurSoccerGroupId, setState) {
+    e.preventDefault();
+    await fetch(asmGameDaysHref + "/" + gameDayId, {
+        method: 'DELETE',
+        mode: "cors"
+    })
+    loadList(amateurSoccerGroupId, setState);
 }
