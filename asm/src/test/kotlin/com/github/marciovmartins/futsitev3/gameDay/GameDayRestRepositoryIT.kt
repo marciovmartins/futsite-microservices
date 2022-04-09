@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus
 import java.time.LocalDate
 import java.util.UUID
 
-class GameDayControllerIT : BaseIT() {
+class GameDayRestRepositoryIT : BaseIT() {
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(ValidGameDayArgumentsProvider::class)
     @ArgumentsSource(ValidMatchPlayerArgumentsProvider::class)
