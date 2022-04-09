@@ -16,9 +16,7 @@ export function GameDayList() {
             {state.gameDays.map(gameDay => {
                     const gameDayId = extractId(gameDay._links.self.href);
                     return <li key={gameDay.date}>
-                        <Link to={'/gameDays/' + gameDayId + '/view'}>{gameDay.date}</Link>
-                        &nbsp;
-                        <Link to={'/gameDays/' + gameDayId + '/edit'}>[edit]</Link>
+                        <Link to={'/gameDays/' + gameDayId}>{gameDay.date}</Link>
                         &nbsp;
                         <a href='#'
                            onClick={(e) => removeGameDay(e, gameDayId, amateurSoccerGroupId, setState)}>[remove]</a>

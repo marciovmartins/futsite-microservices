@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {PlayerPage} from "./components/players/PlayerPage";
-import {GameDayEdit, GameDayNew, GameDayView} from "./components/gameDay/gameDaySave";
 import {GameDayPage} from "./components/gameDay/gameDayPage";
 import {GameDayList} from "./components/gameDay/gameDayList";
 import App, {Home} from "./components/app";
 import {PlayerList} from "./components/players/playerList";
 import {Player} from "./components/players/player";
+import {GameDay} from "./components/gameDay/gameDay";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -17,9 +17,8 @@ ReactDOM.render(
                     <Route index element={<Home/>}/>
                     <Route path="gameDays" element={<GameDayPage/>}>
                         <Route index element={<GameDayList/>}/>
-                        <Route path="new" element={<GameDayNew/>}/>
-                        <Route path=":gameDayId/view" element={<GameDayView/>}/>
-                        <Route path=":gameDayId/edit" element={<GameDayEdit/>}/>
+                        <Route path="new" element={<GameDay mode='add'/>}/>
+                        <Route path=":gameDayId" element={<GameDay mode='edit'/>}/>
                     </Route>
                     <Route path="/players" element={<PlayerPage/>}>
                         <Route index element={<PlayerList/>}/>

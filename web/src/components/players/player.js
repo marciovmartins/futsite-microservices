@@ -15,7 +15,7 @@ export function Player(props) {
 
     useEffect(() => loadPlayer(playerId, props.mode, setState), []);
 
-    return <main>
+    return <div>
         <h2>{title} Player</h2>
         <form>
             <div className="row mb-3">
@@ -39,7 +39,7 @@ export function Player(props) {
                 text={title + " Player"}
             />
         </form>
-    </main>;
+    </div>;
 }
 
 const loadPlayer = (playerId, mode, setState) => {
