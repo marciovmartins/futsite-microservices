@@ -72,22 +72,7 @@ class RankingRestRepositoryIT : BaseIT() {
             .expectStatus().isCreated
 
         val requestBody = RankingRequestBodyDTO(
-            period = RankingRequestBodyDTO.Period(
-                from = "2021-05-01",
-                to = "2021-05-03",
-            ),
-            classificationMethod = RankingRequestBodyDTO.ClassificationMethod(
-                method = RankingRequestBodyDTO.ClassificationMethod.Method.AveragePointsPerMatch,
-                criteria = RankingRequestBodyDTO.ClassificationMethod.Criteria(
-                    percentage = 100,
-                    type = RankingRequestBodyDTO.ClassificationMethod.Criteria.Type.AverageNumberOfMatches,
-                ),
-            ),
-            scoringCriteria = RankingRequestBodyDTO.ScoringCriteria(
-                victories = 3,
-                draws = 1,
-                defeats = 0,
-            ),
+            amateurSoccerGroupId = amateurSoccerGroupId
         )
 
         val expectedRanking = RankingDTO(
