@@ -7,7 +7,6 @@ import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.singleMatchGam
 import com.github.marciovmartins.futsitev3.gameDay.PlayerStatisticDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
 import java.util.UUID
 
 class RankingRestRepositoryIT : BaseIT() {
@@ -27,7 +26,7 @@ class RankingRestRepositoryIT : BaseIT() {
             .bodyValue(
                 singleMatchGameDayDTO(
                     amateurSoccerGroupId = amateurSoccerGroupId,
-                    date = LocalDate.of(2021, 5, 1).toString(),
+                    date = "2021-05-01",
                     playerStatistics = setOf(
                         PlayerStatisticDTO(A, player1, 4, 0, 0, 0, 0),
                         PlayerStatisticDTO(A, player2, 3, 0, 0, 0, 0),
@@ -43,7 +42,7 @@ class RankingRestRepositoryIT : BaseIT() {
             .bodyValue(
                 singleMatchGameDayDTO(
                     amateurSoccerGroupId = amateurSoccerGroupId,
-                    date = LocalDate.of(2021, 5, 2).toString(),
+                    date = "2021-05-02",
                     playerStatistics = setOf(
                         PlayerStatisticDTO(A, player1, 4, 0, 0, 0, 0),
                         PlayerStatisticDTO(A, player3, 3, 1, 0, 0, 0),
@@ -59,7 +58,7 @@ class RankingRestRepositoryIT : BaseIT() {
             .bodyValue(
                 singleMatchGameDayDTO(
                     amateurSoccerGroupId = amateurSoccerGroupId,
-                    date = LocalDate.of(2021, 5, 3).toString(),
+                    date = "2021-05-03",
                     playerStatistics = setOf(
                         PlayerStatisticDTO(A, player1, 2, 0, 0, 0, 0),
                         PlayerStatisticDTO(A, player5, 3, 0, 0, 0, 0),
