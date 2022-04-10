@@ -13,15 +13,6 @@ object GameDayFixture {
         description: Any? = null,
         matches: Set<MatchDTO> = setOf(matchDTO())
     ) = GameDayDTO(amateurSoccerGroupId, date, quote, author, description, matches)
-    
-    fun singleMatchGameDayDTO(
-        amateurSoccerGroupId: Any? = UUID.randomUUID().toString(),
-        date: Any? = LocalDate.now().toString(),
-        quote: Any? = null,
-        author: Any? = null,
-        description: Any? = null,
-        playerStatistics: Set<PlayerStatisticDTO>? = setOf(playerStatisticDTO(team = A), playerStatisticDTO(team = B)),
-    ) = GameDayDTO(amateurSoccerGroupId, date, quote, author, description, setOf(matchDTO(players = playerStatistics)))
 
     fun matchDTO(
         order: Any? = 1,
