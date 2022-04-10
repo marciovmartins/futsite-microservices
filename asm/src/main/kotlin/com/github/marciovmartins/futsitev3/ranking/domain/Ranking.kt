@@ -1,3 +1,3 @@
 package com.github.marciovmartins.futsitev3.ranking.domain
 
-data class Ranking(val players: Players)
+data class Ranking(val playersRanking: PlayersRanking)

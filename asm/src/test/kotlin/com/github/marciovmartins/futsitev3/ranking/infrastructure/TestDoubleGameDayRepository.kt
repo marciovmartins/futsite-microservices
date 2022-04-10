@@ -1,18 +1,19 @@
 package com.github.marciovmartins.futsitev3.ranking.infrastructure
 
-import com.github.marciovmartins.futsitev3.ranking.domain.GameDayByPlayer
 import com.github.marciovmartins.futsitev3.ranking.domain.GameDayRepository
-import com.github.marciovmartins.futsitev3.ranking.domain.Players
+import com.github.marciovmartins.futsitev3.ranking.domain.PlayerStatisticsByGameDay
+import com.github.marciovmartins.futsitev3.ranking.domain.PlayersRanking
 import java.util.UUID
 
 class TestDoubleGameDayRepository : GameDayRepository {
-    private val items = mutableSetOf<GameDayByPlayer>()
+    private val items = mutableSetOf<PlayerStatisticsByGameDay>()
 
-    override fun persist(gameDayByPlayer: GameDayByPlayer) {
-        items.add(gameDayByPlayer)
+    override fun persist(playerStatisticsByGameDay: PlayerStatisticsByGameDay) {
+        items += playerStatisticsByGameDay
     }
 
-    override fun findBy(amateurSoccerGroupId: UUID): Players {
-        TODO("Not yet implemented")
-    }
+    override fun findBy(amateurSoccerGroupId: UUID): PlayersRanking = items
+        .filter { it.amateurSoccerGroupId == amateurSoccerGroupId }
+        .toSet()
+        .let { PlayersRanking.from(it) }
 }
