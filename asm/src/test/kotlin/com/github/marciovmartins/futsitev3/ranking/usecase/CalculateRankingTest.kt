@@ -13,7 +13,116 @@ import java.util.UUID
 
 class CalculateRankingTest {
     @Test
-    fun `calculate ranking`() {
+    fun `calculate ranking for zero game days`() {
+        // setup
+        val amateurSoccerGroupId = UUID.randomUUID()
+
+        val gameDayRepository = TestDoubleGameDayRepository()
+
+        val expectedRanking = Ranking(players = Players(emptySet()))
+        val options = CalculateRanking.Options(amateurSoccerGroupId = amateurSoccerGroupId)
+
+        // execution
+        val calculateRanking = CalculateRanking(gameDayRepository)
+        val ranking = calculateRanking.with(options)
+
+        // assertions
+        assertThat(ranking)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(expectedRanking)
+    }
+
+    @Test
+    fun `calculate ranking for one game day`() {
+        // setup
+        val amateurSoccerGroupId = UUID.randomUUID()
+        val player1 = UUID.randomUUID()
+        val player2 = UUID.randomUUID()
+        val player3 = UUID.randomUUID()
+        val player4 = UUID.randomUUID()
+
+        val gameDayRepository = TestDoubleGameDayRepository()
+        val date1 = LocalDate.of(2021, 5, 1)
+        gameDayRepository.persist(GameDayByPlayer(amateurSoccerGroupId, player1, date1, Team.A, 4, 0, 0, 0, 0))
+        gameDayRepository.persist(GameDayByPlayer(amateurSoccerGroupId, player2, date1, Team.A, 3, 0, 0, 0, 0))
+        gameDayRepository.persist(GameDayByPlayer(amateurSoccerGroupId, player3, date1, Team.B, 2, 1, 0, 0, 0))
+        gameDayRepository.persist(GameDayByPlayer(amateurSoccerGroupId, player4, date1, Team.B, 1, 0, 0, 0, 0))
+
+        val expectedRanking = Ranking(
+            players = Players(
+                setOf(
+                    Player(
+                        position = 1,
+                        playerId = player1,
+                        classification = "1,000 003 1008",
+                        points = 3,
+                        matches = 1,
+                        victories = 1,
+                        draws = 0,
+                        defeats = 0,
+                        goalsInFavor = 8,
+                        goalsAgainst = 3,
+                        goalsBalance = 5,
+                    ),
+                    Player(
+                        position = 1,
+                        playerId = player2,
+                        classification = "1,000 003 1008",
+                        points = 3,
+                        matches = 1,
+                        victories = 1,
+                        draws = 0,
+                        defeats = 0,
+                        goalsInFavor = 8,
+                        goalsAgainst = 3,
+                        goalsBalance = 5,
+                    ),
+                    Player(
+                        position = 3,
+                        playerId = player3,
+                        classification = "0,000 000 0995",
+                        points = 0,
+                        matches = 1,
+                        victories = 0,
+                        draws = 0,
+                        defeats = 1,
+                        goalsInFavor = 3,
+                        goalsAgainst = 8,
+                        goalsBalance = -5,
+                    ),
+                    Player(
+                        position = 3,
+                        playerId = player4,
+                        classification = null,
+                        points = 0,
+                        matches = 2,
+                        victories = 0,
+                        draws = 0,
+                        defeats = 2,
+                        goalsInFavor = 7,
+                        goalsAgainst = 15,
+                        goalsBalance = -8,
+                    ),
+                ),
+            ),
+        )
+
+        val options = CalculateRanking.Options(amateurSoccerGroupId = amateurSoccerGroupId)
+
+        // execution
+        val calculateRanking = CalculateRanking(gameDayRepository)
+        val ranking = calculateRanking.with(options)
+
+        // assertions
+        assertThat(ranking)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(expectedRanking)
+    }
+
+    @Test
+    fun `calculate ranking for many`() {
         // setup
         val amateurSoccerGroupId = UUID.randomUUID()
         val player1 = UUID.randomUUID()

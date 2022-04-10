@@ -5,9 +5,9 @@ import com.github.marciovmartins.futsitev3.ranking.domain.Players
 import com.github.marciovmartins.futsitev3.ranking.domain.Ranking
 import java.util.UUID
 
-class CalculateRanking(gameDayRepository: GameDayRepository) {
+class CalculateRanking(private val gameDayRepository: GameDayRepository) {
     fun with(options: Options): Ranking {
-        return Ranking(Players(emptySet())) //TODO: Not yet implemented
+        return Ranking(players = Players(emptySet())) //TODO: not implemented yet.
     }
 
     data class Options(val amateurSoccerGroupId: UUID)

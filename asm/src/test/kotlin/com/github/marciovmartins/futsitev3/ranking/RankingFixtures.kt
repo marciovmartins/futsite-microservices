@@ -5,9 +5,9 @@ data class RankingRequestBodyDTO(
 )
 
 data class RankingDTO(
-    val players: Set<Player>
+    val players: Set<PlayerDTO>
 ) {
-    data class Player(
+    data class PlayerDTO(
         val position: Any?,
         val playerId: Any?,
         val classification: Any?,

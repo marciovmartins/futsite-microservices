@@ -76,7 +76,7 @@ class RankingRestRepositoryIT : BaseIT() {
 
         val expectedRanking = RankingDTO(
             players = setOf(
-                RankingDTO.Player(
+                RankingDTO.PlayerDTO(
                     position = 1,
                     playerId = player1,
                     classification = "2,333 006 1008",
@@ -89,7 +89,7 @@ class RankingRestRepositoryIT : BaseIT() {
                     goalsAgainst = 12,
                     goalsBalance = 8,
                 ),
-                RankingDTO.Player(
+                RankingDTO.PlayerDTO(
                     position = 2,
                     playerId = player2,
                     classification = "1,333 003 1002",
@@ -102,7 +102,7 @@ class RankingRestRepositoryIT : BaseIT() {
                     goalsAgainst = 15,
                     goalsBalance = 2,
                 ),
-                RankingDTO.Player(
+                RankingDTO.PlayerDTO(
                     position = 3,
                     playerId = player3,
                     classification = "1,333 003 0998",
@@ -115,7 +115,7 @@ class RankingRestRepositoryIT : BaseIT() {
                     goalsAgainst = 17,
                     goalsBalance = -2,
                 ),
-                RankingDTO.Player(
+                RankingDTO.PlayerDTO(
                     position = null,
                     playerId = marcioPreto,
                     classification = null,
@@ -128,7 +128,7 @@ class RankingRestRepositoryIT : BaseIT() {
                     goalsAgainst = 0,
                     goalsBalance = 0,
                 ),
-                RankingDTO.Player(
+                RankingDTO.PlayerDTO(
                     position = null,
                     playerId = player5,
                     classification = null,
@@ -141,7 +141,7 @@ class RankingRestRepositoryIT : BaseIT() {
                     goalsAgainst = 5,
                     goalsBalance = 0,
                 ),
-                RankingDTO.Player(
+                RankingDTO.PlayerDTO(
                     position = null,
                     playerId = player4,
                     classification = null,
