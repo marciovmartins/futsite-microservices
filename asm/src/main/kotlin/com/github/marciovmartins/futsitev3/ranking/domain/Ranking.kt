@@ -14,7 +14,8 @@ data class PlayersRanking(
             val playersRanking = mutableSetOf<PlayerRanking>()
 
             val playerId2playerRankingStatistics =
-                items.associateBy(PlayerStatistic::playerId) { PlayerRankingStatistics(it) }
+                items.groupBy(PlayerStatistic::playerId) { PlayerRankingStatistics(it) }
+                    .mapValues { it.value.reduce(PlayerRankingStatistics::add) }
                     .toList().sortedBy { (_, v) -> v.classification }.reversed().toMap()
 
             for ((index, entry) in playerId2playerRankingStatistics.entries.withIndex()) {
@@ -44,10 +45,9 @@ data class PlayerRankingStatistics(
     val goalsInFavor: Int,
     val goalsAgainst: Int,
 ) {
-    val victoryPoints = victories * 3
+    val points = (victories * 3) + (draws * 1)
     val goalsBalance = goalsInFavor - goalsAgainst
-    val classification =
-        "%.3f %03d %04d".format(victoryPoints.toFloat().div(matches), victoryPoints, 1000 + goalsBalance)
+    val classification = "%.3f %03d %04d".format(points.toFloat().div(matches), victories * 3, 1000 + goalsBalance)
 
     constructor(playerStatistic: PlayerStatistic) : this(
         matches = playerStatistic.matches,
@@ -57,4 +57,15 @@ data class PlayerRankingStatistics(
         goalsInFavor = playerStatistic.goalsInFavor,
         goalsAgainst = playerStatistic.goalsAgainst,
     )
+
+    companion object {
+        fun add(a: PlayerRankingStatistics, b: PlayerRankingStatistics) = PlayerRankingStatistics(
+            matches = a.matches + b.matches,
+            victories = a.victories + b.victories,
+            draws = a.draws + b.draws,
+            defeats = a.defeats + b.defeats,
+            goalsInFavor = a.goalsInFavor + b.goalsInFavor,
+            goalsAgainst = a.goalsAgainst + b.goalsAgainst,
+        )
+    }
 }

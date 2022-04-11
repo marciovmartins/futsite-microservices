@@ -8,7 +8,7 @@ data class TestPlayerRankingDTO(
     val playerId: Any?,
     val position: Any?,
     val classification: Any?,
-    val victoryPoints: Any?,
+    val points: Any?,
     val matches: Any?,
     val victories: Any?,
     val draws: Any?,

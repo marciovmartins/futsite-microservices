@@ -10,7 +10,7 @@ data class PlayerRankingDTO(
     val position: Int,
     val playerId: UUID,
     val classification: String,
-    val victoryPoints: Int,
+    val points: Int,
     val matches: Int,
     val victories: Int,
     val draws: Int,
