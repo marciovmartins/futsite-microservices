@@ -7,8 +7,8 @@ data class RankingDTO(
 )
 
 data class PlayerRankingDTO(
-    val position: Int,
     val playerId: UUID,
+    val position: Int,
     val classification: String,
     val points: Int,
     val matches: Int,
@@ -19,3 +19,5 @@ data class PlayerRankingDTO(
     val goalsAgainst: Int,
     val goalsBalance: Int,
 )
+
+data class PointCriteriaDTO(val victories: Int, val draws: Int, val defeats: Int)

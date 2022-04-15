@@ -5,7 +5,7 @@ import com.github.marciovmartins.futsitev3.ranking.domain.Ranking
 import java.util.UUID
 
 class CalculateRanking(private val playerStatisticsRepository: PlayerStatisticsRepository) {
-    fun with(amateurSoccerGroupId: UUID): RankingDTO {
+    fun with(amateurSoccerGroupId: UUID, pointsCriteria: PointCriteriaDTO): RankingDTO {
         val ranking = playerStatisticsRepository.findBy(amateurSoccerGroupId)
         return ranking.toDTO()
     }
