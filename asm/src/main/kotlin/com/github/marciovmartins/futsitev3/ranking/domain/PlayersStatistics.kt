@@ -4,13 +4,13 @@ data class PlayersStatistics(
     val items: Set<PlayerStatistic>
 ) {
     fun calculateRanking(pointsCriteria: PointCriteria): Ranking {
-        val playersRanking = getPlayersRanking()
+        val playersRanking = getPlayersRanking(pointsCriteria)
         return Ranking(playersRanking)
     }
 
-    private fun getPlayersRanking(): PlayersRanking {
+    private fun getPlayersRanking(pointsCriteria: PointCriteria): PlayersRanking {
         var last: PlayerRanking? = null
-        return items.groupBy(PlayerStatistic::playerId) { PlayerRankingStatistics(it) }
+        return items.groupBy(PlayerStatistic::playerId) { PlayerRankingStatistics(it, pointsCriteria) }
             .mapValues { it.value.reduce(PlayerRankingStatistics::add) }
             .toList().sortedByDescending { (_, playerRankingStatistics) -> playerRankingStatistics.classification }
             .toMap().entries.mapIndexed { index, entry ->

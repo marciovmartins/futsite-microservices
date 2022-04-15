@@ -23,18 +23,24 @@ data class PlayerRankingStatistics(
     val defeats: Int,
     val goalsInFavor: Int,
     val goalsAgainst: Int,
+    private val pointCriteria: PointCriteria,
 ) {
-    val points = (victories * 3) + (draws * 1)
+    val points = victories * pointCriteria.victories + draws * pointCriteria.draws + defeats * pointCriteria.defeats
     val goalsBalance = goalsInFavor - goalsAgainst
-    val classification = "%.3f %03d %04d".format(points.toFloat().div(matches), victories * 3, 1000 + goalsBalance)
+    val classification = "%.3f %03d %04d".format(
+        points.toFloat().div(matches),
+        victories * pointCriteria.victories,
+        1000 + goalsBalance
+    )
 
-    constructor(playerStatistic: PlayerStatistic) : this(
+    constructor(playerStatistic: PlayerStatistic, pointCriteria: PointCriteria) : this(
         matches = playerStatistic.matches,
         victories = playerStatistic.victories,
         draws = playerStatistic.draws,
         defeats = playerStatistic.defeats,
         goalsInFavor = playerStatistic.goalsInFavor,
         goalsAgainst = playerStatistic.goalsAgainst,
+        pointCriteria = pointCriteria,
     )
 
     companion object {
@@ -45,6 +51,7 @@ data class PlayerRankingStatistics(
             defeats = a.defeats + b.defeats,
             goalsInFavor = a.goalsInFavor + b.goalsInFavor,
             goalsAgainst = a.goalsAgainst + b.goalsAgainst,
+            pointCriteria = a.pointCriteria,
         )
     }
 }

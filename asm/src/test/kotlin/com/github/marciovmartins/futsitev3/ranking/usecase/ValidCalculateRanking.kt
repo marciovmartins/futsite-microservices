@@ -75,11 +75,11 @@ object ValidCalculateRanking : ArgumentsProvider {
             playersStatistics = defaultPlayersStatistics,
             pointsCriteria = PointCriteriaDTO(victories = 4, draws = 2, defeats = 1),
             expectedPlayersRanking = setOf(
-                PlayerRankingDTO(player1, 1, "3,333 008 1008", 10, 3, 2, 1, 0, 20, 12, 8),
-                PlayerRankingDTO(player2, 2, "2,333 004 1002", 7, 3, 1, 1, 1, 17, 15, 2),
-                PlayerRankingDTO(player3, 3, "2,333 004 0998", 7, 3, 1, 1, 1, 15, 17, -2),
-                PlayerRankingDTO(player5, 4, "2,000 000 1000", 2, 1, 0, 1, 0, 5, 5, 0),
-                PlayerRankingDTO(player4, 5, "1,000 000 0992", 2, 2, 0, 0, 2, 7, 15, -8),
+                PlayerRankingDTO(player1, 1, "3,000 012 1006", 18, 6, 3, 3, 0, 9, 3, 6),
+                PlayerRankingDTO(player3, 2, "2,500 008 1000", 15, 6, 2, 3, 1, 6, 6, 0),
+                PlayerRankingDTO(player2, 3, "2,000 004 1000", 12, 6, 1, 3, 2, 6, 6, 0),
+                PlayerRankingDTO(player5, 4, "2,000 000 1000", 4, 2, 0, 2, 0, 2, 2, 0),
+                PlayerRankingDTO(player4, 5, "1,750 000 0997", 7, 4, 0, 3, 1, 3, 6, -3),
             ),
         ),
     )
