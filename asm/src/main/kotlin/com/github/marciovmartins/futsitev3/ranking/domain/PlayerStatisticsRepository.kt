@@ -4,5 +4,5 @@ import java.util.UUID
 
 interface PlayerStatisticsRepository {
     fun persist(amateurSoccerGroupId: UUID, playerStatistic: PlayerStatistic)
-    fun findBy(amateurSoccerGroupId: UUID): Ranking
+    fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics
 }

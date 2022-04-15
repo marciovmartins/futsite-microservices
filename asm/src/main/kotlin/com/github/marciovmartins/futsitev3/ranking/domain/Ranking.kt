@@ -48,27 +48,3 @@ data class PlayerRankingStatistics(
         )
     }
 }
-
-
-fun createRanking(items: Set<PlayerStatistic>): PlayersRanking {
-    val playersRanking = getPlayersRanking(items)
-    return PlayersRanking(playersRanking)
-}
-
-private fun getPlayersRanking(items: Set<PlayerStatistic>): Set<PlayerRanking> {
-    var last: PlayerRanking? = null
-    return items.groupBy(PlayerStatistic::playerId) { PlayerRankingStatistics(it) }
-        .mapValues { it.value.reduce(PlayerRankingStatistics::add) }
-        .toList().sortedByDescending { (_, playerRankingStatistics) -> playerRankingStatistics.classification }
-        .toMap().entries.mapIndexed { index, entry ->
-            val position = getPosition(last, entry.value.classification, index)
-            last = PlayerRanking(playerId = entry.key, position = position, statistics = entry.value)
-            last!!
-        }.toSet()
-}
-
-private fun getPosition(lastPlayerRanking: PlayerRanking?, classification: String, index: Int): Int =
-    if (lastPlayerRanking == null || lastPlayerRanking.statistics.classification != classification)
-        index + 1
-    else
-        lastPlayerRanking.position

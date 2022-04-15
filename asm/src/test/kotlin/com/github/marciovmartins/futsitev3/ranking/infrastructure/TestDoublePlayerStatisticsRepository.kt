@@ -2,8 +2,7 @@ package com.github.marciovmartins.futsitev3.ranking.infrastructure
 
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayerStatisticsRepository
-import com.github.marciovmartins.futsitev3.ranking.domain.Ranking
-import com.github.marciovmartins.futsitev3.ranking.domain.createRanking
+import com.github.marciovmartins.futsitev3.ranking.domain.PlayersStatistics
 import java.util.UUID
 
 class TestDoublePlayerStatisticsRepository : PlayerStatisticsRepository {
@@ -14,9 +13,8 @@ class TestDoublePlayerStatisticsRepository : PlayerStatisticsRepository {
         playersStatistics += playerStatistic
     }
 
-    override fun findBy(amateurSoccerGroupId: UUID): Ranking {
+    override fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics {
         return rows.getOrDefault(amateurSoccerGroupId, emptySet())
-            .let(::createRanking)
-            .let(::Ranking)
+            .let(::PlayersStatistics)
     }
 }
