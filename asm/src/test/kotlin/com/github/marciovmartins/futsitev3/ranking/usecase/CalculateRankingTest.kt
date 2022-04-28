@@ -5,6 +5,7 @@ import com.github.marciovmartins.futsitev3.ranking.infrastructure.TestDoublePlay
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
+import java.time.LocalDate
 import java.util.UUID
 
 class CalculateRankingTest {
@@ -12,7 +13,7 @@ class CalculateRankingTest {
     @ArgumentsSource(ValidCalculateRanking::class)
     fun `with different parameters`(
         testDescription: String,
-        playersStatistics: Set<PlayerStatistic>,
+        playersStatistics: Set<Pair<LocalDate, PlayerStatistic>>,
         pointsCriteria: PointCriteriaDTO,
         expectedRanking: RankingDTO
     ) {
@@ -20,7 +21,7 @@ class CalculateRankingTest {
         val amateurSoccerGroupId = UUID.randomUUID()
 
         val playerStatisticsRepository = TestDoublePlayerStatisticsRepository()
-        playersStatistics.forEach { playerStatisticsRepository.persist(amateurSoccerGroupId, it) }
+        playersStatistics.forEach { playerStatisticsRepository.persist(amateurSoccerGroupId, it.second) }
 
         // when
         val calculateRanking = CalculateRanking(playerStatisticsRepository)

@@ -18,10 +18,10 @@ object ValidCalculateRanking : ArgumentsProvider {
         argument(
             testDescription = "with one game day with one match",
             playersStatistics = setOf(
-                PlayerStatistic(player1, may1st2021, 1, 1, 0, 0, 8, 3),
-                PlayerStatistic(player2, may1st2021, 1, 1, 0, 0, 8, 3),
-                PlayerStatistic(player3, may1st2021, 1, 0, 0, 1, 3, 8),
-                PlayerStatistic(player4, may1st2021, 1, 0, 0, 1, 3, 8),
+                Pair(may1st2021, PlayerStatistic(player1, 1, 1, 0, 0, 8, 3)),
+                Pair(may1st2021, PlayerStatistic(player2, 1, 1, 0, 0, 8, 3)),
+                Pair(may1st2021, PlayerStatistic(player3, 1, 0, 0, 1, 3, 8)),
+                Pair(may1st2021, PlayerStatistic(player4, 1, 0, 0, 1, 3, 8)),
             ),
             expectedPlayersRanking = setOf(
                 PlayerRankingDTO(player1, 1, "3,000 003 1005", 3, 1, 1, 0, 0, 8, 3, 5),
@@ -34,22 +34,22 @@ object ValidCalculateRanking : ArgumentsProvider {
             testDescription = "with many game days with one match each",
             playersStatistics = setOf(
                 // player 1
-                PlayerStatistic(player1, may1st2021, 1, 1, 0, 0, 8, 3),
-                PlayerStatistic(player1, may2nd2021, 1, 1, 0, 0, 7, 4),
-                PlayerStatistic(player1, may3rd2021, 1, 0, 1, 0, 5, 5),
+                Pair(may1st2021, PlayerStatistic(player1, 1, 1, 0, 0, 8, 3)),
+                Pair(may2nd2021, PlayerStatistic(player1, 1, 1, 0, 0, 7, 4)),
+                Pair(may3rd2021, PlayerStatistic(player1, 1, 0, 1, 0, 5, 5)),
                 // player 2
-                PlayerStatistic(player2, may1st2021, 1, 1, 0, 0, 8, 3),
-                PlayerStatistic(player2, may2nd2021, 1, 0, 0, 1, 4, 7),
-                PlayerStatistic(player2, may3rd2021, 1, 0, 1, 0, 5, 5),
+                Pair(may1st2021, PlayerStatistic(player2, 1, 1, 0, 0, 8, 3)),
+                Pair(may2nd2021, PlayerStatistic(player2, 1, 0, 0, 1, 4, 7)),
+                Pair(may3rd2021, PlayerStatistic(player2, 1, 0, 1, 0, 5, 5)),
                 // player 3
-                PlayerStatistic(player3, may1st2021, 1, 0, 0, 1, 3, 8),
-                PlayerStatistic(player3, may2nd2021, 1, 1, 0, 0, 7, 4),
-                PlayerStatistic(player3, may3rd2021, 1, 0, 1, 0, 5, 5),
+                Pair(may1st2021, PlayerStatistic(player3, 1, 0, 0, 1, 3, 8)),
+                Pair(may2nd2021, PlayerStatistic(player3, 1, 1, 0, 0, 7, 4)),
+                Pair(may3rd2021, PlayerStatistic(player3, 1, 0, 1, 0, 5, 5)),
                 // player 4
-                PlayerStatistic(player4, may1st2021, 1, 0, 0, 1, 3, 8),
-                PlayerStatistic(player4, may2nd2021, 1, 0, 0, 1, 4, 7),
+                Pair(may1st2021, PlayerStatistic(player4, 1, 0, 0, 1, 3, 8)),
+                Pair(may2nd2021, PlayerStatistic(player4, 1, 0, 0, 1, 4, 7)),
                 // player 5
-                PlayerStatistic(player5, may3rd2021, 1, 0, 1, 0, 5, 5),
+                Pair(may3rd2021, PlayerStatistic(player5, 1, 0, 1, 0, 5, 5)),
             ),
             expectedPlayersRanking = setOf(
                 PlayerRankingDTO(player1, 1, "2,333 006 1008", 7, 3, 2, 1, 0, 20, 12, 8),
@@ -87,7 +87,7 @@ object ValidCalculateRanking : ArgumentsProvider {
 
 private fun argument(
     testDescription: String,
-    playersStatistics: Set<PlayerStatistic>,
+    playersStatistics: Set<Pair<LocalDate, PlayerStatistic>>,
     pointsCriteria: PointCriteriaDTO = PointCriteriaDTO(victories = 3, draws = 1, defeats = 0),
     expectedPlayersRanking: Set<PlayerRankingDTO>,
 ) = Arguments.of(testDescription, playersStatistics, pointsCriteria, RankingDTO(expectedPlayersRanking))
@@ -104,20 +104,20 @@ val may3rd2021: LocalDate = LocalDate.of(2021, 5, 3)
 
 private val defaultPlayersStatistics = setOf(
     // player 1
-    PlayerStatistic(player1, may1st2021, 2, 1, 1, 0, 4, 1),
-    PlayerStatistic(player1, may2nd2021, 2, 2, 0, 0, 3, 0),
-    PlayerStatistic(player1, may3rd2021, 2, 0, 2, 0, 2, 2),
+    Pair(may1st2021, PlayerStatistic(player1, 2, 1, 1, 0, 4, 1)),
+    Pair(may2nd2021, PlayerStatistic(player1, 2, 2, 0, 0, 3, 0)),
+    Pair(may3rd2021, PlayerStatistic(player1, 2, 0, 2, 0, 2, 2)),
     // player 2
-    PlayerStatistic(player2, may1st2021, 2, 1, 1, 0, 4, 1),
-    PlayerStatistic(player2, may2nd2021, 2, 0, 0, 2, 0, 3),
-    PlayerStatistic(player2, may3rd2021, 2, 0, 2, 0, 2, 2),
+    Pair(may1st2021, PlayerStatistic(player2, 2, 1, 1, 0, 4, 1)),
+    Pair(may2nd2021, PlayerStatistic(player2, 2, 0, 0, 2, 0, 3)),
+    Pair(may3rd2021, PlayerStatistic(player2, 2, 0, 2, 0, 2, 2)),
     // player 3
-    PlayerStatistic(player3, may1st2021, 2, 0, 1, 1, 1, 4),
-    PlayerStatistic(player3, may2nd2021, 2, 2, 0, 0, 3, 0),
-    PlayerStatistic(player3, may3rd2021, 2, 0, 2, 0, 2, 2),
+    Pair(may1st2021, PlayerStatistic(player3, 2, 0, 1, 1, 1, 4)),
+    Pair(may2nd2021, PlayerStatistic(player3, 2, 2, 0, 0, 3, 0)),
+    Pair(may3rd2021, PlayerStatistic(player3, 2, 0, 2, 0, 2, 2)),
     // player 4
-    PlayerStatistic(player4, may1st2021, 2, 0, 1, 1, 1, 4),
-    PlayerStatistic(player4, may2nd2021, 2, 0, 2, 0, 2, 2),
+    Pair(may1st2021, PlayerStatistic(player4, 2, 0, 1, 1, 1, 4)),
+    Pair(may2nd2021, PlayerStatistic(player4, 2, 0, 2, 0, 2, 2)),
     // player 5
-    PlayerStatistic(player5, may3rd2021, 2, 0, 2, 0, 2, 2),
+    Pair(may3rd2021, PlayerStatistic(player5, 2, 0, 2, 0, 2, 2)),
 )

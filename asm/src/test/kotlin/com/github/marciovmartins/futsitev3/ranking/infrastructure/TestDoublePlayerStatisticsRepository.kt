@@ -15,6 +15,9 @@ class TestDoublePlayerStatisticsRepository : PlayerStatisticsRepository {
 
     override fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics {
         return rows.getOrDefault(amateurSoccerGroupId, emptySet())
+            .groupBy { it.playerId }
+            .mapValues { it.value.reduce(PlayerStatistic::add) }
+            .values.toSet()
             .let(::PlayersStatistics)
     }
 }
