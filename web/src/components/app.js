@@ -44,7 +44,9 @@ export class Home extends React.Component {
     }
 
     getAmateurSoccerGroupId() {
-        return sessionStorage.getItem("amateurSoccerGroupId") || uuidV4();
+        let uuid = sessionStorage.getItem("amateurSoccerGroupId") || uuidV4();
+        sessionStorage.setItem("amateurSoccerGroupId", uuid)
+        return uuid;
     }
 
     handleAmateurSoccerGroupIdChange = event => {
