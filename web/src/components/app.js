@@ -8,7 +8,8 @@ export default function App() {
             <nav>
                 <Link to="/">Home</Link>&nbsp;|&nbsp;
                 <Link to="/gameDays">Game Day</Link>&nbsp;|&nbsp;
-                <Link to="/players">Players</Link>
+                <Link to="/players">Players</Link>&nbsp;|&nbsp;
+                <Link to="/statistics">Statistics</Link>
             </nav>
             <Outlet/>
         </div>
