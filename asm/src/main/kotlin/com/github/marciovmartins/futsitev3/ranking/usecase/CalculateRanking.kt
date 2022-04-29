@@ -27,12 +27,12 @@ private fun Ranking.toDTO() = RankingDTO(
                 playerId = it.playerId,
                 classification = it.statistics.classification,
                 points = it.statistics.points,
-                matches = it.statistics.matches,
-                victories = it.statistics.victories,
-                draws = it.statistics.draws,
-                defeats = it.statistics.defeats,
-                goalsInFavor = it.statistics.goalsInFavor,
-                goalsAgainst = it.statistics.goalsAgainst,
+                matches = it.statistics.playerStatistic.matches,
+                victories = it.statistics.playerStatistic.victories,
+                draws = it.statistics.playerStatistic.draws,
+                defeats = it.statistics.playerStatistic.defeats,
+                goalsInFavor = it.statistics.playerStatistic.goalsInFavor,
+                goalsAgainst = it.statistics.playerStatistic.goalsAgainst,
                 goalsBalance = it.statistics.goalsBalance,
             )
         }

@@ -10,12 +10,12 @@ data class PlayersStatistics(
 
     private fun getPlayersRanking(pointsCriteria: PointCriteria): PlayersRanking {
         var last: PlayerRanking? = null
-        return items.groupBy(PlayerStatistic::playerId) { PlayerRankingStatistics(it, pointsCriteria) }
-            .mapValues { it.value.reduce(PlayerRankingStatistics::add) }
-            .toList().sortedByDescending { (_, playerRankingStatistics) -> playerRankingStatistics.classification }
-            .toMap().entries.mapIndexed { index, entry ->
-                val position = getPosition(last, entry.value.classification, index)
-                last = PlayerRanking(playerId = entry.key, position = position, statistics = entry.value)
+        return items.asSequence()
+            .map { PlayerRankingStatistics(it, pointsCriteria) }.toList()
+            .sortedByDescending { playerStatistic -> playerStatistic.classification }
+            .mapIndexed { index, entry ->
+                val position = getPosition(last, entry.classification, index)
+                last = PlayerRanking(playerId = entry.playerStatistic.playerId, position = position, statistics = entry)
                 last!!
             }.toSet()
             .let(::PlayersRanking)
