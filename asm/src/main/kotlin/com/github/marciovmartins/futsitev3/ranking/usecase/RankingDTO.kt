@@ -6,7 +6,7 @@ data class RankingDTO(
     val playersRanking: Set<PlayerRankingDTO>,
 )
 
-data class PlayerRankingDTO( //TODO: move as inner class of RankingDTO
+data class PlayerRankingDTO(
     val playerId: UUID,
     val position: Int,
     val classification: String,
