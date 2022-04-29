@@ -11,6 +11,8 @@ data class PlayerStatistic(
     val goalsInFavor: Int,
     val goalsAgainst: Int,
 ) {
+    val goalsBalance = goalsInFavor - goalsAgainst
+
     companion object {
         fun add(a: PlayerStatistic, b: PlayerStatistic) = PlayerStatistic(
             playerId = a.playerId,

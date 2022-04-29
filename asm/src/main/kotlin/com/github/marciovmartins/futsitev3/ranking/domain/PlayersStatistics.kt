@@ -15,15 +15,33 @@ data class PlayersStatistics(
             .sortedByDescending { playerStatistic -> playerStatistic.classification }
             .mapIndexed { index, entry ->
                 val position = getPosition(last, entry.classification, index)
-                last = PlayerRanking(playerId = entry.playerStatistic.playerId, position = position, statistics = entry)
+                last = PlayerRanking(
+                    position = position,
+                    classification = entry.classification,
+                    points = entry.points,
+                    statistics = entry.playerStatistic
+                )
                 last!!
             }.toSet()
             .let(::PlayersRanking)
     }
 
     private fun getPosition(lastPlayerRanking: PlayerRanking?, classification: String, index: Int): Int =
-        if (lastPlayerRanking == null || lastPlayerRanking.statistics.classification != classification)
+        if (lastPlayerRanking == null || lastPlayerRanking.classification != classification)
             index + 1
         else
             lastPlayerRanking.position
+
+    private data class PlayerRankingStatistics(
+        val playerStatistic: PlayerStatistic,
+        private val pointCriteria: PointCriteria,
+    ) {
+        val points =
+            (playerStatistic.victories * pointCriteria.victories) + (playerStatistic.draws * pointCriteria.draws) + (playerStatistic.defeats * pointCriteria.defeats)
+        val classification = "%.3f %03d %04d".format(
+            points.toFloat().div(playerStatistic.matches),
+            playerStatistic.victories * pointCriteria.victories,
+            1000 + (playerStatistic.goalsInFavor - playerStatistic.goalsAgainst)
+        )
+    }
 }
