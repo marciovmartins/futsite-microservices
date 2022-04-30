@@ -1,6 +1,6 @@
 package com.github.marciovmartins.futsitev3.user.data
 
-import com.github.javafaker.Faker
+import net.datafaker.Faker
 
 object MyFaker {
     val faker: Faker = Faker.instance()
