@@ -6,6 +6,7 @@ import org.springframework.boot.runApplication
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer
 import org.springframework.validation.Validator
@@ -14,6 +15,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 
 @SpringBootApplication
+@EnableJpaRepositories(considerNestedRepositories = true)
 class AsmApplication
 
 fun main(args: Array<String>) {

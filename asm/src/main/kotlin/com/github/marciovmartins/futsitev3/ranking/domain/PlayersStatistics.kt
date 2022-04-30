@@ -28,9 +28,9 @@ data class PlayersStatistics(
             .let(::PlayersRanking)
     }
 
-    private fun getPosition(lastPlayerRanking: PlayerRanking?, classification: String, index: Int): Int =
+    private fun getPosition(lastPlayerRanking: PlayerRanking?, classification: String, index: Int): Long =
         if (lastPlayerRanking == null || lastPlayerRanking.classification != classification)
-            index + 1
+            (index + 1).toLong()
         else
             lastPlayerRanking.position
 
@@ -50,12 +50,12 @@ data class PlayersStatistics(
 
 data class PlayerStatistic(
     val playerId: UUID,
-    val matches: Int,
-    val victories: Int,
-    val draws: Int,
-    val defeats: Int,
-    val goalsInFavor: Int,
-    val goalsAgainst: Int,
+    val matches: Long,
+    val victories: Long,
+    val draws: Long,
+    val defeats: Long,
+    val goalsInFavor: Long,
+    val goalsAgainst: Long,
 ) {
     val goalsBalance = goalsInFavor - goalsAgainst
 
