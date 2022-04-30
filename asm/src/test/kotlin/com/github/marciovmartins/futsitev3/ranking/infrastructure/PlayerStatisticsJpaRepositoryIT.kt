@@ -1,16 +1,15 @@
 package com.github.marciovmartins.futsitev3.ranking.infrastructure
 
+import com.github.marciovmartins.futsitev3.BaseIT
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayerStatisticsRepository
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayersStatistics
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import java.util.UUID
 
-@SpringBootTest
-class PlayerStatisticsJpaRepositoryIT {
+class PlayerStatisticsJpaRepositoryIT : BaseIT() {
 
     @Autowired
     lateinit var playerStatisticsRepository: PlayerStatisticsRepository
@@ -31,7 +30,7 @@ class PlayerStatisticsJpaRepositoryIT {
     }
 
     @Test
-    fun `retrieve many player statistics`() {
+    fun `persist and retrieve many player statistics`() {
         // given
         val amateurSoccerGroupId = UUID.randomUUID()
         val playerStatisticToPersist = setOf(
