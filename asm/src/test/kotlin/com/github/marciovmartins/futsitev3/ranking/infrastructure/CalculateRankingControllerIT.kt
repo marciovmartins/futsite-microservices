@@ -34,7 +34,7 @@ class CalculateRankingControllerIT : BaseIT() {
         every {
             calculateRanking.with(
                 amateurSoccerGroupId,
-                rankingCriteriaDTO.pointsCriterion.toUseCase()
+                rankingCriteriaDTO.pointsCriterion.let { PointCriteriaDTO(it.victories, it.draws, it.defeats) }
             )
         } returns expectedRankingDTO
 
@@ -54,12 +54,6 @@ class CalculateRankingControllerIT : BaseIT() {
             .isEqualTo(expectedRankingDTO)
     }
 }
-
-private fun TestRankingCriteriaDTO.PointsCriterionDTO.toUseCase() = PointCriteriaDTO(
-    victories = this.victories,
-    draws = this.draws,
-    defeats = this.defeats,
-)
 
 private val player1 = UUID.randomUUID()
 private val player2 = UUID.randomUUID()
