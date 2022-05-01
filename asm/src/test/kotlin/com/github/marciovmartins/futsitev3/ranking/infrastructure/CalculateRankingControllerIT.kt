@@ -16,7 +16,7 @@ class CalculateRankingControllerIT : BaseIT() {
     lateinit var calculateRanking: CalculateRanking
 
     @Test
-    fun successfully() {
+    fun `with ok 200`() {
         // given
         val amateurSoccerGroupId = UUID.randomUUID()
         val rankingCriteriaDTO = TestRankingCriteriaDTO(
@@ -55,13 +55,14 @@ class CalculateRankingControllerIT : BaseIT() {
     }
 
     @Test
-    fun `with bad request`() {
+    fun `with bad request 4xx`() {
         // given
         val expectedResponseBody = ExpectedResponseBody(
             title = "Constraint Violation",
             status = 400,
             detail = "Required request body is missing",
         )
+
         // when
         val response = webTestClient.post()
             .uri("statistics/players")
@@ -69,6 +70,42 @@ class CalculateRankingControllerIT : BaseIT() {
 
         // then
         val actualExceptions = response.expectStatus().isBadRequest
+            .expectBody(ExpectedResponseBody::class.java)
+            .returnResult().responseBody
+        assertThat(actualExceptions)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(expectedResponseBody)
+    }
+
+    @Test
+    fun `with internal server error 5xx`() {
+        // given
+        val amateurSoccerGroupId = UUID.randomUUID()
+        val rankingCriteriaDTO = TestRankingCriteriaDTO(
+            amateurSoccerGroupId = amateurSoccerGroupId,
+            pointsCriterion = TestRankingCriteriaDTO.PointsCriterionDTO(victories = 3, draws = 1, defeats = 0)
+        )
+        every {
+            calculateRanking.with(
+                amateurSoccerGroupId,
+                rankingCriteriaDTO.pointsCriterion.let { PointCriteriaDTO(it.victories, it.draws, it.defeats) }
+            )
+        } throws Exception("Exception message")
+        val expectedResponseBody = ExpectedResponseBody(
+            title = "Internal Server Error",
+            status = 500,
+            detail = "Exception message",
+        )
+
+        // when
+        val response = webTestClient.post()
+            .uri("statistics/players")
+            .bodyValue(rankingCriteriaDTO)
+            .exchange()
+
+        // then
+        val actualExceptions = response.expectStatus().is5xxServerError
             .expectBody(ExpectedResponseBody::class.java)
             .returnResult().responseBody
         assertThat(actualExceptions)
