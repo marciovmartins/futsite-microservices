@@ -39,19 +39,42 @@ class CalculateRankingControllerIT : BaseIT() {
         } returns expectedRankingDTO
 
         // when
-        val rankingDTO = webTestClient.post()
+        val response = webTestClient.post()
             .uri("statistics/players")
             .bodyValue(rankingCriteriaDTO)
             .exchange()
-            .expectStatus().isOk
-            .returnResult(RankingDTO::class.java)
-            .responseBody.blockFirst()
 
         // then
+        val rankingDTO = response.expectStatus().isOk
+            .expectBody(RankingDTO::class.java)
+            .returnResult().responseBody
         assertThat(rankingDTO)
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(expectedRankingDTO)
+    }
+
+    @Test
+    fun `with bad request`() {
+        // given
+        val expectedResponseBody = ExpectedResponseBody(
+            title = "Constraint Violation",
+            status = 400,
+            detail = "Required request body is missing",
+        )
+        // when
+        val response = webTestClient.post()
+            .uri("statistics/players")
+            .exchange()
+
+        // then
+        val actualExceptions = response.expectStatus().isBadRequest
+            .expectBody(ExpectedResponseBody::class.java)
+            .returnResult().responseBody
+        assertThat(actualExceptions)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(expectedResponseBody)
     }
 }
 

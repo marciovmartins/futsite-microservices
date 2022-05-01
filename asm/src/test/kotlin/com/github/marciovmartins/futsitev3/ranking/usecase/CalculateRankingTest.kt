@@ -12,7 +12,7 @@ class CalculateRankingTest {
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(ValidCalculateRanking::class)
     fun `with different parameters`(
-        testDescription: String,
+        @Suppress("UNUSED_PARAMETER") testDescription: String,
         playersStatistics: Set<Pair<LocalDate, PlayerStatistic>>,
         pointsCriteria: PointCriteriaDTO,
         expectedRanking: RankingDTO
