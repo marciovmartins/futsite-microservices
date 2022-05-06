@@ -54,6 +54,10 @@ data class PlayerStatisticDTO(
     val redCards: Any?,
 )
 
+data class TestGameDayCreated(
+    val gameDayId: String,
+)
+
 data class GameDayCollection(
     val _embedded: EmbeddedGameDays,
     val _links: Links,

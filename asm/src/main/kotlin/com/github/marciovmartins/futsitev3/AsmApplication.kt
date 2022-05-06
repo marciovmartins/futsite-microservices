@@ -1,5 +1,6 @@
 package com.github.marciovmartins.futsitev3
 
+import org.springframework.amqp.rabbit.annotation.EnableRabbit
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -14,6 +15,7 @@ import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 
+@EnableRabbit
 @SpringBootApplication
 @EnableJpaRepositories(considerNestedRepositories = true)
 class AsmApplication

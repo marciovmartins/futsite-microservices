@@ -1,5 +1,6 @@
 package com.github.marciovmartins.futsitev3.gameDay
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.marciovmartins.futsitev3.BaseIT
 import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.gameDayDTO
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidGameDayArgumentsProvider
@@ -8,14 +9,25 @@ import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidPlay
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ValidGameDayArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.ValidMatchPlayerArgumentsProvider
 import org.assertj.core.api.Assertions.assertThat
+import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
+import org.springframework.amqp.rabbit.annotation.RabbitListener
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import java.time.LocalDate
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 
 class GameDayRestRepositoryIT : BaseIT() {
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
+
+    companion object {
+        val messages = mutableListOf<TestGameDayCreated>()
+    }
+
     @ParameterizedTest(name = "{0}")
     @ArgumentsSource(ValidGameDayArgumentsProvider::class)
     @ArgumentsSource(ValidMatchPlayerArgumentsProvider::class)
@@ -25,6 +37,7 @@ class GameDayRestRepositoryIT : BaseIT() {
     ) {
         // setup
         val gameDayId = UUID.randomUUID().toString()
+        val expectedMessage = TestGameDayCreated(gameDayId = gameDayId)
 
         // execution
         val gameDayLocationUrl = webTestClient.put()
@@ -45,6 +58,8 @@ class GameDayRestRepositoryIT : BaseIT() {
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(gameDayToCreate)
+
+        await().atMost(1, TimeUnit.SECONDS).untilAsserted { assertThat(messages).contains(expectedMessage) }
     }
 
     @ParameterizedTest(name = "{0}")
@@ -404,5 +419,10 @@ class GameDayRestRepositoryIT : BaseIT() {
             .exchange()
             .expectBody(GameDayDTO::class.java)
             .returnResult().responseBody!!
+    }
+
+    @RabbitListener(queues = ["futsitev3.gameday.created"])
+    fun receiveGameDayCreatedEvent(messageIn: String) {
+        messages += objectMapper.readValue(messageIn, TestGameDayCreated::class.java)
     }
 }
