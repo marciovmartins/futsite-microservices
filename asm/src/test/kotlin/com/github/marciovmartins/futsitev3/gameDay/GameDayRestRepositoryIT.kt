@@ -2,7 +2,7 @@ package com.github.marciovmartins.futsitev3.gameDay
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.marciovmartins.futsitev3.BaseIT
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.gameDayDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.testGameDayDTO
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidGameDayArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidMatchArgumentsProvider
 import com.github.marciovmartins.futsitev3.gameDay.argumentsprovider.InvalidPlayerStatisticsArgumentsProvider
@@ -33,7 +33,7 @@ class GameDayRestRepositoryIT : BaseIT() {
     @ArgumentsSource(ValidMatchPlayerArgumentsProvider::class)
     fun `create and retrieve a game day`(
         @Suppress("UNUSED_PARAMETER") description: String,
-        gameDayToCreate: GameDayDTO,
+        gameDayToCreate: TestGameDayDTO,
     ) {
         // setup
         val gameDayId = UUID.randomUUID().toString()
@@ -52,7 +52,7 @@ class GameDayRestRepositoryIT : BaseIT() {
 
         // assertion
         responseGet.expectStatus().isOk
-        val gameDay = responseGet.returnResult(GameDayDTO::class.java).responseBody.blockFirst()
+        val gameDay = responseGet.returnResult(TestGameDayDTO::class.java).responseBody.blockFirst()
         assertThat(gameDay)
             .isNotNull
             .usingRecursiveComparison()
@@ -67,11 +67,11 @@ class GameDayRestRepositoryIT : BaseIT() {
     @ArgumentsSource(ValidMatchPlayerArgumentsProvider::class)
     fun `update and retrieve a game day`(
         @Suppress("UNUSED_PARAMETER") description: String,
-        gameDayToUpdate: GameDayDTO,
+        gameDayToUpdate: TestGameDayDTO,
     ) {
         // setup
         val gameDayId = UUID.randomUUID().toString()
-        val gameDayToCreate = gameDayDTO().copy(amateurSoccerGroupId = gameDayToUpdate.amateurSoccerGroupId)
+        val gameDayToCreate = testGameDayDTO().copy(amateurSoccerGroupId = gameDayToUpdate.amateurSoccerGroupId)
         val gameDayLocationUrl = webTestClient.put()
             .uri("gameDays/{id}", gameDayId)
             .bodyValue(gameDayToCreate)
@@ -91,7 +91,7 @@ class GameDayRestRepositoryIT : BaseIT() {
         // assertion
         responsePut.expectStatus().isOk
         responseGet.expectStatus().isOk
-        val gameDay = responseGet.returnResult(GameDayDTO::class.java).responseBody.blockFirst()
+        val gameDay = responseGet.returnResult(TestGameDayDTO::class.java).responseBody.blockFirst()
         assertThat(gameDay)
             .isNotNull
             .usingRecursiveComparison()
@@ -103,7 +103,7 @@ class GameDayRestRepositoryIT : BaseIT() {
     fun `delete existing game day`() {
         // setup
         val gameDayId = UUID.randomUUID().toString()
-        val gameDayToCreate = gameDayDTO()
+        val gameDayToCreate = testGameDayDTO()
         val gameDayLocationUrl = webTestClient.put()
             .uri("gameDays/{id}", gameDayId)
             .bodyValue(gameDayToCreate)
@@ -130,7 +130,7 @@ class GameDayRestRepositoryIT : BaseIT() {
     @ArgumentsSource(InvalidPlayerStatisticsArgumentsProvider::class)
     fun `create game day with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
-        gameDayToCreate: GameDayDTO,
+        gameDayToCreate: TestGameDayDTO,
         expectedExceptions: Set<ExpectedException>,
     ) {
         // setup
@@ -164,12 +164,12 @@ class GameDayRestRepositoryIT : BaseIT() {
     @ArgumentsSource(InvalidPlayerStatisticsArgumentsProvider::class)
     fun `update game day with invalid data fails`(
         @Suppress("UNUSED_PARAMETER") description: String,
-        gameDayToUpdate: GameDayDTO,
+        gameDayToUpdate: TestGameDayDTO,
         expectedExceptions: Set<ExpectedException>
     ) {
         // setup
         val gameDayId = UUID.randomUUID().toString()
-        val gameDayToCreate = gameDayDTO().copy(amateurSoccerGroupId = gameDayToUpdate.amateurSoccerGroupId)
+        val gameDayToCreate = testGameDayDTO().copy(amateurSoccerGroupId = gameDayToUpdate.amateurSoccerGroupId)
         val gameDayLocationUrl = webTestClient.put()
             .uri("gameDays/{id}", gameDayId)
             .bodyValue(gameDayToCreate)
@@ -215,8 +215,8 @@ class GameDayRestRepositoryIT : BaseIT() {
         // setup
         val amateurSoccerGroupId = UUID.randomUUID().toString()
         val date = LocalDate.now().toString()
-        val gameDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
-        val secondGameDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
+        val gameDayToCreate = testGameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
+        val secondGameDayToCreate = testGameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
         webTestClient.put()
             .uri("gameDays/{id}", UUID.randomUUID().toString())
             .bodyValue(gameDayToCreate)
@@ -255,7 +255,7 @@ class GameDayRestRepositoryIT : BaseIT() {
     fun `do not allow update the amateur soccer group id`() {
         // setup
         val gameDayId = UUID.randomUUID().toString()
-        val gameDayToCreate = gameDayDTO()
+        val gameDayToCreate = testGameDayDTO()
         val gameDayToUpdate = gameDayToCreate.copy(amateurSoccerGroupId = UUID.randomUUID().toString())
         webTestClient.put()
             .uri("gameDays/{id}", gameDayId)
@@ -292,7 +292,7 @@ class GameDayRestRepositoryIT : BaseIT() {
     fun `do not allow http post to game day with uuid resource`() {
         // setup
         val gameDayId = UUID.randomUUID().toString()
-        val gameDayToCreate = gameDayDTO()
+        val gameDayToCreate = testGameDayDTO()
 
         // execution
         val response = webTestClient.post()
@@ -407,8 +407,8 @@ class GameDayRestRepositoryIT : BaseIT() {
             )
     }
 
-    private fun createGameDay(amateurSoccerGroupId: Any? = null, date: Any? = LocalDate.now()): GameDayDTO {
-        val gameDayToCreate = gameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
+    private fun createGameDay(amateurSoccerGroupId: Any? = null, date: Any? = LocalDate.now()): TestGameDayDTO {
+        val gameDayToCreate = testGameDayDTO(amateurSoccerGroupId = amateurSoccerGroupId, date = date)
         val gameDayId = UUID.randomUUID().toString()
         webTestClient.put()
             .uri("gameDays/{id}", gameDayId)
@@ -417,7 +417,7 @@ class GameDayRestRepositoryIT : BaseIT() {
         return webTestClient.get()
             .uri("gameDays/{id}", gameDayId)
             .exchange()
-            .expectBody(GameDayDTO::class.java)
+            .expectBody(TestGameDayDTO::class.java)
             .returnResult().responseBody!!
     }
 

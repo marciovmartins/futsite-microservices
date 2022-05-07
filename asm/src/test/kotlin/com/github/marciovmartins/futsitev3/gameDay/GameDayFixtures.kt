@@ -5,21 +5,24 @@ import java.time.LocalDate
 import java.util.UUID
 
 object GameDayFixture {
-    fun gameDayDTO(
+    fun testGameDayDTO(
         amateurSoccerGroupId: Any? = UUID.randomUUID().toString(),
         date: Any? = LocalDate.now().toString(),
         quote: Any? = null,
         author: Any? = null,
         description: Any? = null,
-        matches: Set<MatchDTO> = setOf(matchDTO())
-    ) = GameDayDTO(amateurSoccerGroupId, date, quote, author, description, matches)
+        matches: Set<TestMatchDTO> = setOf(testMatchDTO())
+    ) = TestGameDayDTO(amateurSoccerGroupId, date, quote, author, description, matches)
 
-    fun matchDTO(
+    fun testMatchDTO(
         order: Any? = 1,
-        players: Set<PlayerStatisticDTO>? = setOf(playerStatisticDTO(team = A), playerStatisticDTO(team = B))
-    ) = MatchDTO(order, players)
+        players: Set<TestPlayerStatisticDTO>? = setOf(
+            testPlayerStatisticDTO(team = A),
+            testPlayerStatisticDTO(team = B)
+        )
+    ) = TestMatchDTO(order, players)
 
-    fun playerStatisticDTO(
+    fun testPlayerStatisticDTO(
         team: Any?,
         playerId: Any? = UUID.randomUUID().toString(),
         goalsInFavor: Any? = faker.random().nextInt(0, 5),
@@ -27,24 +30,24 @@ object GameDayFixture {
         yellowCards: Any? = faker.random().nextInt(0, 2),
         blueCards: Any? = faker.random().nextInt(0, 3),
         redCards: Any? = faker.random().nextInt(0, 1),
-    ) = PlayerStatisticDTO(team, playerId, goalsInFavor, goalsAgainst, yellowCards, blueCards, redCards)
+    ) = TestPlayerStatisticDTO(team, playerId, goalsInFavor, goalsAgainst, yellowCards, blueCards, redCards)
 }
 
-data class GameDayDTO(
+data class TestGameDayDTO(
     val amateurSoccerGroupId: Any?,
     val date: Any?,
     val quote: Any?,
     val author: Any?,
     val description: Any?,
-    val matches: Set<MatchDTO>?
+    val matches: Set<TestMatchDTO>?
 )
 
-data class MatchDTO(
+data class TestMatchDTO(
     val order: Any?,
-    val playerStatistics: Set<PlayerStatisticDTO>?,
+    val playerStatistics: Set<TestPlayerStatisticDTO>?,
 )
 
-data class PlayerStatisticDTO(
+data class TestPlayerStatisticDTO(
     val team: Any?,
     val playerId: Any?,
     val goalsInFavor: Any?,
@@ -64,7 +67,7 @@ data class GameDayCollection(
     val page: Page,
 ) {
     data class EmbeddedGameDays(
-        val gameDays: List<GameDayDTO>,
+        val gameDays: List<TestGameDayDTO>,
     )
 }
 

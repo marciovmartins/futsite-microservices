@@ -1,6 +1,6 @@
 package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.matchDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.testMatchDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
@@ -26,13 +26,13 @@ object ValidGameDayArgumentsProvider : ArgumentsProvider {
         // MATCHES
         gameDayArgument(
             testDescription = "valid game day with one valid match",
-            matches = setOf(matchDTO()),
+            matches = setOf(testMatchDTO()),
         ),
         gameDayArgument(
             testDescription = "valid game day with several valid matches",
             matches = setOf(
-                matchDTO(order = 1),
-                matchDTO(order = 2)
+                testMatchDTO(order = 1),
+                testMatchDTO(order = 2)
             ),
         ),
     )

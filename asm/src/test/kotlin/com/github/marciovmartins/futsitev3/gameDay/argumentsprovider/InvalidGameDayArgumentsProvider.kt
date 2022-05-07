@@ -1,7 +1,7 @@
 package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 
 import com.github.marciovmartins.futsitev3.gameDay.ExpectedException
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.matchDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.testMatchDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
@@ -80,8 +80,8 @@ object InvalidGameDayArgumentsProvider : ArgumentsProvider {
         gameDayArgument(
             testDescription = "invalid game day with duplicated match order",
             matches = setOf(
-                matchDTO(order = 1),
-                matchDTO(order = 1),
+                testMatchDTO(order = 1),
+                testMatchDTO(order = 1),
             ),
             expectedException = setOf(
                 ExpectedException(
@@ -93,8 +93,8 @@ object InvalidGameDayArgumentsProvider : ArgumentsProvider {
         gameDayArgument(
             testDescription = "invalid game day with skip match orders",
             matches = setOf(
-                matchDTO(order = 1),
-                matchDTO(order = 3),
+                testMatchDTO(order = 1),
+                testMatchDTO(order = 3),
             ),
             expectedException = setOf(
                 ExpectedException(

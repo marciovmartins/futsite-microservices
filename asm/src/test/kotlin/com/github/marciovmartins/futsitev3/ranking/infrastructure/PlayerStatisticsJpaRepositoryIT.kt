@@ -63,7 +63,7 @@ class PlayerStatisticsJpaRepositoryIT : BaseIT() {
         )
 
         // when
-        playerStatisticToPersist.forEach { playerStatisticsRepository.persist(amateurSoccerGroupId, it) }
+        playerStatisticsRepository.persist(amateurSoccerGroupId, PlayersStatistics(playerStatisticToPersist))
         val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId)
 
         // then

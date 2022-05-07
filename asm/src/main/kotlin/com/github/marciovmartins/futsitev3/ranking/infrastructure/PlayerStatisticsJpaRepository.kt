@@ -18,8 +18,9 @@ import javax.persistence.Id
 class PlayerStatisticsJpaRepository(
     private val dao: DAO
 ) : PlayerStatisticsRepository {
-    override fun persist(amateurSoccerGroupId: UUID, playerStatistic: PlayerStatistic) {
-        dao.save(PlayerStatisticEntity(amateurSoccerGroupId, playerStatistic))
+    override fun persist(amateurSoccerGroupId: UUID, playersStatistics: PlayersStatistics) {
+        val playerStatisticEntities = playersStatistics.items.map { PlayerStatisticEntity(amateurSoccerGroupId, it) }
+        dao.saveAll(playerStatisticEntities)
     }
 
     override fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics {

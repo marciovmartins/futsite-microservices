@@ -1,7 +1,8 @@
 package com.github.marciovmartins.futsitev3.ranking.usecase
 
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayerStatistic
-import com.github.marciovmartins.futsitev3.ranking.infrastructure.TestDoublePlayerStatisticsRepository
+import com.github.marciovmartins.futsitev3.ranking.domain.PlayersStatistics
+import com.github.marciovmartins.futsitev3.ranking.infrastructure.FakePlayerStatisticsRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
@@ -13,15 +14,16 @@ class CalculateRankingTest {
     @ArgumentsSource(ValidCalculateRanking::class)
     fun `with different parameters`(
         @Suppress("UNUSED_PARAMETER") testDescription: String,
-        playersStatistics: Set<Pair<LocalDate, PlayerStatistic>>,
+        playersStatisticsByDate: Set<Pair<LocalDate, PlayerStatistic>>,
         pointsCriteria: PointCriteriaDTO,
         expectedRanking: RankingDTO
     ) {
         // given
         val amateurSoccerGroupId = UUID.randomUUID()
 
-        val playerStatisticsRepository = TestDoublePlayerStatisticsRepository()
-        playersStatistics.forEach { playerStatisticsRepository.persist(amateurSoccerGroupId, it.second) }
+        val playerStatisticsRepository = FakePlayerStatisticsRepository()
+        val playersStatistics = playersStatisticsByDate.map { it.second }.toSet().let { PlayersStatistics(it) }
+        playerStatisticsRepository.persist(amateurSoccerGroupId, playersStatistics)
 
         // when
         val calculateRanking = CalculateRanking(playerStatisticsRepository)

@@ -2,7 +2,7 @@ package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 
 import com.github.marciovmartins.futsitev3.gameDay.A
 import com.github.marciovmartins.futsitev3.gameDay.B
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerStatisticDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.testPlayerStatisticDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
@@ -31,7 +31,7 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         singleMatchArgument(
             testDescription = "invalid game day with exactly only one match player statistics of team A",
             playerStatistics = setOf(
-                playerStatisticDTO(team = A),
+                testPlayerStatisticDTO(team = A),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must have at least one player statistic for team A and one player statistic for team B",
@@ -41,7 +41,7 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         singleMatchArgument(
             testDescription = "invalid game day with exactly only one match player statistics of team B",
             playerStatistics = setOf(
-                playerStatisticDTO(team = B),
+                testPlayerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must have at least one player statistic for team A and one player statistic for team B",
@@ -51,8 +51,8 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         singleMatchArgument(
             testDescription = "invalid game day with only match player statistics from team A",
             playerStatistics = setOf(
-                playerStatisticDTO(team = A),
-                playerStatisticDTO(team = A),
+                testPlayerStatisticDTO(team = A),
+                testPlayerStatisticDTO(team = A),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must have at least one player statistic for team A and one player statistic for team B",
@@ -62,8 +62,8 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         singleMatchArgument(
             testDescription = "invalid game day with only match player statistics from team B",
             playerStatistics = setOf(
-                playerStatisticDTO(team = B),
-                playerStatisticDTO(team = B),
+                testPlayerStatisticDTO(team = B),
+                testPlayerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "must have at least one player statistic for team A and one player statistic for team B",
@@ -73,8 +73,8 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         singleMatchArgument(
             testDescription = "invalid game day with duplicated player user id in different team",
             playerStatistics = setOf(
-                playerStatisticDTO(team = A, playerId = "d636819a-7df6-4c07-90ff-e4a781530500"),
-                playerStatisticDTO(team = B, playerId = "d636819a-7df6-4c07-90ff-e4a781530500"),
+                testPlayerStatisticDTO(team = A, playerId = "d636819a-7df6-4c07-90ff-e4a781530500"),
+                testPlayerStatisticDTO(team = B, playerId = "d636819a-7df6-4c07-90ff-e4a781530500"),
             ),
             expectedExceptions = singleExpectedException(
                 message = "cannot have duplicated player user id",
@@ -84,9 +84,9 @@ object InvalidMatchArgumentsProvider : ArgumentsProvider {
         singleMatchArgument(
             testDescription = "invalid game day with duplicated player user id on same team",
             playerStatistics = setOf(
-                playerStatisticDTO(team = A, playerId = "f70897f4-497b-48f2-8094-18464886195b"),
-                playerStatisticDTO(team = A, playerId = "f70897f4-497b-48f2-8094-18464886195b"),
-                playerStatisticDTO(team = B),
+                testPlayerStatisticDTO(team = A, playerId = "f70897f4-497b-48f2-8094-18464886195b"),
+                testPlayerStatisticDTO(team = A, playerId = "f70897f4-497b-48f2-8094-18464886195b"),
+                testPlayerStatisticDTO(team = B),
             ),
             expectedExceptions = singleExpectedException(
                 message = "cannot have duplicated player user id",

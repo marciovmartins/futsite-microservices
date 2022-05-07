@@ -3,12 +3,12 @@ package com.github.marciovmartins.futsitev3.gameDay.argumentsprovider
 import com.github.marciovmartins.futsitev3.gameDay.A
 import com.github.marciovmartins.futsitev3.gameDay.B
 import com.github.marciovmartins.futsitev3.gameDay.ExpectedException
-import com.github.marciovmartins.futsitev3.gameDay.GameDayDTO
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.gameDayDTO
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.matchDTO
-import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.playerStatisticDTO
-import com.github.marciovmartins.futsitev3.gameDay.MatchDTO
-import com.github.marciovmartins.futsitev3.gameDay.PlayerStatisticDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.testGameDayDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.testMatchDTO
+import com.github.marciovmartins.futsitev3.gameDay.GameDayFixture.testPlayerStatisticDTO
+import com.github.marciovmartins.futsitev3.gameDay.TestGameDayDTO
+import com.github.marciovmartins.futsitev3.gameDay.TestMatchDTO
+import com.github.marciovmartins.futsitev3.gameDay.TestPlayerStatisticDTO
 import org.junit.jupiter.params.provider.Arguments
 import java.time.LocalDate
 import java.util.UUID
@@ -20,24 +20,27 @@ internal fun gameDayArgument(
     quote: Any? = null,
     author: Any? = null,
     description: Any? = null,
-    matches: Set<MatchDTO>? = setOf(matchDTO()),
+    matches: Set<TestMatchDTO>? = setOf(testMatchDTO()),
     expectedException: Set<ExpectedException>? = null
 ) = Arguments.of(
     testDescription,
-    GameDayDTO(amateurSoccerGroupId, date, quote, author, description, matches),
+    TestGameDayDTO(amateurSoccerGroupId, date, quote, author, description, matches),
     expectedException
 )!!
 
 internal fun singleMatchArgument(
     testDescription: String,
     order: Any? = 1,
-    playerStatistics: Set<PlayerStatisticDTO> = setOf(playerStatisticDTO(team = A), playerStatisticDTO(team = B)),
+    playerStatistics: Set<TestPlayerStatisticDTO> = setOf(
+        testPlayerStatisticDTO(team = A),
+        testPlayerStatisticDTO(team = B)
+    ),
     expectedExceptions: Set<ExpectedException>? = null
 ): Arguments = Arguments.of(
     testDescription,
-    gameDayDTO(
+    testGameDayDTO(
         matches = setOf(
-            matchDTO(order = order, players = playerStatistics)
+            testMatchDTO(order = order, players = playerStatistics)
         ),
     ),
     expectedExceptions

@@ -5,16 +5,16 @@ import com.github.marciovmartins.futsitev3.ranking.domain.PlayerStatisticsReposi
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayersStatistics
 import java.util.UUID
 
-class TestDoublePlayerStatisticsRepository : PlayerStatisticsRepository {
-    private val rows = mutableMapOf<UUID, MutableSet<PlayerStatistic>>()
+class FakePlayerStatisticsRepository : PlayerStatisticsRepository {
+    private val rows = mutableMapOf<UUID, PlayersStatistics>()
 
-    override fun persist(amateurSoccerGroupId: UUID, playerStatistic: PlayerStatistic) {
-        val playersStatistics = rows.getOrPut(amateurSoccerGroupId) { mutableSetOf() }
-        playersStatistics += playerStatistic
+    override fun persist(amateurSoccerGroupId: UUID, playersStatistics: PlayersStatistics) {
+        rows[amateurSoccerGroupId] = playersStatistics
     }
 
     override fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics {
-        return rows.getOrDefault(amateurSoccerGroupId, emptySet())
+        return rows.getOrDefault(amateurSoccerGroupId, PlayersStatistics(emptySet()))
+            .items
             .groupBy { it.playerId }
             .mapValues { it.value.reduce(PlayerStatistic::add) }
             .values.toSet()
