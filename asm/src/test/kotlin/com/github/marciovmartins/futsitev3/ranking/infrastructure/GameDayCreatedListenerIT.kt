@@ -29,7 +29,7 @@ class GameDayCreatedListenerIT : BaseIT() {
         val gameDayJson = objectMapper.writeValueAsString(gameDay)
 
         // when
-        rabbitTemplate.convertAndSend("futsitev3.gameday.created", gameDayJson)
+        rabbitTemplate.convertAndSend("amq.topic", "futsitev3.gameday.created", gameDayJson)
 
         // then
         verify { getPlayerStatistic.from(gameDayId) }

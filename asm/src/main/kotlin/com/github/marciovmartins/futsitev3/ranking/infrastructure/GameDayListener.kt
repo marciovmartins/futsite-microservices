@@ -13,8 +13,12 @@ class GameDayListener(
 ) {
     @RabbitListener(queues = ["futsitev3.gameday.created"])
     fun receiveGameDayCreatedMessage(messageIn: String) {
-        val gameDay = objectMapper.readValue(messageIn, GameDayCreatedDTO::class.java)
-        getPlayerStatistic.from(gameDayId = gameDay.gameDayId)
+        try {
+            val gameDay = objectMapper.readValue(messageIn, GameDayCreatedDTO::class.java)
+            getPlayerStatistic.from(gameDayId = gameDay.gameDayId)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
     }
 }
 

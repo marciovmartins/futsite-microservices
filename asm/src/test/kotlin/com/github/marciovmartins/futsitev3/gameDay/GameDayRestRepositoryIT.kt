@@ -13,17 +13,17 @@ import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
+import org.springframework.amqp.rabbit.annotation.EnableRabbit
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.http.HttpStatus
+import java.time.Duration
 import java.time.LocalDate
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 class GameDayRestRepositoryIT : BaseIT() {
-    @Autowired
-    lateinit var objectMapper: ObjectMapper
-
     companion object {
         val messages = mutableListOf<TestGameDayCreated>()
     }
@@ -59,7 +59,9 @@ class GameDayRestRepositoryIT : BaseIT() {
             .ignoringCollectionOrder()
             .isEqualTo(gameDayToCreate)
 
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted { assertThat(messages).contains(expectedMessage) }
+        await().atMost(1, TimeUnit.SECONDS).pollInterval(Duration.ofMillis(100)).untilAsserted {
+            assertThat(messages).contains(expectedMessage)
+        }
     }
 
     @ParameterizedTest(name = "{0}")
@@ -421,8 +423,19 @@ class GameDayRestRepositoryIT : BaseIT() {
             .returnResult().responseBody!!
     }
 
-    @RabbitListener(queues = ["futsitev3.gameday.created"])
-    fun receiveGameDayCreatedEvent(messageIn: String) {
-        messages += objectMapper.readValue(messageIn, TestGameDayCreated::class.java)
+    @EnableRabbit
+    @TestConfiguration
+    class MyConfiguration {
+        @Autowired
+        lateinit var objectMapper: ObjectMapper
+
+        @RabbitListener(queues = ["futsitev3.test.ranking.gameday.created"])
+        fun receiveGameDayCreatedEvent(messageIn: String) {
+            try {
+                messages += objectMapper.readValue(messageIn, TestGameDayCreated::class.java)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }

@@ -17,7 +17,7 @@ class GameDayEventHandler(
     fun handleGameDayAfterSave(gameDay: GameDay) {
         val gameDayCreated = GameDayCreated(gameDayId = gameDay.id!!)
         val gameDayCreatedJson = objectMapper.writeValueAsString(gameDayCreated)
-        rabbitTemplate.convertAndSend("futsitev3.gameday.created", gameDayCreatedJson)
+        rabbitTemplate.convertAndSend("amq.topic", "futsitev3.gameday.created", gameDayCreatedJson)
     }
 }
 

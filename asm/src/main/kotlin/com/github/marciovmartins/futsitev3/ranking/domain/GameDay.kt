@@ -4,6 +4,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 data class GameDay(
+    val gameDayId: UUID,
     val amateurSoccerGroupId: UUID,
     val date: LocalDate,
     val matches: Set<Match>
