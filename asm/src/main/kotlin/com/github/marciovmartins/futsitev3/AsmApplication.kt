@@ -3,6 +3,7 @@ package com.github.marciovmartins.futsitev3
 import org.springframework.amqp.rabbit.annotation.EnableRabbit
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
@@ -17,6 +18,7 @@ import org.springframework.web.filter.CorsFilter
 
 @EnableRabbit
 @SpringBootApplication
+@ConfigurationPropertiesScan
 @EnableJpaRepositories(considerNestedRepositories = true)
 class AsmApplication
 

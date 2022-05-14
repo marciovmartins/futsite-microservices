@@ -12,6 +12,7 @@ class GetPlayerStatistic(
 ) {
     fun from(gameDayId: UUID) {
         val gameDay = gameDayRepository.findBy(gameDayId)
+            ?: throw Exception("not implemented yet")
         val playersStatistics = gameDay.calculatePlayersStatistics()
         playerStatisticsRepository.persist(gameDay.amateurSoccerGroupId, playersStatistics)
     }

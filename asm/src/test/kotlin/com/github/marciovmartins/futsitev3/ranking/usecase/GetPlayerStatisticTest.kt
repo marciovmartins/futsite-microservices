@@ -1,18 +1,15 @@
 package com.github.marciovmartins.futsitev3.ranking.usecase
 
-import com.github.marciovmartins.futsitev3.ranking.domain.defaultGameDay
 import com.github.marciovmartins.futsitev3.ranking.domain.GameDayRepository
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayersStatistics
+import com.github.marciovmartins.futsitev3.ranking.domain.defaultGameDay
 import com.github.marciovmartins.futsitev3.ranking.infrastructure.FakePlayerStatisticsRepository
-import com.github.marciovmartins.futsitev3.ranking.domain.player1
-import com.github.marciovmartins.futsitev3.ranking.domain.player2
-import com.github.marciovmartins.futsitev3.ranking.domain.player3
-import com.github.marciovmartins.futsitev3.ranking.domain.player4
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.util.UUID
 
 class GetPlayerStatisticTest {
     private val playerStatisticsRepository = FakePlayerStatisticsRepository()
@@ -22,7 +19,12 @@ class GetPlayerStatisticTest {
     @Test
     fun `with a game day with one match`() {
         // given
-        val gameDay = defaultGameDay()
+        val player1: UUID = UUID.randomUUID()
+        val player2: UUID = UUID.randomUUID()
+        val player3: UUID = UUID.randomUUID()
+        val player4: UUID = UUID.randomUUID()
+
+        val gameDay = defaultGameDay(player1, player2, player3, player4)
         every { gameDayRepository.findBy(gameDay.gameDayId) } returns gameDay
 
         val expectedPlayersStatistics = PlayersStatistics(
