@@ -1,19 +1,26 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+import {Button} from "../shared/button";
+import {setNestedKey} from "../../helper-functions";
 
 const asmStatisticsPlayersHref = "http://localhost:8080/statistics/players";
 
 export function PlayerStatistics() {
-    const [state, setState] = useState({
+    let [state, setState] = useState({
         data: {
             amateurSoccerGroupId: sessionStorage.getItem("amateurSoccerGroupId"),
             ranking: {
                 playersRanking: []
+            },
+            pointsCriterion: {
+                victories: 3,
+                draws: 1,
+                defeats: 0
             }
         }
     });
 
     useEffect(() => {
-        calculateRanking(state.data.amateurSoccerGroupId, setState)
+        calculateRanking(state, setState)
     }, []);
 
     return <main>
@@ -53,17 +60,60 @@ export function PlayerStatistics() {
             )}
             </tbody>
         </table>
+
+        <form onSubmit={(event) => handleSubmit(event, state, setState)}>
+            <div className="row mb-3">
+                <label htmlFor="player-statistics-victories" className="col-sm-2 col-form-label">Victories</label>
+                <div className="col-sm-1">
+                    <input name="pointsCriterion.victories"
+                           type="text"
+                           value={state.data.pointsCriterion.victories}
+                           required
+                           id="player-statistics-victories"
+                           className="form-control"
+                           onChange={(event) => handleInputChange(event, state, setState)}
+                    />
+                </div>
+            </div>
+            <div className="row mb-3">
+                <label htmlFor="player-statistics-draws" className="col-sm-2 col-form-label">Draws</label>
+                <div className="col-sm-1">
+                    <input name="pointsCriterion.draws"
+                           type="text"
+                           value={state.data.pointsCriterion.draws}
+                           id="player-statistics-draws"
+                           className="form-control"
+                           onChange={(event) => handleInputChange(event, state, setState)}
+                    />
+                </div>
+            </div>
+            <div className="row mb-3">
+                <label htmlFor="player-statistics-defeats" className="col-sm-2 col-form-label">Defeats</label>
+                <div className="col-sm-1">
+                    <input name="pointsCriterion.defeats"
+                           type="text"
+                           value={state.data.pointsCriterion.defeats}
+                           id="player-statistics-defeats"
+                           className="form-control"
+                           onChange={(event) => handleInputChange(event, state, setState)}
+                    />
+                </div>
+            </div>
+
+            <Button
+                mode="add"
+                type="submit"
+                className="btn btn-success"
+                text="Calculate Ranking"
+            />
+        </form>
     </main>;
 }
 
-function calculateRanking(amateurSoccerGroupId, setState) {
+const calculateRanking = (state, setState) => {
     let requestBody = {
-        amateurSoccerGroupId: amateurSoccerGroupId,
-        pointsCriterion: {
-            victories: 3,
-            draws: 1,
-            defeats: 0
-        }
+        amateurSoccerGroupId: state.data.amateurSoccerGroupId,
+        pointsCriterion: state.data.pointsCriterion
     }
     fetch(asmStatisticsPlayersHref, {
         method: 'POST',
@@ -75,4 +125,18 @@ function calculateRanking(amateurSoccerGroupId, setState) {
         .then(ranking => setState((s) => ({
             ...s, data: {...s.data, ranking}
         })));
+}
+
+const handleSubmit = (e, state, setState) => {
+    e.preventDefault();
+    calculateRanking(state, setState)
+}
+
+const handleInputChange = (event, state, setState) => {
+    const target = event.target;
+    const name = "data." + target.name;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    let currentState = {...state};
+    setNestedKey(currentState, name.split('.'), value);
+    setState(currentState);
 }
