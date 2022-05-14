@@ -291,34 +291,6 @@ class GameDayRestRepositoryIT : BaseIT() {
     }
 
     @Test
-    fun `do not allow http post to game day with uuid resource`() {
-        // setup
-        val gameDayId = UUID.randomUUID().toString()
-        val gameDayToCreate = testGameDayDTO()
-
-        // execution
-        val response = webTestClient.post()
-            .uri("gameDays/{id}", gameDayId)
-            .bodyValue(gameDayToCreate)
-            .exchange()
-
-        // assertions
-        val actualException = response.expectStatus().isNotFound
-            .expectBody(ExpectedResponseBody::class.java)
-            .returnResult().responseBody
-        assertThat(actualException)
-            .usingRecursiveComparison()
-            .ignoringCollectionOrder()
-            .isEqualTo(
-                ExpectedResponseBody(
-                    title = "Not Found",
-                    status = 404,
-                    detail = "No handler found for POST /gameDays/$gameDayId"
-                )
-            )
-    }
-
-    @Test
     fun `validate finding 0 game days by amateurSoccerGroupId`() {
         // setup
         val amateurSoccerGroupId = UUID.randomUUID().toString()
