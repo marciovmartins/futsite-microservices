@@ -5,7 +5,6 @@ import java.time.LocalDate
 import java.util.UUID
 
 data class GameDayDTO(
-    @field:JsonProperty("gameDayId") val gameDayId: UUID,
     @field:JsonProperty("amateurSoccerGroupId") val amateurSoccerGroupId: UUID,
     @field:JsonProperty("date") val date: LocalDate,
     @field:JsonProperty("matches") val matches: Set<MatchDTO>

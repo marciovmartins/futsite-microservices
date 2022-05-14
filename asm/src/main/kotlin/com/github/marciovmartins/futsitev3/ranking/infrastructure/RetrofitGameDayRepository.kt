@@ -24,7 +24,7 @@ class RetrofitGameDayRepository(
         .create(AsmGameDayService::class.java)
 
     override fun findBy(gameDayId: UUID): GameDay? = service.getGameDay(gameDayId).execute().body()
-        ?.let(::GameDay)
+        ?.let { GameDay(gameDayId, it) }
 }
 
 private interface AsmGameDayService {

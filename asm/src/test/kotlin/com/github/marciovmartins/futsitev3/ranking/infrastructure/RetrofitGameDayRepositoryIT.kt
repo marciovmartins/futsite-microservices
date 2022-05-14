@@ -47,7 +47,7 @@ class RetrofitGameDayRepositoryIT : BaseIT() {
         val player4 = UUID.randomUUID()
 
         val expectedGameDay = defaultGameDay(player1, player2, player3, player4, gameDayId, amateurSoccerGroupId)
-        val gameDayResponse = defaultGameDayResponse(player1, player2, player3, player4, gameDayId, amateurSoccerGroupId)
+        val gameDayResponse = defaultGameDayResponse(player1, player2, player3, player4, amateurSoccerGroupId)
 
         mockServer.`when`(
             request()

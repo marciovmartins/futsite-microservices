@@ -9,8 +9,8 @@ data class GameDay(
     val date: LocalDate,
     val matches: Set<Match>
 ) {
-    constructor(gameDayDTO: GameDayDTO) : this(
-        gameDayId = gameDayDTO.gameDayId,
+    constructor(gameDayId: UUID, gameDayDTO: GameDayDTO) : this(
+        gameDayId = gameDayId,
         amateurSoccerGroupId = gameDayDTO.amateurSoccerGroupId,
         date = gameDayDTO.date,
         matches = gameDayDTO.matches.map { Match(it) }.toSet()

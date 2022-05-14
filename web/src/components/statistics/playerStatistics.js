@@ -1,60 +1,21 @@
+import {useEffect, useState} from "react";
+
+const asmStatisticsPlayersHref = "http://localhost:8080/statistics/players";
+
 export function PlayerStatistics() {
-    let ranking = {
-        playersRanking: [
-            {
-                playerId: "270f59f3-1faa-41c1-9e91-1d2df166b2ce",
-                position: 1,
-                classification: "3,000 003 1005",
-                points: 3,
-                matches: 1,
-                victories: 1,
-                draws: 0,
-                defeats: 0,
-                goalsInFavor: 8,
-                goalsAgainst: 3,
-                balance: 5
-            },
-            {
-                playerId: "665015d9-b55f-4c1d-8bea-9feb40cd0f95",
-                position: 1,
-                classification: "3,000 003 1005",
-                points: 3,
-                matches: 1,
-                victories: 1,
-                draws: 0,
-                defeats: 0,
-                goalsInFavor: 8,
-                goalsAgainst: 3,
-                balance: 5
-            },
-            {
-                playerId: "9cb5d61d-01b8-499a-a63f-fee3e9f27990",
-                position: 3,
-                classification: "0,000 000 0995",
-                points: 0,
-                matches: 1,
-                victories: 0,
-                draws: 0,
-                defeats: 1,
-                goalsInFavor: 3,
-                goalsAgainst: 8,
-                balance: -5
-            },
-            {
-                playerId: "16a75158-ab37-4d86-9717-8ca323543131",
-                position: 3,
-                classification: "0,000 000 0995",
-                points: 0,
-                matches: 1,
-                victories: 0,
-                draws: 0,
-                defeats: 1,
-                goalsInFavor: 3,
-                goalsAgainst: 8,
-                balance: -5
-            },
-        ]
-    }
+    const [state, setState] = useState({
+        data: {
+            amateurSoccerGroupId: sessionStorage.getItem("amateurSoccerGroupId"),
+            ranking: {
+                playersRanking: []
+            }
+        }
+    });
+
+    useEffect(() => {
+        calculateRanking(state.data.amateurSoccerGroupId, setState)
+    }, []);
+
     return <main>
         <h1>Player Statistics</h1>
 
@@ -75,7 +36,7 @@ export function PlayerStatistics() {
             </tr>
             </thead>
             <tbody>
-            {ranking.playersRanking.map((playerRanking, index) =>
+            {state.data.ranking.playersRanking.map((playerRanking, index) =>
                 <tr key={index}>
                     <th scope="row">{playerRanking.position}</th>
                     <td>{playerRanking.playerId}</td>
@@ -93,4 +54,25 @@ export function PlayerStatistics() {
             </tbody>
         </table>
     </main>;
+}
+
+function calculateRanking(amateurSoccerGroupId, setState) {
+    let requestBody = {
+        amateurSoccerGroupId: amateurSoccerGroupId,
+        pointsCriterion: {
+            victories: 3,
+            draws: 1,
+            defeats: 0
+        }
+    }
+    fetch(asmStatisticsPlayersHref, {
+        method: 'POST',
+        headers: {"Content-Type": "application/hal+json"},
+        mode: 'cors',
+        body: JSON.stringify(requestBody)
+    })
+        .then(response => response.json())
+        .then(ranking => setState((s) => ({
+            ...s, data: {...s.data, ranking}
+        })));
 }

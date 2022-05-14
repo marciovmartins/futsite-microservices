@@ -20,7 +20,6 @@ data class ExpectedException(
 )
 
 data class TestGameDayDTO(
-    val gameDayId: Any?,
     val amateurSoccerGroupId: Any?,
     val date: Any?,
     val quote: Any?,
@@ -49,10 +48,8 @@ fun defaultGameDayResponse(
     player2: UUID,
     player3: UUID,
     player4: UUID,
-    gameDayId: UUID = UUID.randomUUID(),
     amateurSoccerGroupId: UUID = UUID.randomUUID(),
 ) = TestGameDayDTO(
-    gameDayId = gameDayId,
     amateurSoccerGroupId = amateurSoccerGroupId,
     date = LocalDate.now(),
     quote = null,

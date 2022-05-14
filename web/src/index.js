@@ -8,7 +8,7 @@ import App, {Home} from "./components/app";
 import {PlayerList} from "./components/players/playerList";
 import {Player} from "./components/players/player";
 import {GameDay} from "./components/gameDay/gameDay";
-import {StatisticsPage} from "./components/statistics/statisticsPage";
+import {StatisticsIndex} from "./components/statistics/statisticsIndex";
 import {PlayerStatistics} from "./components/statistics/playerStatistics";
 
 ReactDOM.render(
@@ -27,7 +27,7 @@ ReactDOM.render(
                         <Route path="new" element={<Player mode='add'/>}/>
                         <Route path=":playerId" element={<Player mode='edit'/>}/>
                     </Route>
-                    <Route path="/statistics" element={<StatisticsPage/>}>
+                    <Route path="/statistics" element={<StatisticsIndex/>}>
                         <Route index element={<PlayerStatistics/>}/>
                         <Route path="players" element={<PlayerStatistics/>}/>
                     </Route>
