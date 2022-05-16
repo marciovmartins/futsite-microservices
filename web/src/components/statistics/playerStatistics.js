@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {Button} from "../shared/button";
 import {setNestedKey} from "../../helper-functions";
+import {extractId} from "../helper";
 
 const asmStatisticsPlayersHref = "http://localhost:8080/statistics/players";
+const userDataPlayersDaysHref = "http://localhost:8081/players";
 
 export function PlayerStatistics() {
     let [state, setState] = useState({
@@ -46,7 +48,7 @@ export function PlayerStatistics() {
             {state.data.ranking.playersRanking.map((playerRanking, index) =>
                 <tr key={index}>
                     <th scope="row">{playerRanking.position}</th>
-                    <td>{playerRanking.playerId}</td>
+                    <td>{playerRanking.playerNickname}</td>
                     <td>{playerRanking.classification}</td>
                     <td>{playerRanking.points}</td>
                     <td>{playerRanking.matches}</td>
@@ -55,7 +57,7 @@ export function PlayerStatistics() {
                     <td>{playerRanking.defeats}</td>
                     <td>{playerRanking.goalsInFavor}</td>
                     <td>{playerRanking.goalsAgainst}</td>
-                    <td>{playerRanking.balance}</td>
+                    <td>{playerRanking.goalsBalance}</td>
                 </tr>
             )}
             </tbody>
@@ -111,21 +113,54 @@ export function PlayerStatistics() {
 }
 
 const calculateRanking = (state, setState) => {
+    Promise.all([
+        calculateStatistics(state),
+        fetchUserDataPlayers(state, setState)
+    ]).then(([statistics, players]) => {
+        statistics.playersRanking.forEach(playerStatistic => {
+            playerStatistic.playerNickname = players.filter(player => player.id === playerStatistic.playerId)[0].nickname
+        });
+        setState((s) => ({
+            ...s, data: {...s.data, ranking: statistics}
+        }));
+    })
+}
+
+function calculateStatistics(state) {
     let requestBody = {
         amateurSoccerGroupId: state.data.amateurSoccerGroupId,
         pointsCriterion: state.data.pointsCriterion
     }
-    fetch(asmStatisticsPlayersHref, {
+    return fetch(asmStatisticsPlayersHref, {
         method: 'POST',
         headers: {"Content-Type": "application/hal+json"},
         mode: 'cors',
         body: JSON.stringify(requestBody)
+    }).then(response => response.json())
+        .then(json => ({
+            playersRanking: json.playersRanking
+        }));
+}
+
+const fetchUserDataPlayers = (state) => {
+    function map(players) {
+        return (players || []).map(player => ({
+            id: extractId(player._links.player.href) || '',
+            userId: player.userId || '',
+            nickname: player.nickname || '',
+        }));
+    }
+
+    return fetch(userDataPlayersDaysHref + "/search/byAmateurSoccerGroupId?amateurSoccerGroupId=" + state.data.amateurSoccerGroupId, {
+        method: 'GET',
+        headers: {"Accept": "application/hal+json"},
+        mode: "cors"
     })
         .then(response => response.json())
-        .then(ranking => setState((s) => ({
-            ...s, data: {...s.data, ranking}
-        })));
+        .then(json => json._embedded || {players: []})
+        .then(embedded => map(embedded.players));
 }
+
 
 const handleSubmit = (e, state, setState) => {
     e.preventDefault();
