@@ -2,6 +2,8 @@ package com.github.marciovmartins.futsitev3.ranking.infrastructure
 
 import com.github.marciovmartins.futsitev3.BaseIT
 import com.github.marciovmartins.futsitev3.ranking.usecase.CalculateRanking
+import com.github.marciovmartins.futsitev3.ranking.usecase.PercentageDTO
+import com.github.marciovmartins.futsitev3.ranking.usecase.PercentageType
 import com.github.marciovmartins.futsitev3.ranking.usecase.PlayerRankingDTO
 import com.github.marciovmartins.futsitev3.ranking.usecase.PointCriteriaDTO
 import com.github.marciovmartins.futsitev3.ranking.usecase.RankingDTO
@@ -34,7 +36,18 @@ class CalculateRankingControllerIT : BaseIT() {
         every {
             calculateRanking.with(
                 amateurSoccerGroupId,
-                rankingCriteriaDTO.pointsCriterion.let { PointCriteriaDTO(it.victories, it.draws, it.defeats) }
+                rankingCriteriaDTO.pointsCriterion.let {
+                    PointCriteriaDTO(
+                        victories = it.victories,
+                        draws = it.draws,
+                        defeats = it.defeats,
+                        percentage = it.percentage.let { it2 ->
+                            PercentageDTO(
+                                value = it2.value,
+                                type = PercentageType.valueOf(it2.type)
+                            )
+                        })
+                }
             )
         } returns expectedRankingDTO
 
@@ -82,14 +95,22 @@ class CalculateRankingControllerIT : BaseIT() {
     fun `with internal server error 5xx`() {
         // given
         val amateurSoccerGroupId = UUID.randomUUID()
-        val rankingCriteriaDTO = TestRankingCriteriaDTO(
-            amateurSoccerGroupId = amateurSoccerGroupId,
-            pointsCriterion = TestRankingCriteriaDTO.PointsCriterionDTO(victories = 3, draws = 1, defeats = 0)
-        )
+        val rankingCriteriaDTO = TestRankingCriteriaDTO(amateurSoccerGroupId = amateurSoccerGroupId)
         every {
             calculateRanking.with(
                 amateurSoccerGroupId,
-                rankingCriteriaDTO.pointsCriterion.let { PointCriteriaDTO(it.victories, it.draws, it.defeats) }
+                rankingCriteriaDTO.pointsCriterion.let {
+                    PointCriteriaDTO(
+                        victories = it.victories,
+                        draws = it.draws,
+                        defeats = it.defeats,
+                        percentage = it.percentage.let { it2 ->
+                            PercentageDTO(
+                                value = it2.value,
+                                type = PercentageType.valueOf(it2.type)
+                            )
+                        })
+                }
             )
         } throws Exception("Exception message")
         val expectedResponseBody = ExpectedResponseBody(

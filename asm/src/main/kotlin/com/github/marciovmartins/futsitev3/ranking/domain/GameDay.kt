@@ -20,7 +20,7 @@ data class GameDay(
         .groupBy { it.playerId }
         .mapValues { it.value.reduce(PlayerStatistic::add) }
         .values.toSet()
-        .let(::PlayersStatistics)
+        .let { PlayersStatistics(it, matches.size) }
 }
 
 data class Match(

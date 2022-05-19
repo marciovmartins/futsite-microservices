@@ -1,5 +1,6 @@
 package com.github.marciovmartins.futsitev3.ranking.usecase
 
+import com.github.marciovmartins.futsitev3.ranking.domain.Percentage
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayerStatisticsRepository
 import com.github.marciovmartins.futsitev3.ranking.domain.PointCriteria
 import com.github.marciovmartins.futsitev3.ranking.domain.Ranking
@@ -19,7 +20,12 @@ private fun PointCriteriaDTO.toDomain() = PointCriteria(
     victories = this.victories,
     draws = this.draws,
     defeats = this.defeats,
-)
+    percentage = this.percentage.let {
+        Percentage(
+            value = it.value,
+            type = it.type.toDomain()
+        )
+    })
 
 private fun Ranking.toDTO() = RankingDTO(
     playersRanking = this.playersRanking.items
@@ -40,3 +46,5 @@ private fun Ranking.toDTO() = RankingDTO(
         }
         .toSet()
 )
+
+private fun PercentageType.toDomain() = Percentage.Type.valueOf(this.name)

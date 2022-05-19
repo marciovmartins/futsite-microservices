@@ -8,8 +8,8 @@ data class RankingDTO(
 
 data class PlayerRankingDTO(
     val playerId: UUID,
-    val position: Long,
-    val classification: String,
+    val position: Long?,
+    val classification: String?,
     val points: Long,
     val matches: Long,
     val victories: Long,

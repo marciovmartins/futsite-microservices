@@ -15,6 +15,7 @@ class CalculateRankingTest {
     fun `with different parameters`(
         @Suppress("UNUSED_PARAMETER") testDescription: String,
         playersStatisticsByDate: Set<Pair<LocalDate, PlayerStatistic>>,
+        matches: Int,
         pointsCriteria: PointCriteriaDTO,
         expectedRanking: RankingDTO
     ) {
@@ -22,7 +23,8 @@ class CalculateRankingTest {
         val amateurSoccerGroupId = UUID.randomUUID()
 
         val playerStatisticsRepository = FakePlayerStatisticsRepository()
-        val playersStatistics = playersStatisticsByDate.map { it.second }.toSet().let { PlayersStatistics(it) }
+        val playersStatistics = playersStatisticsByDate.map { it.second }.toSet()
+            .let { PlayersStatistics(it, matches) }
         playerStatisticsRepository.persist(amateurSoccerGroupId, playersStatistics)
 
         // when

@@ -18,7 +18,7 @@ class PlayerStatisticsJpaRepositoryIT : BaseIT() {
     fun `retrieve empty player statistics`() {
         // given
         val amateurSoccerGroupId = UUID.randomUUID()
-        val expectedPlayersStatistics = PlayersStatistics(items = emptySet())
+        val expectedPlayersStatistics = PlayersStatistics(items = emptySet(), matches = 0)
 
         // when
         val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId)
@@ -59,11 +59,15 @@ class PlayerStatisticsJpaRepositoryIT : BaseIT() {
                 PlayerStatistic(player3, 3, 1, 1, 1, 15, 17),
                 PlayerStatistic(player4, 2, 0, 0, 2, 7, 15),
                 PlayerStatistic(player5, 1, 0, 1, 0, 5, 5),
-            )
+            ),
+            matches = 3
         )
 
         // when
-        playerStatisticsRepository.persist(amateurSoccerGroupId, PlayersStatistics(playerStatisticToPersist))
+        playerStatisticsRepository.persist(
+            amateurSoccerGroupId,
+            PlayersStatistics(playerStatisticToPersist, matches = 3)
+        )
         val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId)
 
         // then

@@ -33,7 +33,8 @@ class GetPlayerStatisticTest {
                 PlayerStatistic(player2, 1, 1, 0, 0, 8, 3),
                 PlayerStatistic(player3, 1, 0, 0, 1, 3, 8),
                 PlayerStatistic(player4, 1, 0, 0, 1, 3, 8),
-            )
+            ),
+            matches = 1,
         )
 
         // when

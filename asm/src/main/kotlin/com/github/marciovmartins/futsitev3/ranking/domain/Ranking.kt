@@ -9,8 +9,8 @@ data class PlayersRanking(
 )
 
 data class PlayerRanking(
-    val position: Long,
-    val classification: String,
+    val position: Long?,
+    val classification: String?,
     val points: Long,
     val statistics: PlayerStatistic,
 ) {

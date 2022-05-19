@@ -13,11 +13,12 @@ class FakePlayerStatisticsRepository : PlayerStatisticsRepository {
     }
 
     override fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics {
-        return rows.getOrDefault(amateurSoccerGroupId, PlayersStatistics(emptySet()))
-            .items
+        val playersStatistics = rows.getOrDefault(amateurSoccerGroupId, PlayersStatistics(emptySet(), 0))
+        val matches = playersStatistics.matches
+        return playersStatistics.items
             .groupBy { it.playerId }
             .mapValues { it.value.reduce(PlayerStatistic::add) }
             .values.toSet()
-            .let(::PlayersStatistics)
+            .let { PlayersStatistics(it, matches) }
     }
 }

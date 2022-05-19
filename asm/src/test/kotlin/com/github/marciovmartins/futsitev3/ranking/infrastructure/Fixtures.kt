@@ -3,8 +3,18 @@ package com.github.marciovmartins.futsitev3.ranking.infrastructure
 import java.time.LocalDate
 import java.util.UUID
 
-data class TestRankingCriteriaDTO(val amateurSoccerGroupId: UUID, val pointsCriterion: PointsCriterionDTO) {
-    data class PointsCriterionDTO(val victories: Long, val draws: Long, val defeats: Long)
+data class TestRankingCriteriaDTO(
+    val amateurSoccerGroupId: UUID,
+    val pointsCriterion: PointsCriterionDTO = PointsCriterionDTO()
+) {
+    data class PointsCriterionDTO(
+        val victories: Long = 3,
+        val draws: Long = 1,
+        val defeats: Long = 0,
+        val percentage: PercentageDTO = PercentageDTO(value = 0.1, type = "BY_TOTAL"),
+    )
+
+    data class PercentageDTO(val value: Double, val type: String)
 }
 
 data class ExpectedResponseBody(

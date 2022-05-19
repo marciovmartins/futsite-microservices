@@ -13,6 +13,7 @@ object ValidCalculateRanking : ArgumentsProvider {
         argument(
             testDescription = "with different parameters",
             playersStatistics = emptySet(),
+            matches = 0,
             expectedPlayersRanking = emptySet(),
         ),
         argument(
@@ -23,6 +24,7 @@ object ValidCalculateRanking : ArgumentsProvider {
                 Pair(may1st2021, PlayerStatistic(player3, 1, 0, 0, 1, 3, 8)),
                 Pair(may1st2021, PlayerStatistic(player4, 1, 0, 0, 1, 3, 8)),
             ),
+            matches = 1,
             expectedPlayersRanking = setOf(
                 PlayerRankingDTO(player1, 1, "3,000 003 1005", 3, 1, 1, 0, 0, 8, 3, 5),
                 PlayerRankingDTO(player2, 1, "3,000 003 1005", 3, 1, 1, 0, 0, 8, 3, 5),
@@ -51,6 +53,7 @@ object ValidCalculateRanking : ArgumentsProvider {
                 // player 5
                 Pair(may3rd2021, PlayerStatistic(player5, 1, 0, 1, 0, 5, 5)),
             ),
+            matches = 3,
             expectedPlayersRanking = setOf(
                 PlayerRankingDTO(player1, 1, "2,333 006 1008", 7, 3, 2, 1, 0, 20, 12, 8),
                 PlayerRankingDTO(player2, 2, "1,333 003 1002", 4, 3, 1, 1, 1, 17, 15, 2),
@@ -62,6 +65,7 @@ object ValidCalculateRanking : ArgumentsProvider {
         argument(
             testDescription = "with many game days with many match each",
             playersStatistics = defaultPlayersStatistics,
+            matches = 3,
             expectedPlayersRanking = setOf(
                 PlayerRankingDTO(player1, 1, "2,000 009 1006", 12, 6, 3, 3, 0, 9, 3, 6),
                 PlayerRankingDTO(player3, 2, "1,500 006 1000", 9, 6, 2, 3, 1, 6, 6, 0),
@@ -72,8 +76,12 @@ object ValidCalculateRanking : ArgumentsProvider {
         ),
         argument(
             testDescription = "with different point criteria",
-            playersStatistics = defaultPlayersStatistics,
-            pointsCriteria = PointCriteriaDTO(victories = 4, draws = 2, defeats = 1),
+            pointsCriteria = PointCriteriaDTO(
+                victories = 4,
+                draws = 2,
+                defeats = 1,
+                percentage = PercentageDTO(value = 0.1, type = PercentageType.BY_TOTAL)
+            ),
             expectedPlayersRanking = setOf(
                 PlayerRankingDTO(player1, 1, "3,000 012 1006", 18, 6, 3, 3, 0, 9, 3, 6),
                 PlayerRankingDTO(player3, 2, "2,500 008 1000", 15, 6, 2, 3, 1, 6, 6, 0),
@@ -82,15 +90,56 @@ object ValidCalculateRanking : ArgumentsProvider {
                 PlayerRankingDTO(player4, 5, "1,750 000 0997", 7, 4, 0, 3, 1, 3, 6, -3),
             ),
         ),
+        argument(
+            testDescription = "with 50% of the total matches",
+            pointsCriteria = PointCriteriaDTO(
+                victories = 3,
+                draws = 1,
+                defeats = 0,
+                percentage = PercentageDTO(value = 50.0, type = PercentageType.BY_TOTAL)
+            ),
+            expectedPlayersRanking = setOf(
+                PlayerRankingDTO(player1, 1, "2,000 009 1006", 12, 6, 3, 3, 0, 9, 3, 6),
+                PlayerRankingDTO(player3, 2, "1,500 006 1000", 9, 6, 2, 3, 1, 6, 6, 0),
+                PlayerRankingDTO(player2, 3, "1,000 003 1000", 6, 6, 1, 3, 2, 6, 6, 0),
+                PlayerRankingDTO(player4, 4, "0,750 000 0997", 3, 4, 0, 3, 1, 3, 6, -3),
+                PlayerRankingDTO(player5, null, null, 2, 2, 0, 2, 0, 2, 2, 0),
+            ),
+        ),
+        argument(
+            testDescription = "with 100% of the total matches",
+            pointsCriteria = PointCriteriaDTO(
+                victories = 3,
+                draws = 1,
+                defeats = 0,
+                percentage = PercentageDTO(value = 100.0, type = PercentageType.BY_TOTAL)
+            ),
+            expectedPlayersRanking = setOf(
+                PlayerRankingDTO(player1, 1, "2,000 009 1006", 12, 6, 3, 3, 0, 9, 3, 6),
+                PlayerRankingDTO(player3, 2, "1,500 006 1000", 9, 6, 2, 3, 1, 6, 6, 0),
+                PlayerRankingDTO(player2, 3, "1,000 003 1000", 6, 6, 1, 3, 2, 6, 6, 0),
+                PlayerRankingDTO(player5, null, null, 2, 2, 0, 2, 0, 2, 2, 0),
+                PlayerRankingDTO(player4, null, null, 3, 4, 0, 3, 1, 3, 6, -3),
+            ),
+        ),
     )
 }
 
 private fun argument(
     testDescription: String,
-    playersStatistics: Set<Pair<LocalDate, PlayerStatistic>>,
-    pointsCriteria: PointCriteriaDTO = PointCriteriaDTO(victories = 3, draws = 1, defeats = 0),
+    playersStatistics: Set<Pair<LocalDate, PlayerStatistic>> = defaultPlayersStatistics,
+    matches: Int = 6,
+    pointsCriteria: PointCriteriaDTO = PointCriteriaDTO(
+        victories = 3,
+        draws = 1,
+        defeats = 0,
+        percentage = PercentageDTO(
+            value = 0.1,
+            type = PercentageType.BY_TOTAL
+        )
+    ),
     expectedPlayersRanking: Set<PlayerRankingDTO>,
-) = Arguments.of(testDescription, playersStatistics, pointsCriteria, RankingDTO(expectedPlayersRanking))
+) = Arguments.of(testDescription, playersStatistics, matches, pointsCriteria, RankingDTO(expectedPlayersRanking))
 
 private val player1 = UUID.randomUUID()
 private val player2 = UUID.randomUUID()

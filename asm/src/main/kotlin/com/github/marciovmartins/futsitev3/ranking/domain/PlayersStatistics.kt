@@ -3,7 +3,8 @@ package com.github.marciovmartins.futsitev3.ranking.domain
 import java.util.UUID
 
 data class PlayersStatistics(
-    val items: Set<PlayerStatistic>
+    val items: Set<PlayerStatistic>,
+    val matches: Int
 ) {
     fun calculateRanking(pointsCriteria: PointCriteria): Ranking {
         val playersRanking = getPlayersRanking(pointsCriteria)
@@ -13,7 +14,7 @@ data class PlayersStatistics(
     private fun getPlayersRanking(pointsCriteria: PointCriteria): PlayersRanking {
         var last: PlayerRanking? = null
         return items.asSequence()
-            .map { PlayerRankingStatistics(it, pointsCriteria) }.toList()
+            .map { PlayerRankingStatistics(it, matches, pointsCriteria) }.toList()
             .sortedByDescending { playerStatistic -> playerStatistic.classification }
             .mapIndexed { index, entry ->
                 val position = getPosition(last, entry.classification, index)
@@ -28,23 +29,38 @@ data class PlayersStatistics(
             .let(::PlayersRanking)
     }
 
-    private fun getPosition(lastPlayerRanking: PlayerRanking?, classification: String, index: Int): Long =
-        if (lastPlayerRanking == null || lastPlayerRanking.classification != classification)
+    private fun getPosition(lastPlayerRanking: PlayerRanking?, classification: String?, index: Int): Long? =
+        if (lastPlayerRanking == null || (classification != null && lastPlayerRanking.classification != classification))
             (index + 1).toLong()
-        else
+        else if (classification != null)
             lastPlayerRanking.position
+        else null
 
     private data class PlayerRankingStatistics(
         val playerStatistic: PlayerStatistic,
+        private val matches: Int,
         private val pointCriteria: PointCriteria,
     ) {
-        val points =
-            (playerStatistic.victories * pointCriteria.victories) + (playerStatistic.draws * pointCriteria.draws) + (playerStatistic.defeats * pointCriteria.defeats)
-        val classification = "%.3f %03d %04d".format(
-            points.toFloat().div(playerStatistic.matches),
-            playerStatistic.victories * pointCriteria.victories,
-            1000 + (playerStatistic.goalsInFavor - playerStatistic.goalsAgainst)
-        )
+        private val victoryPoints = playerStatistic.victories * pointCriteria.victories
+        private val drawPoints = playerStatistic.draws * pointCriteria.draws
+        private val defeatPoints = playerStatistic.defeats * pointCriteria.defeats
+
+        val points = victoryPoints + drawPoints + defeatPoints
+
+        val classification: String? = if (isRanked()) {
+            "%.3f %03d %04d".format(
+                points.toFloat().div(playerStatistic.matches),
+                playerStatistic.victories * pointCriteria.victories,
+                1000 + (playerStatistic.goalsInFavor - playerStatistic.goalsAgainst)
+            )
+        } else null
+
+        private fun isRanked(): Boolean {
+            return when (pointCriteria.percentage.type) {
+                Percentage.Type.BY_TOTAL -> playerStatistic.matches >= matches * (pointCriteria.percentage.value * 0.01)
+                Percentage.Type.BY_AVERAGE -> TODO()
+            }
+        }
     }
 }
 

@@ -25,7 +25,7 @@ class PlayerStatisticsJpaRepository(
 
     override fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics {
         val items = dao.findByAmateurSoccerGroupId(amateurSoccerGroupId)
-        return PlayersStatistics(items = items)
+        return PlayersStatistics(items = items, 0)
     }
 
     interface DAO : CrudRepository<PlayerStatisticEntity, Long> {
