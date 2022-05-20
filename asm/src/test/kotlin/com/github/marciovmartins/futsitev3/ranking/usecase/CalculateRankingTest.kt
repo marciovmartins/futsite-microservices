@@ -24,8 +24,8 @@ class CalculateRankingTest {
 
         val playerStatisticsRepository = FakePlayerStatisticsRepository()
         val playersStatistics = playersStatisticsByDate.map { it.second }.toSet()
-            .let { PlayersStatistics(it, matches) }
-        playerStatisticsRepository.persist(amateurSoccerGroupId, playersStatistics)
+            .let { PlayersStatistics(matches, it) }
+        playerStatisticsRepository.persist(amateurSoccerGroupId, LocalDate.now(), playersStatistics)
 
         // when
         val calculateRanking = CalculateRanking(playerStatisticsRepository)

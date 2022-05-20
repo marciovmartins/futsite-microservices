@@ -3,8 +3,8 @@ package com.github.marciovmartins.futsitev3.ranking.domain
 import java.util.UUID
 
 data class PlayersStatistics(
-    val items: Set<PlayerStatistic>,
-    val matches: Int
+    val matches: Int,
+    val items: Set<PlayerStatistic>
 ) {
     fun calculateRanking(pointsCriteria: PointCriteria): Ranking {
         val playersRanking = getPlayersRanking(pointsCriteria)

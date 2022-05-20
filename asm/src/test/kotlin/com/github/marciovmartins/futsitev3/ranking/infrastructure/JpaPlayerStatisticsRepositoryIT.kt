@@ -2,23 +2,23 @@ package com.github.marciovmartins.futsitev3.ranking.infrastructure
 
 import com.github.marciovmartins.futsitev3.BaseIT
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayerStatistic
-import com.github.marciovmartins.futsitev3.ranking.domain.PlayerStatisticsRepository
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayersStatistics
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.time.LocalDate
 import java.util.UUID
 
-class PlayerStatisticsJpaRepositoryIT : BaseIT() {
+class JpaPlayerStatisticsRepositoryIT : BaseIT() {
 
     @Autowired
-    lateinit var playerStatisticsRepository: PlayerStatisticsRepository
+    lateinit var playerStatisticsRepository: JpaPlayerStatisticsRepository
 
     @Test
     fun `retrieve empty player statistics`() {
         // given
         val amateurSoccerGroupId = UUID.randomUUID()
-        val expectedPlayersStatistics = PlayersStatistics(items = emptySet(), matches = 0)
+        val expectedPlayersStatistics = PlayersStatistics(matches = 0, items = emptySet())
 
         // when
         val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId)
@@ -53,20 +53,21 @@ class PlayerStatisticsJpaRepositoryIT : BaseIT() {
             PlayerStatistic(player5, 1, 0, 1, 0, 5, 5),
         )
         val expectedPlayersStatistics = PlayersStatistics(
+            matches = 3,
             items = setOf(
                 PlayerStatistic(player1, 3, 2, 1, 0, 20, 12),
                 PlayerStatistic(player2, 3, 1, 1, 1, 17, 15),
                 PlayerStatistic(player3, 3, 1, 1, 1, 15, 17),
                 PlayerStatistic(player4, 2, 0, 0, 2, 7, 15),
                 PlayerStatistic(player5, 1, 0, 1, 0, 5, 5),
-            ),
-            matches = 3
+            )
         )
 
         // when
         playerStatisticsRepository.persist(
-            amateurSoccerGroupId,
-            PlayersStatistics(playerStatisticToPersist, matches = 3)
+            amateurSoccerGroupId = amateurSoccerGroupId,
+            gameDayDate = LocalDate.now(),
+            playersStatistics = PlayersStatistics(matches = 3, playerStatisticToPersist)
         )
         val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId)
 
