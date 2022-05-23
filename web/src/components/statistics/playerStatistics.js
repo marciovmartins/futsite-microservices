@@ -16,7 +16,11 @@ export function PlayerStatistics() {
             pointsCriterion: {
                 victories: 3,
                 draws: 1,
-                defeats: 0
+                defeats: 0,
+                percentage: {
+                    value: 0.1,
+                    type: 'BY_TOTAL'
+                }
             }
         }
     });
@@ -99,6 +103,25 @@ export function PlayerStatistics() {
                            className="form-control"
                            onChange={(event) => handleInputChange(event, state, setState)}
                     />
+                </div>
+            </div>
+            <div className="row mb-3">
+                <label htmlFor="player-statistics-criteria" className="col-sm-2 col-form-label">Criteria</label>
+                <div className="col-sm-1">
+                    <input name="pointsCriterion.percentage.value"
+                           type="text"
+                           value={state.data.pointsCriterion.percentage.value}
+                           id="player-statistics-defeats"
+                           className="form-control "
+                           onChange={(event) => handleInputChange(event, state, setState)}
+                    />
+                </div>
+                <div className="col-sm-5">
+                    <select name="pointsCriterion.percentage.type"
+                            className="form-select"
+                            aria-label="percentage criterion">
+                        <option value="BY_TOTAL">% of Total Matches for the Period.</option>
+                    </select>
                 </div>
             </div>
 
