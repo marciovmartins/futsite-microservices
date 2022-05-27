@@ -13,10 +13,16 @@ import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
+import org.springframework.amqp.core.Binding
+import org.springframework.amqp.core.BindingBuilder
+import org.springframework.amqp.core.Queue
+import org.springframework.amqp.core.TopicExchange
 import org.springframework.amqp.rabbit.annotation.EnableRabbit
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpStatus
 import java.time.Duration
 import java.time.LocalDate
@@ -25,7 +31,8 @@ import java.util.concurrent.TimeUnit
 
 class GameDayRestRepositoryIT : BaseIT() {
     companion object {
-        val messages = mutableListOf<TestGameDayCreated>()
+        val gameDayCreatedMessages = mutableListOf<TestGameDayEvent>()
+        val gameDayDeletedMessages = mutableListOf<TestGameDayEvent>()
     }
 
     @ParameterizedTest(name = "{0}")
@@ -37,7 +44,7 @@ class GameDayRestRepositoryIT : BaseIT() {
     ) {
         // setup
         val gameDayId = UUID.randomUUID().toString()
-        val expectedMessage = TestGameDayCreated(gameDayId = gameDayId)
+        val expectedMessage = TestGameDayEvent(gameDayId = gameDayId)
 
         // execution
         val gameDayLocationUrl = webTestClient.put()
@@ -60,7 +67,7 @@ class GameDayRestRepositoryIT : BaseIT() {
             .isEqualTo(gameDayToCreate)
 
         await().atMost(1, TimeUnit.SECONDS).pollInterval(Duration.ofMillis(100)).untilAsserted {
-            assertThat(messages).contains(expectedMessage)
+            assertThat(gameDayCreatedMessages).contains(expectedMessage)
         }
     }
 
@@ -113,6 +120,8 @@ class GameDayRestRepositoryIT : BaseIT() {
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
 
+        val expectedDeletedMessage = TestGameDayEvent(gameDayId)
+
         // execution
         val responseDelete = webTestClient.delete()
             .uri(gameDayLocationUrl)
@@ -124,6 +133,10 @@ class GameDayRestRepositoryIT : BaseIT() {
         // assertions
         responseDelete.expectStatus().isNoContent
         responseGet.expectStatus().isNotFound
+
+        await().atMost(1, TimeUnit.SECONDS).pollInterval(Duration.ofMillis(100)).untilAsserted {
+            assertThat(gameDayDeletedMessages).contains(expectedDeletedMessage)
+        }
     }
 
     @ParameterizedTest(name = "{0}")
@@ -404,7 +417,25 @@ class GameDayRestRepositoryIT : BaseIT() {
         @RabbitListener(queues = ["futsitev3.test.ranking.gameday.created"])
         fun receiveGameDayCreatedEvent(messageIn: String) {
             try {
-                messages += objectMapper.readValue(messageIn, TestGameDayCreated::class.java)
+                gameDayCreatedMessages += objectMapper.readValue(messageIn, TestGameDayEvent::class.java)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        @Bean
+        fun gameDayDeletedQueue() = Queue("futsitev3.test.gameday.deleted.GameDayRestRepositoryIT")
+
+        @Bean
+        fun bindingGameDayDeletedQueue(@Qualifier("gameDayDeletedQueue") queue: Queue): Binding = BindingBuilder
+            .bind(queue)
+            .to(TopicExchange("amq.topic"))
+            .with("futsitev3.gameday.deleted")
+
+        @RabbitListener(queues = ["futsitev3.test.gameday.deleted.GameDayRestRepositoryIT"])
+        fun receiveGameDayDeletedEvent(messageIn: String) {
+            try {
+                gameDayDeletedMessages += objectMapper.readValue(messageIn, TestGameDayEvent::class.java)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

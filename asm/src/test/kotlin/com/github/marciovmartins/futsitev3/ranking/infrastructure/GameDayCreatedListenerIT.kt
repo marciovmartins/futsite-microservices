@@ -2,7 +2,7 @@ package com.github.marciovmartins.futsitev3.ranking.infrastructure
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.marciovmartins.futsitev3.BaseIT
-import com.github.marciovmartins.futsitev3.gameDay.TestGameDayCreated
+import com.github.marciovmartins.futsitev3.gameDay.TestGameDayEvent
 import com.github.marciovmartins.futsitev3.ranking.usecase.GetPlayerStatistic
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -39,7 +39,7 @@ class GameDayCreatedListenerIT : BaseIT() {
     fun `calculate players statistics from game day created`() {
         // given
         val gameDayId = UUID.randomUUID()
-        val gameDay = TestGameDayCreated(gameDayId = gameDayId.toString())
+        val gameDay = TestGameDayEvent(gameDayId = gameDayId.toString())
         val gameDayJson = objectMapper.writeValueAsString(gameDay)
 
         every { getPlayerStatistic.from(any()) } just Runs

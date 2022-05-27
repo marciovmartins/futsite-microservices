@@ -57,7 +57,7 @@ data class TestPlayerStatisticDTO(
     val redCards: Any?,
 )
 
-data class TestGameDayCreated(
+data class TestGameDayEvent(
     val gameDayId: String,
 )
 
