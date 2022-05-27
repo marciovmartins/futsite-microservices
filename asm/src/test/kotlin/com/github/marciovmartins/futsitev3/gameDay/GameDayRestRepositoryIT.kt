@@ -411,7 +411,13 @@ class GameDayRestRepositoryIT : BaseIT() {
         @Autowired
         lateinit var objectMapper: ObjectMapper
 
-        @RabbitListener(queues = ["futsitev3.test.ranking.gameday.created"])
+        @RabbitListener(
+            bindings = [QueueBinding(
+                value = Queue("futsitev3.test.gameday.created.GameDayRestRepositoryIT"),
+                exchange = Exchange("amq.topic", type = "topic"),
+                key = ["futsitev3.gameday.created"]
+            )]
+        )
         fun receiveGameDayCreatedEvent(messageIn: String) {
             try {
                 gameDayCreatedMessages += objectMapper.readValue(messageIn, TestGameDayEvent::class.java)
