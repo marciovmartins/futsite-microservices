@@ -13,16 +13,13 @@ import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
-import org.springframework.amqp.core.Binding
-import org.springframework.amqp.core.BindingBuilder
-import org.springframework.amqp.core.Queue
-import org.springframework.amqp.core.TopicExchange
 import org.springframework.amqp.rabbit.annotation.EnableRabbit
+import org.springframework.amqp.rabbit.annotation.Exchange
+import org.springframework.amqp.rabbit.annotation.Queue
+import org.springframework.amqp.rabbit.annotation.QueueBinding
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpStatus
 import java.time.Duration
 import java.time.LocalDate
@@ -423,16 +420,13 @@ class GameDayRestRepositoryIT : BaseIT() {
             }
         }
 
-        @Bean
-        fun gameDayDeletedQueue() = Queue("futsitev3.test.gameday.deleted.GameDayRestRepositoryIT")
-
-        @Bean
-        fun bindingGameDayDeletedQueue(@Qualifier("gameDayDeletedQueue") queue: Queue): Binding = BindingBuilder
-            .bind(queue)
-            .to(TopicExchange("amq.topic"))
-            .with("futsitev3.gameday.deleted")
-
-        @RabbitListener(queues = ["futsitev3.test.gameday.deleted.GameDayRestRepositoryIT"])
+        @RabbitListener(
+            bindings = [QueueBinding(
+                value = Queue("futsitev3.test.gameday.deleted.GameDayRestRepositoryIT"),
+                exchange = Exchange("amq.topic", type = "topic"),
+                key = ["futsitev3.gameday.deleted"]
+            )]
+        )
         fun receiveGameDayDeletedEvent(messageIn: String) {
             try {
                 gameDayDeletedMessages += objectMapper.readValue(messageIn, TestGameDayEvent::class.java)
