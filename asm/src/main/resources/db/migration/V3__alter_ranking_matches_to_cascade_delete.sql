@@ -1,11 +1,10 @@
-alter table ranking_players_statistics
-    add column game_day_date date null after amateur_soccer_group_id;
-
-update ranking_players_statistics rps
-    inner join ranking_matches rm on rps.matches = rm.matches
-set rps.game_day_date = rm.game_day_date
-where rps.game_day_date is null;
+alter table ranking_matches
+    add column game_day_id varchar(36) not null after amateur_soccer_group_id,
+    add unique index ranking_matches_index1 (amateur_soccer_group_id, game_day_id, game_day_date),
+    drop index amateur_soccer_group_id_index;
 
 alter table ranking_players_statistics
-    change column game_day_date game_day_date date not null,
-    add index ranking_players_statistics_amateur_soccer_group_id_game_day_id (amateur_soccer_group_id, game_day_date);
+    add column game_day_id   varchar(36) not null after amateur_soccer_group_id,
+    add column game_day_date date        not null after game_day_id,
+    add unique index ranking_players_statistics_index1 (amateur_soccer_group_id, game_day_id, game_day_date, player_id),
+    drop index amateur_soccer_group_id_index;

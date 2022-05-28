@@ -11,18 +11,22 @@ private val emptyPlayerStatistic = { playerId: UUID -> PlayerStatistic(playerId,
 
 class FakePlayerStatisticsRepository :
     PlayerStatisticsRepository { //TODO: too complex, what to do to improve that and make it simple?
-    private val rows = mutableMapOf<UUID, MutableMap<LocalDate, PlayersStatistics>>()
+    private val rows = mutableSetOf<Row>()
 
-    override fun persist(amateurSoccerGroupId: UUID, gameDayDate: LocalDate, playersStatistics: PlayersStatistics) {
-        val map = rows.computeIfAbsent(amateurSoccerGroupId) { mutableMapOf() }
-        map[gameDayDate] = playersStatistics
+    override fun persist(
+        amateurSoccerGroupId: UUID,
+        gameDayId: UUID,
+        gameDayDate: LocalDate,
+        playersStatistics: PlayersStatistics
+    ) {
+        rows.add(Row(amateurSoccerGroupId, gameDayId, gameDayDate, playersStatistics))
     }
 
     override fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics {
-        val collection = rows[amateurSoccerGroupId]
-        if (collection == null || collection.isEmpty()) return PlayersStatistics(0, emptySet())
+        val collection = rows.filter { it.amateurSoccerGroupId == amateurSoccerGroupId }.toSet()
+        if (collection.isEmpty()) return PlayersStatistics(0, emptySet())
 
-        val playersStatistics = collection.values.reduce(FakePlayerStatisticsRepository::add)
+        val playersStatistics = collection.map { it.playersStatistics }.reduce(FakePlayerStatisticsRepository::add)
         val matches = playersStatistics.matches
         return playersStatistics.items
             .groupBy { it.playerId }
@@ -31,21 +35,21 @@ class FakePlayerStatisticsRepository :
             .let { PlayersStatistics(matches, it) }
     }
 
-    override fun delete(amateurSoccerGroupId: UUID, gameDayDate: LocalDate) {
-        rows[amateurSoccerGroupId]?.remove(gameDayDate)
+    override fun delete(gameDayId: UUID) {
+        rows.remove(rows.first { it.gameDayId === gameDayId })
     }
 
     fun persist(gameDay: GameDay) {
         persist(
             amateurSoccerGroupId = gameDay.amateurSoccerGroupId,
+            gameDayId = gameDay.gameDayId,
             gameDayDate = gameDay.date,
             playersStatistics = gameDay.calculatePlayersStatistics(),
         )
     }
 
-    fun exists(amateurSoccerGroupId: UUID, gameDayDate: LocalDate): Boolean {
-        val amateurSoccerGroupResult = rows[amateurSoccerGroupId] ?: return false
-        return amateurSoccerGroupResult[gameDayDate] !== null
+    fun exists(gameDayId: UUID): Boolean {
+        return rows.firstOrNull { it.gameDayId === gameDayId } !== null
     }
 
     companion object {
@@ -64,3 +68,10 @@ class FakePlayerStatisticsRepository :
         }
     }
 }
+
+private data class Row(
+    val amateurSoccerGroupId: UUID,
+    val gameDayId: UUID,
+    val gameDayDate: LocalDate,
+    val playersStatistics: PlayersStatistics,
+)

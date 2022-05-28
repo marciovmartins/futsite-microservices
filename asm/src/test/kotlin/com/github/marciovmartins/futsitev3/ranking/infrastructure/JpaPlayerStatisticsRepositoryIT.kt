@@ -34,24 +34,13 @@ class JpaPlayerStatisticsRepositoryIT : BaseIT() {
     fun `persist, retrieve and delete one game day date with many player statistics`() {
         // given
         val amateurSoccerGroupId = UUID.randomUUID()
+        val gameDayId = UUID.randomUUID()
         val gameDayDate = LocalDate.now()
         val playerStatisticToPersist = setOf(
-            // player 1
-            PlayerStatistic(player1, 1, 1, 0, 0, 8, 3),
-            PlayerStatistic(player1, 1, 1, 0, 0, 7, 4),
-            PlayerStatistic(player1, 1, 0, 1, 0, 5, 5),
-            // player 2
-            PlayerStatistic(player2, 1, 1, 0, 0, 8, 3),
-            PlayerStatistic(player2, 1, 0, 0, 1, 4, 7),
-            PlayerStatistic(player2, 1, 0, 1, 0, 5, 5),
-            // player 3
-            PlayerStatistic(player3, 1, 0, 0, 1, 3, 8),
-            PlayerStatistic(player3, 1, 1, 0, 0, 7, 4),
-            PlayerStatistic(player3, 1, 0, 1, 0, 5, 5),
-            // player 4
-            PlayerStatistic(player4, 1, 0, 0, 1, 3, 8),
-            PlayerStatistic(player4, 1, 0, 0, 1, 4, 7),
-            // player 5
+            PlayerStatistic(player1, 3, 2, 1, 0, 20, 12),
+            PlayerStatistic(player2, 3, 1, 1, 1, 17, 15),
+            PlayerStatistic(player3, 3, 1, 1, 1, 15, 17),
+            PlayerStatistic(player4, 2, 0, 0, 2, 7, 15),
             PlayerStatistic(player5, 1, 0, 1, 0, 5, 5),
         )
         val expectedPlayersStatistics = PlayersStatistics(
@@ -68,11 +57,12 @@ class JpaPlayerStatisticsRepositoryIT : BaseIT() {
         // when
         playerStatisticsRepository.persist(
             amateurSoccerGroupId = amateurSoccerGroupId,
+            gameDayId = gameDayId,
             gameDayDate = gameDayDate,
             playersStatistics = PlayersStatistics(matches = 3, playerStatisticToPersist)
         )
         val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId)
-        playerStatisticsRepository.delete(amateurSoccerGroupId, gameDayDate)
+        playerStatisticsRepository.delete(gameDayId)
         val playersStatisticsAfterDeletion = playerStatisticsRepository.findBy(amateurSoccerGroupId)
 
         // then

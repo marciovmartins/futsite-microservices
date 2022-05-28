@@ -22,12 +22,17 @@ class JpaPlayerStatisticsRepository(
     private val matchesDAO: MatchesDAO,
     private val playerStatisticDAO: PlayerStatisticDAO,
 ) : PlayerStatisticsRepository {
-    override fun persist(amateurSoccerGroupId: UUID, gameDayDate: LocalDate, playersStatistics: PlayersStatistics) {
-        val matchesEntity = MatchesEntity(amateurSoccerGroupId, gameDayDate, playersStatistics.matches)
+    override fun persist(
+        amateurSoccerGroupId: UUID,
+        gameDayId: UUID,
+        gameDayDate: LocalDate,
+        playersStatistics: PlayersStatistics
+    ) {
+        val matchesEntity = MatchesEntity(amateurSoccerGroupId, gameDayId, gameDayDate, playersStatistics.matches)
         matchesDAO.save(matchesEntity)
 
         val playerStatisticEntities = playersStatistics.items
-            .map { PlayerStatisticEntity(amateurSoccerGroupId, gameDayDate, it) }
+            .map { PlayerStatisticEntity(amateurSoccerGroupId, gameDayId, gameDayDate, it) }
         playerStatisticDAO.saveAll(playerStatisticEntities)
     }
 
@@ -38,9 +43,9 @@ class JpaPlayerStatisticsRepository(
     }
 
     @Transactional
-    override fun delete(amateurSoccerGroupId: UUID, gameDayDate: LocalDate) {
-        matchesDAO.deleteByAmateurSoccerGroupIdAndGameDayDate(amateurSoccerGroupId, gameDayDate)
-        playerStatisticDAO.deleteByAmateurSoccerGroupIdAndGameDayDate(amateurSoccerGroupId, gameDayDate)
+    override fun delete(gameDayId: UUID) {
+        matchesDAO.deleteByGameDayId(gameDayId)
+        playerStatisticDAO.deleteByGameDayId(gameDayId)
     }
 
     interface MatchesDAO : CrudRepository<MatchesEntity, Long> {
@@ -54,7 +59,7 @@ class JpaPlayerStatisticsRepository(
         )
         fun findByAmateurSoccerGroupId(@Param("amateurSoccerGroupId") amateurSoccerGroupId: UUID): Long?
 
-        fun deleteByAmateurSoccerGroupIdAndGameDayDate(amateurSoccerGroupId: UUID, gameDayDate: LocalDate)
+        fun deleteByGameDayId(gameDayId: UUID)
     }
 
     @Entity(name = "ranking_matches")
@@ -67,12 +72,16 @@ class JpaPlayerStatisticsRepository(
         @Type(type = "uuid-char")
         var amateurSoccerGroupId: UUID,
 
+        @Type(type = "uuid-char")
+        var gameDayId: UUID,
+
         var gameDayDate: LocalDate,
 
         var matches: Long,
     ) {
-        constructor(amateurSoccerGroupId: UUID, gameDayDate: LocalDate, matches: Int) : this(
+        constructor(amateurSoccerGroupId: UUID, gameDayId: UUID, gameDayDate: LocalDate, matches: Int) : this(
             amateurSoccerGroupId = amateurSoccerGroupId,
+            gameDayId = gameDayId,
             gameDayDate = gameDayDate,
             matches = matches.toLong(),
         )
@@ -97,7 +106,7 @@ class JpaPlayerStatisticsRepository(
         )
         fun findByAmateurSoccerGroupId(@Param("amateurSoccerGroupId") amateurSoccerGroupId: UUID): Set<PlayerStatistic>
 
-        fun deleteByAmateurSoccerGroupIdAndGameDayDate(amateurSoccerGroupId: UUID, gameDayDate: LocalDate)
+        fun deleteByGameDayId(gameDayId: UUID)
     }
 
     @Entity(name = "ranking_players_statistics")
@@ -105,6 +114,9 @@ class JpaPlayerStatisticsRepository(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long? = null,
+
+        @Type(type = "uuid-char")
+        var gameDayId: UUID,
 
         @Type(type = "uuid-char")
         var amateurSoccerGroupId: UUID,
@@ -121,8 +133,14 @@ class JpaPlayerStatisticsRepository(
         var goalsInFavor: Long,
         var goalsAgainst: Long,
     ) {
-        constructor(amateurSoccerGroupId: UUID, gameDayDate: LocalDate, playerStatistic: PlayerStatistic) : this(
+        constructor(
+            amateurSoccerGroupId: UUID,
+            gameDayId: UUID,
+            gameDayDate: LocalDate,
+            playerStatistic: PlayerStatistic
+        ) : this(
             amateurSoccerGroupId = amateurSoccerGroupId,
+            gameDayId = gameDayId,
             gameDayDate = gameDayDate,
             playerId = playerStatistic.playerId,
             matches = playerStatistic.matches,

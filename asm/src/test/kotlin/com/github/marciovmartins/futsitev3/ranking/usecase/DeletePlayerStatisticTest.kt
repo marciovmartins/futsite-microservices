@@ -16,9 +16,9 @@ class DeletePlayerStatisticTest {
         val deletePlayerStatistic = DeletePlayerStatistic(playerStatisticsRepository)
 
         // when
-        deletePlayerStatistic.with(gameDay.amateurSoccerGroupId, gameDay.date)
+        deletePlayerStatistic.with(gameDay.gameDayId)
 
         // then
-        assertThat(playerStatisticsRepository.exists(gameDay.amateurSoccerGroupId, gameDay.date)).isFalse
+        assertThat(playerStatisticsRepository.exists(gameDay.gameDayId)).isFalse
     }
 }

@@ -3,6 +3,7 @@ package com.github.marciovmartins.futsitev3.ranking.infrastructure
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.marciovmartins.futsitev3.BaseIT
 import com.github.marciovmartins.futsitev3.gameDay.TestGameDayEvent
+import com.github.marciovmartins.futsitev3.ranking.usecase.DeletePlayerStatistic
 import com.github.marciovmartins.futsitev3.ranking.usecase.GetPlayerStatistic
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -23,7 +24,8 @@ import java.time.Duration
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
-private const val routingKey = "futsitev3.test.ranking.gameday.created.GameDayCreatedListenerIT"
+private const val gameDayCreatedRoutingKey = "futsitev3.test.ranking.gameday.created.GameDayCreatedListenerIT"
+private const val gameDayDeletedRoutingKey = "futsitev3.test.ranking.gameday.deleted.GameDayCreatedListenerIT"
 
 class GameDayCreatedListenerIT : BaseIT() {
     @Autowired
@@ -35,8 +37,11 @@ class GameDayCreatedListenerIT : BaseIT() {
     @MockkBean
     lateinit var getPlayerStatistic: GetPlayerStatistic
 
+    @MockkBean
+    lateinit var deletePlayerStatistic: DeletePlayerStatistic
+
     @Test
-    fun `calculate players statistics from game day created`() {
+    fun `calculate players statistics from game day created event`() {
         // given
         val gameDayId = UUID.randomUUID()
         val gameDay = TestGameDayEvent(gameDayId = gameDayId.toString())
@@ -45,7 +50,7 @@ class GameDayCreatedListenerIT : BaseIT() {
         every { getPlayerStatistic.from(any()) } just Runs
 
         // when
-        rabbitTemplate.convertAndSend("amq.topic", routingKey, gameDayJson)
+        rabbitTemplate.convertAndSend("amq.topic", gameDayCreatedRoutingKey, gameDayJson)
 
         // then
         await().atMost(1, TimeUnit.SECONDS).pollInterval(Duration.ofMillis(100)).untilAsserted {
@@ -53,19 +58,49 @@ class GameDayCreatedListenerIT : BaseIT() {
         }
     }
 
+    @Test
+    fun `delete players statistics from game day deleted event`() {
+        // given
+        val gameDayId = UUID.randomUUID()
+        val gameDay = TestGameDayEvent(gameDayId = gameDayId.toString())
+        val gameDayJson = objectMapper.writeValueAsString(gameDay)
+
+        every { deletePlayerStatistic.with(any()) } just Runs
+
+        // when
+        rabbitTemplate.convertAndSend("amq.topic", gameDayDeletedRoutingKey, gameDayJson)
+
+        // then
+        await().atMost(1, TimeUnit.SECONDS).pollInterval(Duration.ofMillis(100)).untilAsserted {
+            verify { deletePlayerStatistic.with(gameDayId) }
+        }
+    }
+
     class TestGameDayListener(
         getPlayerStatistic: GetPlayerStatistic,
+        deletePlayerStatistic: DeletePlayerStatistic,
         objectMapper: ObjectMapper
-    ) : GameDayListener(getPlayerStatistic, objectMapper) {
+    ) : GameDayListener(getPlayerStatistic, deletePlayerStatistic, objectMapper) {
         @RabbitListener(
             bindings = [QueueBinding(
-                value = Queue(routingKey),
+                value = Queue(gameDayCreatedRoutingKey),
                 exchange = Exchange("amq.topic", type = "topic"),
-                key = [routingKey]
+                key = [gameDayCreatedRoutingKey]
             )]
         )
         override fun receiveGameDayCreatedMessage(messageIn: String) {
             super.receiveGameDayCreatedMessage(messageIn)
+        }
+
+        @RabbitListener(
+            bindings = [QueueBinding(
+                value = Queue(gameDayDeletedRoutingKey),
+                exchange = Exchange("amq.topic", type = "topic"),
+                key = [gameDayDeletedRoutingKey]
+            )]
+        )
+        override fun receiveGameDayDeletedMessage(messageIn: String) {
+            super.receiveGameDayDeletedMessage(messageIn)
         }
     }
 
@@ -74,7 +109,8 @@ class GameDayCreatedListenerIT : BaseIT() {
         @Bean
         fun testGameDayListenerBean(
             getPlayerStatistic: GetPlayerStatistic,
+            deletePlayerStatistic: DeletePlayerStatistic,
             objectMapper: ObjectMapper
-        ): GameDayListener = TestGameDayListener(getPlayerStatistic, objectMapper)
+        ): GameDayListener = TestGameDayListener(getPlayerStatistic, deletePlayerStatistic, objectMapper)
     }
 }

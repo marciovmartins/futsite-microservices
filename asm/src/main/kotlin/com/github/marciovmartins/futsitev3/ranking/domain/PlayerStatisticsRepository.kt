@@ -4,7 +4,12 @@ import java.time.LocalDate
 import java.util.UUID
 
 interface PlayerStatisticsRepository {
-    fun persist(amateurSoccerGroupId: UUID, gameDayDate: LocalDate, playersStatistics: PlayersStatistics)
+    fun persist(
+        amateurSoccerGroupId: UUID,
+        gameDayId: UUID,
+        gameDayDate: LocalDate,
+        playersStatistics: PlayersStatistics
+    )
     fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics
-    fun delete(amateurSoccerGroupId: UUID, gameDayDate: LocalDate)
+    fun delete(gameDayId: UUID)
 }
