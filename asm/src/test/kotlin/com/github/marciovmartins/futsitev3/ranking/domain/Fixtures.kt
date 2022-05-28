@@ -25,3 +25,5 @@ fun defaultGameDay(
         )
     )
 )
+
+val emptyPlayersStatistics = PlayersStatistics(matches = 0, items = emptySet())

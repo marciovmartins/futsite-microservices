@@ -3,6 +3,7 @@ package com.github.marciovmartins.futsitev3.ranking.infrastructure
 import com.github.marciovmartins.futsitev3.BaseIT
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.ranking.domain.PlayersStatistics
+import com.github.marciovmartins.futsitev3.ranking.domain.emptyPlayersStatistics
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,9 +31,10 @@ class JpaPlayerStatisticsRepositoryIT : BaseIT() {
     }
 
     @Test
-    fun `persist and retrieve many player statistics`() {
+    fun `persist, retrieve and delete one game day date with many player statistics`() {
         // given
         val amateurSoccerGroupId = UUID.randomUUID()
+        val gameDayDate = LocalDate.now()
         val playerStatisticToPersist = setOf(
             // player 1
             PlayerStatistic(player1, 1, 1, 0, 0, 8, 3),
@@ -66,16 +68,23 @@ class JpaPlayerStatisticsRepositoryIT : BaseIT() {
         // when
         playerStatisticsRepository.persist(
             amateurSoccerGroupId = amateurSoccerGroupId,
-            gameDayDate = LocalDate.now(),
+            gameDayDate = gameDayDate,
             playersStatistics = PlayersStatistics(matches = 3, playerStatisticToPersist)
         )
         val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId)
+        playerStatisticsRepository.delete(amateurSoccerGroupId, gameDayDate)
+        val playersStatisticsAfterDeletion = playerStatisticsRepository.findBy(amateurSoccerGroupId)
 
         // then
         assertThat(playersStatistics)
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(expectedPlayersStatistics)
+
+        assertThat(playersStatisticsAfterDeletion)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(emptyPlayersStatistics)
     }
 }
 

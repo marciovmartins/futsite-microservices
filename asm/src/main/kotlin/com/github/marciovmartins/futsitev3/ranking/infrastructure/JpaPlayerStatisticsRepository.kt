@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 import java.util.UUID
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -24,7 +26,8 @@ class JpaPlayerStatisticsRepository(
         val matchesEntity = MatchesEntity(amateurSoccerGroupId, gameDayDate, playersStatistics.matches)
         matchesDAO.save(matchesEntity)
 
-        val playerStatisticEntities = playersStatistics.items.map { PlayerStatisticEntity(amateurSoccerGroupId, it) }
+        val playerStatisticEntities = playersStatistics.items
+            .map { PlayerStatisticEntity(amateurSoccerGroupId, gameDayDate, it) }
         playerStatisticDAO.saveAll(playerStatisticEntities)
     }
 
@@ -34,8 +37,45 @@ class JpaPlayerStatisticsRepository(
         return PlayersStatistics(matches = matches.toInt(), items = items)
     }
 
+    @Transactional
     override fun delete(amateurSoccerGroupId: UUID, gameDayDate: LocalDate) {
-        TODO("Not yet implemented")
+        matchesDAO.deleteByAmateurSoccerGroupIdAndGameDayDate(amateurSoccerGroupId, gameDayDate)
+        playerStatisticDAO.deleteByAmateurSoccerGroupIdAndGameDayDate(amateurSoccerGroupId, gameDayDate)
+    }
+
+    interface MatchesDAO : CrudRepository<MatchesEntity, Long> {
+        @Query(
+            value = """
+            SELECT SUM(matches)
+            FROM ranking_matches
+            WHERE amateurSoccerGroupId = :amateurSoccerGroupId
+            GROUP BY amateurSoccerGroupId
+        """
+        )
+        fun findByAmateurSoccerGroupId(@Param("amateurSoccerGroupId") amateurSoccerGroupId: UUID): Long?
+
+        fun deleteByAmateurSoccerGroupIdAndGameDayDate(amateurSoccerGroupId: UUID, gameDayDate: LocalDate)
+    }
+
+    @Entity(name = "ranking_matches")
+    data class MatchesEntity(
+        @Id
+        @Column(name = "ranking_matches_id")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        var id: Long? = null,
+
+        @Type(type = "uuid-char")
+        var amateurSoccerGroupId: UUID,
+
+        var gameDayDate: LocalDate,
+
+        var matches: Long,
+    ) {
+        constructor(amateurSoccerGroupId: UUID, gameDayDate: LocalDate, matches: Int) : this(
+            amateurSoccerGroupId = amateurSoccerGroupId,
+            gameDayDate = gameDayDate,
+            matches = matches.toLong(),
+        )
     }
 
     interface PlayerStatisticDAO : CrudRepository<PlayerStatisticEntity, Long> {
@@ -56,6 +96,8 @@ class JpaPlayerStatisticsRepository(
         """
         )
         fun findByAmateurSoccerGroupId(@Param("amateurSoccerGroupId") amateurSoccerGroupId: UUID): Set<PlayerStatistic>
+
+        fun deleteByAmateurSoccerGroupIdAndGameDayDate(amateurSoccerGroupId: UUID, gameDayDate: LocalDate)
     }
 
     @Entity(name = "ranking_players_statistics")
@@ -67,6 +109,8 @@ class JpaPlayerStatisticsRepository(
         @Type(type = "uuid-char")
         var amateurSoccerGroupId: UUID,
 
+        var gameDayDate: LocalDate,
+
         @Type(type = "uuid-char")
         var playerId: UUID,
 
@@ -77,8 +121,9 @@ class JpaPlayerStatisticsRepository(
         var goalsInFavor: Long,
         var goalsAgainst: Long,
     ) {
-        constructor(amateurSoccerGroupId: UUID, playerStatistic: PlayerStatistic) : this(
+        constructor(amateurSoccerGroupId: UUID, gameDayDate: LocalDate, playerStatistic: PlayerStatistic) : this(
             amateurSoccerGroupId = amateurSoccerGroupId,
+            gameDayDate = gameDayDate,
             playerId = playerStatistic.playerId,
             matches = playerStatistic.matches,
             victories = playerStatistic.victories,
@@ -86,38 +131,6 @@ class JpaPlayerStatisticsRepository(
             defeats = playerStatistic.defeats,
             goalsInFavor = playerStatistic.goalsInFavor,
             goalsAgainst = playerStatistic.goalsAgainst
-        )
-    }
-
-    interface MatchesDAO : CrudRepository<MatchesEntity, Long> {
-        @Query(
-            value = """
-            SELECT SUM(matches)
-            FROM ranking_matches
-            WHERE amateurSoccerGroupId = :amateurSoccerGroupId
-            GROUP BY amateurSoccerGroupId
-        """
-        )
-        fun findByAmateurSoccerGroupId(@Param("amateurSoccerGroupId") amateurSoccerGroupId: UUID): Long?
-    }
-
-    @Entity(name = "ranking_matches")
-    data class MatchesEntity(
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        var id: Long? = null,
-
-        @Type(type = "uuid-char")
-        var amateurSoccerGroupId: UUID,
-
-        var gameDayDate: LocalDate,
-
-        var matches: Long,
-    ) {
-        constructor(amateurSoccerGroupId: UUID, gameDayDate: LocalDate, matches: Int) : this(
-            amateurSoccerGroupId = amateurSoccerGroupId,
-            gameDayDate = gameDayDate,
-            matches = matches.toLong(),
         )
     }
 }
