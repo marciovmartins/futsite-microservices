@@ -4,10 +4,10 @@ import java.time.LocalDate
 import java.util.UUID
 
 fun defaultGameDay(
-    player1: UUID,
-    player2: UUID,
-    player3: UUID,
-    player4: UUID,
+    player1: UUID = UUID.randomUUID(),
+    player2: UUID = UUID.randomUUID(),
+    player3: UUID = UUID.randomUUID(),
+    player4: UUID = UUID.randomUUID(),
     gameDayId: UUID = UUID.randomUUID(),
     amateurSoccerGroupId: UUID = UUID.randomUUID(),
 ) = GameDay(

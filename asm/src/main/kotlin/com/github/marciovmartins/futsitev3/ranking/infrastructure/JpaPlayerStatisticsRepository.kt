@@ -34,6 +34,10 @@ class JpaPlayerStatisticsRepository(
         return PlayersStatistics(matches = matches.toInt(), items = items)
     }
 
+    override fun delete(amateurSoccerGroupId: UUID, gameDayDate: LocalDate) {
+        TODO("Not yet implemented")
+    }
+
     interface PlayerStatisticDAO : CrudRepository<PlayerStatisticEntity, Long> {
         @Query(
             value = """

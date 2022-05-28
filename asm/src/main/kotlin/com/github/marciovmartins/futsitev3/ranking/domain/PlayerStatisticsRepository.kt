@@ -6,4 +6,5 @@ import java.util.UUID
 interface PlayerStatisticsRepository {
     fun persist(amateurSoccerGroupId: UUID, gameDayDate: LocalDate, playersStatistics: PlayersStatistics)
     fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics
+    fun delete(amateurSoccerGroupId: UUID, gameDayDate: LocalDate)
 }
