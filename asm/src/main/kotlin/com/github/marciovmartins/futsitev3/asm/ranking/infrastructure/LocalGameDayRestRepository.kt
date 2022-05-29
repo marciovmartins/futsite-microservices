@@ -14,7 +14,7 @@ import com.github.marciovmartins.futsitev3.asm.gameDay.Match as AsmMatch
 import com.github.marciovmartins.futsitev3.asm.gameDay.PlayerStatistic as AsmPlayerStatistic
 
 @Repository
-class AsmGameDayRestRepository(
+class LocalGameDayRestRepository(
     private val gameDayRestRepository: GameDayRestRepository,
 ) : GameDayRepository {
     override fun findBy(gameDayId: UUID): GameDay? = gameDayRestRepository.findByIdOrNull(gameDayId)

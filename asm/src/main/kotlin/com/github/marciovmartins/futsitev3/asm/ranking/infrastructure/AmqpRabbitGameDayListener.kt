@@ -14,7 +14,7 @@ private const val gameDayCreatedRoutingKey = "futsitev3.gameday.created"
 private const val gameDayDeletedRoutingKey = "futsitev3.gameday.deleted"
 
 @Component
-class GameDayListener(
+class AmqpRabbitGameDayListener(
     private val getPlayerStatistic: GetPlayerStatistic,
     private val deletePlayerStatistic: DeletePlayerStatistic,
     private val objectMapper: ObjectMapper,

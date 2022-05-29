@@ -76,11 +76,11 @@ class GameDayListenerIT : BaseIT() {
         }
     }
 
-    class TestGameDayListener(
+    class TestAmqpRabbitGameDayListener(
         getPlayerStatistic: GetPlayerStatistic,
         deletePlayerStatistic: DeletePlayerStatistic,
         objectMapper: ObjectMapper
-    ) : GameDayListener(getPlayerStatistic, deletePlayerStatistic, objectMapper) {
+    ) : AmqpRabbitGameDayListener(getPlayerStatistic, deletePlayerStatistic, objectMapper) {
         @RabbitListener(
             bindings = [QueueBinding(
                 value = Queue(gameDayCreatedRoutingKey),
@@ -111,6 +111,6 @@ class GameDayListenerIT : BaseIT() {
             getPlayerStatistic: GetPlayerStatistic,
             deletePlayerStatistic: DeletePlayerStatistic,
             objectMapper: ObjectMapper
-        ): GameDayListener = TestGameDayListener(getPlayerStatistic, deletePlayerStatistic, objectMapper)
+        ): AmqpRabbitGameDayListener = TestAmqpRabbitGameDayListener(getPlayerStatistic, deletePlayerStatistic, objectMapper)
     }
 }

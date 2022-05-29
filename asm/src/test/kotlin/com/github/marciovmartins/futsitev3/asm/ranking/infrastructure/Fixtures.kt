@@ -1,9 +1,5 @@
 package com.github.marciovmartins.futsitev3.asm.ranking.infrastructure
 
-import com.github.marciovmartins.futsitev3.asm.gameDay.GameDay
-import com.github.marciovmartins.futsitev3.asm.gameDay.Match
-import com.github.marciovmartins.futsitev3.asm.gameDay.PlayerStatistic
-import java.time.LocalDate
 import java.util.UUID
 
 data class TestRankingCriteriaDTO(
@@ -30,28 +26,4 @@ data class ExpectedResponseBody(
 data class ExpectedException(
     val message: String,
     val field: String? = null,
-)
-
-fun defaultAsmGameDay(
-    player1: UUID,
-    player2: UUID,
-    player3: UUID,
-    player4: UUID,
-    gameDayId: UUID = UUID.randomUUID(),
-    amateurSoccerGroupId: UUID = UUID.randomUUID(),
-) = GameDay(
-    id = gameDayId,
-    amateurSoccerGroupId = amateurSoccerGroupId,
-    date = LocalDate.now(),
-    matches = setOf(
-        Match(
-            order = 1,
-            playerStatistics = setOf(
-                PlayerStatistic(null, PlayerStatistic.Team.A, player1, 4, 0, 0, 0, 0),
-                PlayerStatistic(null, PlayerStatistic.Team.A, player2, 3, 0, 0, 0, 0),
-                PlayerStatistic(null, PlayerStatistic.Team.B, player3, 2, 1, 0, 0, 0),
-                PlayerStatistic(null, PlayerStatistic.Team.B, player4, 1, 0, 0, 0, 0),
-            ),
-        ),
-    ),
 )

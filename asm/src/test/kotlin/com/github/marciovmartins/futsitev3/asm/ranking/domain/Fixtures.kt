@@ -26,4 +26,64 @@ fun defaultGameDay(
     )
 )
 
+fun defaultAsmGameDay(
+    player1: UUID,
+    player2: UUID,
+    player3: UUID,
+    player4: UUID,
+    gameDayId: UUID = UUID.randomUUID(),
+    amateurSoccerGroupId: UUID = UUID.randomUUID(),
+) = com.github.marciovmartins.futsitev3.asm.gameDay.GameDay(
+    id = gameDayId,
+    amateurSoccerGroupId = amateurSoccerGroupId,
+    date = LocalDate.now(),
+    matches = setOf(
+        com.github.marciovmartins.futsitev3.asm.gameDay.Match(
+            order = 1,
+            playerStatistics = setOf(
+                com.github.marciovmartins.futsitev3.asm.gameDay.PlayerStatistic(
+                    null,
+                    com.github.marciovmartins.futsitev3.asm.gameDay.PlayerStatistic.Team.A,
+                    player1,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0
+                ),
+                com.github.marciovmartins.futsitev3.asm.gameDay.PlayerStatistic(
+                    null,
+                    com.github.marciovmartins.futsitev3.asm.gameDay.PlayerStatistic.Team.A,
+                    player2,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0
+                ),
+                com.github.marciovmartins.futsitev3.asm.gameDay.PlayerStatistic(
+                    null,
+                    com.github.marciovmartins.futsitev3.asm.gameDay.PlayerStatistic.Team.B,
+                    player3,
+                    2,
+                    1,
+                    0,
+                    0,
+                    0
+                ),
+                com.github.marciovmartins.futsitev3.asm.gameDay.PlayerStatistic(
+                    null,
+                    com.github.marciovmartins.futsitev3.asm.gameDay.PlayerStatistic.Team.B,
+                    player4,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ),
+            ),
+        ),
+    ),
+)
+
 val emptyPlayersStatistics = PlayersStatistics(matches = 0, items = emptySet())

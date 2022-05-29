@@ -1,6 +1,11 @@
-package com.github.marciovmartins.futsitev3.asm.ranking.usecase
+package com.github.marciovmartins.futsitev3.asm.ranking.usecase.argumentsprovider
 
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatistic
+import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PercentageDTO
+import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PercentageType
+import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PlayerRankingDTO
+import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PointCriteriaDTO
+import com.github.marciovmartins.futsitev3.asm.ranking.usecase.RankingDTO
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
