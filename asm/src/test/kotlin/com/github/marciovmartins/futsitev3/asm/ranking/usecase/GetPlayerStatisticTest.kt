@@ -3,7 +3,7 @@ package com.github.marciovmartins.futsitev3.asm.ranking.usecase
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.GameDayRepository
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayersStatistics
-import com.github.marciovmartins.futsitev3.asm.ranking.domain.defaultGameDay
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.defaultProcessedGameDay
 import com.github.marciovmartins.futsitev3.asm.ranking.infrastructure.FakePlayerStatisticsRepository
 import io.mockk.every
 import io.mockk.mockk
@@ -24,8 +24,8 @@ class GetPlayerStatisticTest {
         val player3: UUID = UUID.randomUUID()
         val player4: UUID = UUID.randomUUID()
 
-        val gameDay = defaultGameDay(player1, player2, player3, player4)
-        every { gameDayRepository.findBy(gameDay.gameDayId) } returns gameDay
+        val processedGameDay = defaultProcessedGameDay(player1, player2, player3, player4)
+        every { gameDayRepository.findBy(processedGameDay.gameDayId) } returns processedGameDay
 
         val expectedPlayersStatistics = PlayersStatistics(
             matches = 1,
@@ -38,8 +38,8 @@ class GetPlayerStatisticTest {
         )
 
         // when
-        getPlayerStatistic.from(gameDay.gameDayId)
-        val playersStatistics = playerStatisticsRepository.findBy(gameDay.amateurSoccerGroupId)
+        getPlayerStatistic.from(processedGameDay.gameDayId)
+        val playersStatistics = playerStatisticsRepository.findBy(processedGameDay.amateurSoccerGroupId)
 
         // then
         assertThat(playersStatistics).isEqualTo(expectedPlayersStatistics)

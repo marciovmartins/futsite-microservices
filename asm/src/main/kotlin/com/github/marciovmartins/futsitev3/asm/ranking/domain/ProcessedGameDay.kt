@@ -3,31 +3,23 @@ package com.github.marciovmartins.futsitev3.asm.ranking.domain
 import java.time.LocalDate
 import java.util.UUID
 
-data class GameDay(
+data class ProcessedGameDay(
     val gameDayId: UUID,
     val amateurSoccerGroupId: UUID,
     val date: LocalDate,
-    val matches: Set<Match>
+    val playersStatistics: PlayersStatistics
 ) {
     constructor(gameDayId: UUID, gameDayDTO: GameDayDTO) : this(
         gameDayId = gameDayId,
         amateurSoccerGroupId = gameDayDTO.amateurSoccerGroupId,
         date = gameDayDTO.date,
-        matches = gameDayDTO.matches.map { Match(it) }.toSet()
-    )
-
-    fun calculatePlayersStatistics(): PlayersStatistics = matches.flatMap { it.playerStatistics }
-        .groupBy { it.playerId }
-        .mapValues { it.value.reduce(PlayerStatistic::add) }
-        .values.toSet()
-        .let { PlayersStatistics(matches.size, it) }
-}
-
-data class Match(
-    val playerStatistics: Set<PlayerStatistic>
-) {
-    constructor(matchDTO: MatchDTO) : this(
-        playerStatistics = createPlayerStatistics(matchDTO.playerStatistics)
+        playersStatistics = gameDayDTO.matches
+            .map { createPlayerStatistics(it.playerStatistics) }
+            .flatten()
+            .groupBy { it.playerId }
+            .mapValues { it.value.reduce(PlayerStatistic::add) }
+            .values.toSet()
+            .let { PlayersStatistics(gameDayDTO.matches.size, it) }
     )
 
     companion object {

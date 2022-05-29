@@ -3,6 +3,7 @@ package com.github.marciovmartins.futsitev3.asm.ranking.infrastructure
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatisticsRepository
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayersStatistics
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.ProcessedGameDay
 import org.hibernate.annotations.Type
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
@@ -22,17 +23,24 @@ class JpaPlayerStatisticsRepository(
     private val matchesDAO: MatchesDAO,
     private val playerStatisticDAO: PlayerStatisticDAO,
 ) : PlayerStatisticsRepository {
-    override fun persist(
-        amateurSoccerGroupId: UUID,
-        gameDayId: UUID,
-        gameDayDate: LocalDate,
-        playersStatistics: PlayersStatistics
-    ) {
-        val matchesEntity = MatchesEntity(amateurSoccerGroupId, gameDayId, gameDayDate, playersStatistics.matches)
+    override fun persist(processedGameDay: ProcessedGameDay) {
+        val matchesEntity = MatchesEntity(
+            processedGameDay.amateurSoccerGroupId,
+            processedGameDay.gameDayId,
+            processedGameDay.date,
+            processedGameDay.playersStatistics.matches,
+        )
         matchesDAO.save(matchesEntity)
 
-        val playerStatisticEntities = playersStatistics.items
-            .map { PlayerStatisticEntity(amateurSoccerGroupId, gameDayId, gameDayDate, it) }
+        val playerStatisticEntities = processedGameDay.playersStatistics.items
+            .map {
+                PlayerStatisticEntity(
+                    processedGameDay.amateurSoccerGroupId,
+                    processedGameDay.gameDayId,
+                    processedGameDay.date,
+                    it
+                )
+            }
         playerStatisticDAO.saveAll(playerStatisticEntities)
     }
 

@@ -3,6 +3,7 @@ package com.github.marciovmartins.futsitev3.asm.ranking.infrastructure
 import com.github.marciovmartins.futsitev3.asm.BaseIT
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayersStatistics
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.ProcessedGameDay
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.emptyPlayersStatistics
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -33,15 +34,20 @@ class JpaPlayerStatisticsRepositoryIT : BaseIT() {
     @Test
     fun `persist, retrieve and delete one game day date with many player statistics`() {
         // given
-        val amateurSoccerGroupId = UUID.randomUUID()
-        val gameDayId = UUID.randomUUID()
-        val gameDayDate = LocalDate.now()
-        val playerStatisticToPersist = setOf(
-            PlayerStatistic(player1, 3, 2, 1, 0, 20, 12),
-            PlayerStatistic(player2, 3, 1, 1, 1, 17, 15),
-            PlayerStatistic(player3, 3, 1, 1, 1, 15, 17),
-            PlayerStatistic(player4, 2, 0, 0, 2, 7, 15),
-            PlayerStatistic(player5, 1, 0, 1, 0, 5, 5),
+        val processedGameDay = ProcessedGameDay(
+            gameDayId = UUID.randomUUID(),
+            amateurSoccerGroupId = UUID.randomUUID(),
+            date = LocalDate.now(),
+            playersStatistics = PlayersStatistics(
+                matches = 3,
+                items = setOf(
+                    PlayerStatistic(player1, 3, 2, 1, 0, 20, 12),
+                    PlayerStatistic(player2, 3, 1, 1, 1, 17, 15),
+                    PlayerStatistic(player3, 3, 1, 1, 1, 15, 17),
+                    PlayerStatistic(player4, 2, 0, 0, 2, 7, 15),
+                    PlayerStatistic(player5, 1, 0, 1, 0, 5, 5),
+                ),
+            ),
         )
         val expectedPlayersStatistics = PlayersStatistics(
             matches = 3,
@@ -55,15 +61,10 @@ class JpaPlayerStatisticsRepositoryIT : BaseIT() {
         )
 
         // when
-        playerStatisticsRepository.persist(
-            amateurSoccerGroupId = amateurSoccerGroupId,
-            gameDayId = gameDayId,
-            gameDayDate = gameDayDate,
-            playersStatistics = PlayersStatistics(matches = 3, playerStatisticToPersist)
-        )
-        val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId)
-        playerStatisticsRepository.delete(gameDayId)
-        val playersStatisticsAfterDeletion = playerStatisticsRepository.findBy(amateurSoccerGroupId)
+        playerStatisticsRepository.persist(processedGameDay)
+        val playersStatistics = playerStatisticsRepository.findBy(processedGameDay.amateurSoccerGroupId)
+        playerStatisticsRepository.delete(processedGameDay.gameDayId)
+        val playersStatisticsAfterDeletion = playerStatisticsRepository.findBy(processedGameDay.amateurSoccerGroupId)
 
         // then
         assertThat(playersStatistics)

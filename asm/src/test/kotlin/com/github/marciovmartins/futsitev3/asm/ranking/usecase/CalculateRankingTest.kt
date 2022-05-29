@@ -2,6 +2,7 @@ package com.github.marciovmartins.futsitev3.asm.ranking.usecase
 
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayersStatistics
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.ProcessedGameDay
 import com.github.marciovmartins.futsitev3.asm.ranking.infrastructure.FakePlayerStatisticsRepository
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.argumentsprovider.ValidCalculateRanking
 import org.assertj.core.api.Assertions.assertThat
@@ -21,17 +22,20 @@ class CalculateRankingTest {
         expectedRanking: RankingDTO
     ) {
         // given
-        val amateurSoccerGroupId = UUID.randomUUID()
-        val gameDayId = UUID.randomUUID()
+        val processedGameDay = ProcessedGameDay(
+            amateurSoccerGroupId = UUID.randomUUID(),
+            gameDayId = UUID.randomUUID(),
+            date = LocalDate.now(),
+            playersStatistics = playersStatisticsByDate.map { it.second }.toSet()
+                .let { PlayersStatistics(matches, it) },
+        )
 
         val playerStatisticsRepository = FakePlayerStatisticsRepository()
-        val playersStatistics = playersStatisticsByDate.map { it.second }.toSet()
-            .let { PlayersStatistics(matches, it) }
-        playerStatisticsRepository.persist(amateurSoccerGroupId, gameDayId, LocalDate.now(), playersStatistics)
+        playerStatisticsRepository.persist(processedGameDay)
 
         // when
         val calculateRanking = CalculateRanking(playerStatisticsRepository)
-        val ranking = calculateRanking.with(amateurSoccerGroupId, pointsCriteria)
+        val ranking = calculateRanking.with(processedGameDay.amateurSoccerGroupId, pointsCriteria)
 
         // then
         assertThat(ranking)
