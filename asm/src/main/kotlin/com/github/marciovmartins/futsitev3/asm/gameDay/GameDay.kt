@@ -10,6 +10,7 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -45,7 +46,7 @@ class GameDay(
     @field:UniqueMatchOrder
     @field:SequentialMatchOrder
     @JoinColumn(name = "game_day_id", nullable = false)
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     var matches: Set<Match>,
 
     @Version
@@ -75,7 +76,7 @@ class Match(
     @field:BothTeams
     @field:UniquePlayers
     @JoinColumn(name = "match_id", nullable = false)
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
     var playerStatistics: Set<PlayerStatistic>
 )
 
