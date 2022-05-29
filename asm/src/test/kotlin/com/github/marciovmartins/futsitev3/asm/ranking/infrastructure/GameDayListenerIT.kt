@@ -24,10 +24,10 @@ import java.time.Duration
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
-private const val gameDayCreatedRoutingKey = "futsitev3.test.ranking.gameday.created.GameDayCreatedListenerIT"
-private const val gameDayDeletedRoutingKey = "futsitev3.test.ranking.gameday.deleted.GameDayCreatedListenerIT"
+private const val gameDayCreatedRoutingKey = "futsitev3.test.ranking.gameday.created.GameDayListenerIT"
+private const val gameDayDeletedRoutingKey = "futsitev3.test.ranking.gameday.deleted.GameDayListenerIT"
 
-class GameDayCreatedListenerIT : BaseIT() {
+class GameDayListenerIT : BaseIT() {
     @Autowired
     lateinit var rabbitTemplate: RabbitTemplate
 
