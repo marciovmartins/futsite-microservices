@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit
 private const val gameDayCreatedRoutingKey = "futsitev3.test.ranking.gameday.created.GameDayListenerIT"
 private const val gameDayDeletedRoutingKey = "futsitev3.test.ranking.gameday.deleted.GameDayListenerIT"
 
-class GameDayListenerIT : BaseIT() {
+class AmqpRabbitGameDayListenerIT : BaseIT() {
     @Autowired
     lateinit var rabbitTemplate: RabbitTemplate
 
