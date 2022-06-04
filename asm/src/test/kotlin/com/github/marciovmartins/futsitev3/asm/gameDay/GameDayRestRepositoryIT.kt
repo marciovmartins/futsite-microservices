@@ -30,6 +30,7 @@ class GameDayRestRepositoryIT : BaseIT() {
     companion object {
         val gameDayCreatedMessages = mutableListOf<TestGameDayEvent>()
         val gameDayDeletedMessages = mutableListOf<TestGameDayEvent>()
+        val gameDayUpdatedMessages = mutableListOf<TestGameDayEvent>()
     }
 
     @ParameterizedTest(name = "{0}")
@@ -84,6 +85,7 @@ class GameDayRestRepositoryIT : BaseIT() {
             .exchange().expectStatus().isCreated
             .returnResult(Unit::class.java)
             .responseHeaders.location.toString()
+        val expectedMessage = TestGameDayEvent(gameDayId = gameDayId)
 
         // execution
         val responsePut = webTestClient.put()
@@ -103,6 +105,10 @@ class GameDayRestRepositoryIT : BaseIT() {
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(gameDayToUpdate)
+
+        await().atMost(1, TimeUnit.SECONDS).pollInterval(Duration.ofMillis(100)).untilAsserted {
+            assertThat(gameDayUpdatedMessages).contains(expectedMessage)
+        }
     }
 
     @Test
@@ -436,6 +442,21 @@ class GameDayRestRepositoryIT : BaseIT() {
         fun receiveGameDayDeletedEvent(messageIn: String) {
             try {
                 gameDayDeletedMessages += objectMapper.readValue(messageIn, TestGameDayEvent::class.java)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        @RabbitListener(
+            bindings = [QueueBinding(
+                value = Queue("futsitev3.test.gameday.updated.GameDayRestRepositoryIT"),
+                exchange = Exchange("amq.topic", type = "topic"),
+                key = ["futsitev3.gameday.updated"]
+            )]
+        )
+        fun receiveGameDayUpdatedEvent(messageIn: String) {
+            try {
+                gameDayUpdatedMessages += objectMapper.readValue(messageIn, TestGameDayEvent::class.java)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

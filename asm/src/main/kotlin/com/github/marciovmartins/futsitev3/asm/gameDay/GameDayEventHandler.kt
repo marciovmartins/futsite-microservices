@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.data.rest.core.annotation.HandleAfterCreate
 import org.springframework.data.rest.core.annotation.HandleAfterDelete
+import org.springframework.data.rest.core.annotation.HandleAfterSave
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler
 import org.springframework.stereotype.Component
 import java.util.UUID
@@ -15,10 +16,16 @@ class GameDayEventHandler(
     private val objectMapper: ObjectMapper,
 ) {
     @HandleAfterCreate
-    fun handleGameDayAfterSave(gameDay: GameDay) {
+    fun handleGameDayAfterCreate(gameDay: GameDay) {
         val gameDayCreated = GameDayEvent(gameDayId = gameDay.id!!)
         val gameDayCreatedJson = objectMapper.writeValueAsString(gameDayCreated)
         rabbitTemplate.convertAndSend("amq.topic", "futsitev3.gameday.created", gameDayCreatedJson)
+    }
+    @HandleAfterSave
+    fun handleGameDayAfterSave(gameDay: GameDay) {
+        val gameDayUpdated = GameDayEvent(gameDayId = gameDay.id!!)
+        val gameDayUpdatedJson = objectMapper.writeValueAsString(gameDayUpdated)
+        rabbitTemplate.convertAndSend("amq.topic", "futsitev3.gameday.updated", gameDayUpdatedJson)
     }
 
     @HandleAfterDelete
