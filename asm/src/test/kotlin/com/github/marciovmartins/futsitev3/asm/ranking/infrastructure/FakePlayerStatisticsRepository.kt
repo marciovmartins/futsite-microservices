@@ -10,14 +10,14 @@ private val emptyPlayerStatistic = { playerId: UUID -> PlayerStatistic(playerId,
 
 //TODO: too complex, what to do to improve that and make it simple?
 class FakePlayerStatisticsRepository : PlayerStatisticsRepository {
-    private val rows = mutableSetOf<ProcessedGameDay>()
+    private val rows = mutableMapOf<UUID, ProcessedGameDay>()
 
     override fun persist(processedGameDay: ProcessedGameDay) {
-        rows.add(processedGameDay)
+        rows[processedGameDay.gameDayId] = (processedGameDay)
     }
 
     override fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics {
-        val collection = rows.filter { it.amateurSoccerGroupId == amateurSoccerGroupId }.toSet()
+        val collection = rows.filterValues { it.amateurSoccerGroupId == amateurSoccerGroupId }.values.toSet()
         if (collection.isEmpty()) return PlayersStatistics(0, emptySet())
 
         val playersStatistics = collection.map { it.playersStatistics }.reduce(FakePlayerStatisticsRepository::add)
@@ -30,11 +30,11 @@ class FakePlayerStatisticsRepository : PlayerStatisticsRepository {
     }
 
     override fun delete(gameDayId: UUID) {
-        rows.remove(rows.first { it.gameDayId === gameDayId })
+        rows.remove(gameDayId)
     }
 
     fun exists(gameDayId: UUID): Boolean {
-        return rows.firstOrNull { it.gameDayId === gameDayId } !== null
+        return rows[gameDayId] !== null
     }
 
     companion object {
