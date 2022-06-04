@@ -138,6 +138,18 @@ export function GameDay(props) {
 }
 
 function Match(props) {
+    let nicknamesByPlayerId = (props.players || []).reduce((map, obj) => {
+        map[obj.id] = obj.nickname
+        return map;
+    }, {});
+    let comparator = (playerStatisticA, playerStatisticB) => {
+        let nicknameA = nicknamesByPlayerId[playerStatisticA.playerId] || '';
+        let nicknameB = nicknamesByPlayerId[playerStatisticB.playerId] || '';
+        if (nicknameA < nicknameB) return -1;
+        if (nicknameA > nicknameB) return 1;
+        return 0;
+    }
+
     return (
         <div>
             <h2>
@@ -166,7 +178,7 @@ function Match(props) {
                 </tr>
                 </thead>
                 <tbody>
-                {props.data.playerStatistics.map((playerStatistic, index) =>
+                {props.data.playerStatistics.sort(comparator).map((playerStatistic, index) =>
                     <PlayerStatistic
                         key={index}
                         index={index}
@@ -325,7 +337,7 @@ const fetchUserDataPlayers = (state, setState) => {
         .then(response => response.json())
         .then(json => json._embedded || {players: []})
         .then(embedded => map(embedded.players))
-        .then(players => setState((s, p) => ({...s, players})))
+        .then(players => setState((s) => ({...s, players})))
 }
 
 const fetchGameDay = (gameDayId, state, setState) => {
@@ -338,7 +350,7 @@ const fetchGameDay = (gameDayId, state, setState) => {
             const playersWithoutStatistics = state.players.map(player => player.id).filter(playerId => !playersWithStatistics.includes(playerId));
             playersWithoutStatistics.forEach(playerId => match.playerStatistics.push(createEmptyPlayer(playerId)))
         })
-        setState((s, p) => ({...s, data: {...asmGameDay, ...userDataGameDay}}));
+        setState((s) => ({...s, data: {...asmGameDay, ...userDataGameDay}}));
     });
 }
 
