@@ -46,7 +46,7 @@ class JpaPlayerStatisticsRepository(
     }
 
     override fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics {
-        val matches = matchesDAO.findByAmateurSoccerGroupId(amateurSoccerGroupId) ?: 0
+        val matches = matchesDAO.findNumberOfMatchesByAmateurSoccerGroupId(amateurSoccerGroupId) ?: 0
         val items = playerStatisticDAO.findByAmateurSoccerGroupId(amateurSoccerGroupId)
         return PlayersStatistics(matches = matches.toInt(), items = items)
     }
@@ -66,7 +66,7 @@ class JpaPlayerStatisticsRepository(
             GROUP BY amateurSoccerGroupId
         """
         )
-        fun findByAmateurSoccerGroupId(@Param("amateurSoccerGroupId") amateurSoccerGroupId: UUID): Long?
+        fun findNumberOfMatchesByAmateurSoccerGroupId(@Param("amateurSoccerGroupId") amateurSoccerGroupId: UUID): Long?
 
         fun deleteByGameDayId(gameDayId: UUID)
     }
