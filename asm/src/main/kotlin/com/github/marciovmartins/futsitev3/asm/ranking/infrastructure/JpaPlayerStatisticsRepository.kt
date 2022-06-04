@@ -4,6 +4,7 @@ import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatisticsRepository
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayersStatistics
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.ProcessedGameDay
+import org.hibernate.annotations.SQLInsert
 import org.hibernate.annotations.Type
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
@@ -71,6 +72,17 @@ class JpaPlayerStatisticsRepository(
     }
 
     @Entity(name = "ranking_matches")
+    @SQLInsert( // https://stackoverflow.com/a/28586116/7069261
+        sql = """
+                INSERT INTO ranking_matches
+                    (amateur_soccer_group_id, game_day_date, game_day_id, matches)
+                VALUES
+                    (?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE
+                    matches = VALUES(matches),
+                    ranking_matches_id = LAST_INSERT_ID(ranking_matches_id)
+            """
+    )
     data class MatchesEntity(
         @Id
         @Column(name = "ranking_matches_id")
@@ -118,6 +130,23 @@ class JpaPlayerStatisticsRepository(
     }
 
     @Entity(name = "ranking_players_statistics")
+    @SQLInsert(
+        sql = """
+            INSERT INTO ranking_players_statistics 
+                (amateur_soccer_group_id, defeats, draws, game_day_date, game_day_id, goals_against, goals_in_favor, matches, player_id, victories)
+            VALUES
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+                defeats = VALUES(defeats),
+                draws = VALUES(draws),
+                goals_against = VALUES(goals_against),
+                goals_in_favor = VALUES(goals_in_favor),
+                matches = VALUES(matches),
+                victories = VALUES(victories),
+                id = LAST_INSERT_ID(id)
+            
+        """
+    )
     data class PlayerStatisticEntity(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)

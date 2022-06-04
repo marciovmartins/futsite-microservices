@@ -32,7 +32,7 @@ class JpaPlayerStatisticsRepositoryIT : BaseIT() {
     }
 
     @Test
-    fun `persist, retrieve and delete one game day date with many player statistics`() {
+    fun `persist, retrieve, update and delete one game day date with many player statistics`() {
         // given
         val processedGameDay = ProcessedGameDay(
             gameDayId = UUID.randomUUID(),
@@ -60,9 +60,23 @@ class JpaPlayerStatisticsRepositoryIT : BaseIT() {
             )
         )
 
+        val expectedUpdatedPlayersStatistics = PlayersStatistics(
+            matches = 3,
+            items = setOf(
+                PlayerStatistic(player1, 3, 2, 1, 0, 20, 12),
+                PlayerStatistic(player2, 3, 1, 1, 1, 17, 15),
+                PlayerStatistic(player3, 3, 1, 1, 1, 15, 17),
+                PlayerStatistic(player4, 2, 0, 0, 2, 7, 15),
+                PlayerStatistic(player5, 1, 0, 1, 0, 5, 5),
+            )
+        )
+        val processedGameDayToUpdate = processedGameDay.copy(playersStatistics = expectedUpdatedPlayersStatistics)
+
         // when
         playerStatisticsRepository.persist(processedGameDay)
         val playersStatistics = playerStatisticsRepository.findBy(processedGameDay.amateurSoccerGroupId)
+        playerStatisticsRepository.persist(processedGameDayToUpdate)
+        val updatedPlayersStatistics = playerStatisticsRepository.findBy(processedGameDay.amateurSoccerGroupId)
         playerStatisticsRepository.delete(processedGameDay.gameDayId)
         val playersStatisticsAfterDeletion = playerStatisticsRepository.findBy(processedGameDay.amateurSoccerGroupId)
 
@@ -71,6 +85,11 @@ class JpaPlayerStatisticsRepositoryIT : BaseIT() {
             .usingRecursiveComparison()
             .ignoringCollectionOrder()
             .isEqualTo(expectedPlayersStatistics)
+
+        assertThat(updatedPlayersStatistics)
+            .usingRecursiveComparison()
+            .ignoringCollectionOrder()
+            .isEqualTo(expectedUpdatedPlayersStatistics)
 
         assertThat(playersStatisticsAfterDeletion)
             .usingRecursiveComparison()
