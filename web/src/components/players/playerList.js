@@ -24,13 +24,21 @@ export function PlayerList() {
 }
 
 function loadList(setState) {
-    const amateurSoccerGroupId = sessionStorage.getItem('amateurSoccerGroupId');
+    let comparator = (playerA, playerB) => {
+        if (playerA.nickname < playerB.nickname) return -1;
+        if (playerA.nickname > playerB.nickname) return 1;
+        return 0;
+    }
+
+    let amateurSoccerGroupId = sessionStorage.getItem('amateurSoccerGroupId');
+
     fetch(userDataPlayersHref + '/search/byAmateurSoccerGroupId?amateurSoccerGroupId=' + amateurSoccerGroupId, {
         method: 'GET',
         headers: {"Accept": "application/hal+json"},
         mode: "cors"
     }).then(response => response.json())
         .then(data => data._embedded.players)
+        .then(players => players.sort(comparator))
         .then(players => setState({players}))
 };
 
