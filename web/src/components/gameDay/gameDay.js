@@ -150,6 +150,11 @@ function Match(props) {
         return 0;
     }
 
+    let playersWithStatistics = props.data.playerStatistics.map(playerStatistics => playerStatistics.playerId);
+    let players = props.players.map(player => player.id);
+    let playersWithoutStatistics = players.filter(playerId => !playersWithStatistics.includes(playerId));
+    playersWithoutStatistics.forEach(playerId => props.data.playerStatistics.push(createEmptyPlayer(playerId)))
+
     return (
         <div>
             <h2>
@@ -346,8 +351,9 @@ const fetchGameDay = (gameDayId, state, setState) => {
         fetchUserDataGameDay(gameDayId),
     ]).then(([asmGameDay, userDataGameDay]) => {
         asmGameDay.matches.forEach(match => {
-            const playersWithStatistics = match.playerStatistics.map(playerStatistics => playerStatistics.playerId);
-            const playersWithoutStatistics = state.players.map(player => player.id).filter(playerId => !playersWithStatistics.includes(playerId));
+            let playersWithStatistics = match.playerStatistics.map(playerStatistics => playerStatistics.playerId);
+            let players = state.players.map(player => player.id);
+            let playersWithoutStatistics = players.filter(playerId => !playersWithStatistics.includes(playerId));
             playersWithoutStatistics.forEach(playerId => match.playerStatistics.push(createEmptyPlayer(playerId)))
         })
         setState((s) => ({...s, data: {...asmGameDay, ...userDataGameDay}}));
