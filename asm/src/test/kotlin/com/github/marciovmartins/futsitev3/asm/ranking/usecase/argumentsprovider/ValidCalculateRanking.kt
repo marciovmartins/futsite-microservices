@@ -127,6 +127,54 @@ object ValidCalculateRanking : ArgumentsProvider {
                 PlayerRankingDTO(player4, null, null, 3, 4, 0, 3, 1, 3, 6, -3),
             ),
         ),
+        argument(
+            testDescription = "with 80% of the total matches",
+            pointsCriteria = PointCriteriaDTO(
+                victories = 3,
+                draws = 1,
+                defeats = 0,
+                percentage = PercentageDTO(value = 80.0, type = PercentageType.BY_TOTAL)
+            ),
+            expectedPlayersRanking = setOf(
+                PlayerRankingDTO(player1, 1, "2,000 009 1006", 12, 6, 3, 3, 0, 9, 3, 6),
+                PlayerRankingDTO(player3, 2, "1,500 006 1000", 9, 6, 2, 3, 1, 6, 6, 0),
+                PlayerRankingDTO(player2, 3, "1,000 003 1000", 6, 6, 1, 3, 2, 6, 6, 0),
+                PlayerRankingDTO(player5, null, null, 2, 2, 0, 2, 0, 2, 2, 0),
+                PlayerRankingDTO(player4, null, null, 3, 4, 0, 3, 1, 3, 6, -3),
+            ),
+        ),
+        argument(
+            testDescription = "with 100% of the average of all matches by total of players",
+            pointsCriteria = PointCriteriaDTO(
+                victories = 3,
+                draws = 1,
+                defeats = 0,
+                percentage = PercentageDTO(value = 100.0, type = PercentageType.BY_AVERAGE)
+            ),
+            expectedPlayersRanking = setOf(
+                PlayerRankingDTO(player1, 1, "2,000 009 1006", 12, 6, 3, 3, 0, 9, 3, 6),
+                PlayerRankingDTO(player3, 2, "1,500 006 1000", 9, 6, 2, 3, 1, 6, 6, 0),
+                PlayerRankingDTO(player2, 3, "1,000 003 1000", 6, 6, 1, 3, 2, 6, 6, 0),
+                PlayerRankingDTO(player5, null, null, 2, 2, 0, 2, 0, 2, 2, 0),
+                PlayerRankingDTO(player4, null, null, 3, 4, 0, 3, 1, 3, 6, -3),
+            ),
+        ),
+        argument(
+            testDescription = "with 80% of the average of all matches by total of players",
+            pointsCriteria = PointCriteriaDTO(
+                victories = 3,
+                draws = 1,
+                defeats = 0,
+                percentage = PercentageDTO(value = 80.0, type = PercentageType.BY_AVERAGE)
+            ),
+            expectedPlayersRanking = setOf(
+                PlayerRankingDTO(player1, 1, "2,000 009 1006", 12, 6, 3, 3, 0, 9, 3, 6),
+                PlayerRankingDTO(player3, 2, "1,500 006 1000", 9, 6, 2, 3, 1, 6, 6, 0),
+                PlayerRankingDTO(player2, 3, "1,000 003 1000", 6, 6, 1, 3, 2, 6, 6, 0),
+                PlayerRankingDTO(player4, 4, "0,750 000 0997", 3, 4, 0, 3, 1, 3, 6, -3),
+                PlayerRankingDTO(player5, null, null, 2, 2, 0, 2, 0, 2, 2, 0),
+            ),
+        ),
     )
 }
 

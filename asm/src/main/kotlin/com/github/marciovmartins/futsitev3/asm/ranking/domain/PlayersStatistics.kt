@@ -6,6 +6,10 @@ data class PlayersStatistics(
     val matches: Int,
     val items: Set<PlayerStatistic>
 ) {
+    private val totalMatches = matches.toDouble()
+    private val sumOfAllPlayerMatches = items.sumOf { it.matches }.toDouble()
+    private val totalOfPlayers = items.count().toDouble()
+
     fun calculateRanking(pointsCriteria: PointCriteria): Ranking {
         val playersRanking = getPlayersRanking(pointsCriteria)
         return Ranking(playersRanking)
@@ -14,7 +18,8 @@ data class PlayersStatistics(
     private fun getPlayersRanking(pointsCriteria: PointCriteria): PlayersRanking {
         var last: PlayerRanking? = null
         return items.asSequence()
-            .map { PlayerRankingStatistics(it, matches, pointsCriteria) }.toList()
+            .map { PlayerRankingStatistics(it, totalMatches, sumOfAllPlayerMatches, totalOfPlayers, pointsCriteria) }
+            .toList()
             .sortedByDescending { playerStatistic -> playerStatistic.classification }
             .mapIndexed { index, entry ->
                 val position = getPosition(last, entry.classification, index)
@@ -38,12 +43,15 @@ data class PlayersStatistics(
 
     private data class PlayerRankingStatistics(
         val playerStatistic: PlayerStatistic,
-        private val matches: Int,
+        private val matches: Double,
+        private val sumOfAllPlayerMatches: Double,
+        private val totalOfPlayers: Double,
         private val pointCriteria: PointCriteria,
     ) {
         private val victoryPoints = playerStatistic.victories * pointCriteria.victories
         private val drawPoints = playerStatistic.draws * pointCriteria.draws
         private val defeatPoints = playerStatistic.defeats * pointCriteria.defeats
+        private val sumOfAllPlayerMatchesByTotalOfPlayers = sumOfAllPlayerMatches / totalOfPlayers
 
         val points = victoryPoints + drawPoints + defeatPoints
 
@@ -57,8 +65,10 @@ data class PlayersStatistics(
 
         private fun isRanked(): Boolean {
             return when (pointCriteria.percentage.type) {
-                Percentage.Type.BY_TOTAL -> playerStatistic.matches >= matches * (pointCriteria.percentage.value * 0.01)
-                Percentage.Type.BY_AVERAGE -> TODO()
+                Percentage.Type.BY_TOTAL ->
+                    playerStatistic.matches >= matches * (pointCriteria.percentage.value * 0.01)
+                Percentage.Type.BY_AVERAGE ->
+                    playerStatistic.matches.toDouble() >= sumOfAllPlayerMatchesByTotalOfPlayers * (pointCriteria.percentage.value * 0.01)
             }
         }
     }
