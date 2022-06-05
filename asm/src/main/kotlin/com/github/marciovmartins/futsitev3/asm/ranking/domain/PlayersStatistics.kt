@@ -11,13 +11,8 @@ data class PlayersStatistics(
     private val totalOfPlayers = items.count().toDouble()
 
     fun calculateRanking(pointsCriteria: PointCriteria): Ranking {
-        val playersRanking = getPlayersRanking(pointsCriteria)
-        return Ranking(playersRanking)
-    }
-
-    private fun getPlayersRanking(pointsCriteria: PointCriteria): PlayersRanking {
         var last: PlayerRanking? = null
-        return items.asSequence()
+        val playersRanking = items.asSequence()
             .map { PlayerRankingStatistics(it, totalMatches, sumOfAllPlayerMatches, totalOfPlayers, pointsCriteria) }
             .toList()
             .sortedByDescending { playerStatistic -> playerStatistic.classification }
@@ -32,6 +27,7 @@ data class PlayersStatistics(
                 last!!
             }.toSet()
             .let(::PlayersRanking)
+        return Ranking(playersRanking)
     }
 
     private fun getPosition(lastPlayerRanking: PlayerRanking?, classification: String?, index: Int): Long? =
