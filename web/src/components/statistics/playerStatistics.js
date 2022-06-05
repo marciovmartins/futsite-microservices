@@ -118,9 +118,12 @@ export function PlayerStatistics() {
                 </div>
                 <div className="col-sm-5">
                     <select name="pointsCriterion.percentage.type"
+                            value={state.data.pointsCriterion.percentage.type}
+                            onChange={(event) => handleInputChange(event, state, setState)}
                             className="form-select"
                             aria-label="percentage criterion">
                         <option value="BY_TOTAL">% of Total Matches for the Period.</option>
+                        <option value="BY_AVERAGE">% of the Average Matches played by all participants.</option>
                     </select>
                 </div>
             </div>
