@@ -5,6 +5,7 @@ import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayersStatistics
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.ProcessedGameDay
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.emptyPlayersStatistics
+import com.github.marciovmartins.futsitev3.asm.shared.domain.LocalDateInterval
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,10 +21,11 @@ class JpaPlayerStatisticsRepositoryIT : BaseIT() {
     fun `retrieve empty player statistics`() {
         // given
         val amateurSoccerGroupId = UUID.randomUUID()
+        val interval = LocalDateInterval(LocalDate.MIN, LocalDate.MAX)
         val expectedPlayersStatistics = PlayersStatistics(matches = 0, items = emptySet())
 
         // when
-        val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId)
+        val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId, interval)
 
         // then
         assertThat(playersStatistics)
@@ -34,6 +36,7 @@ class JpaPlayerStatisticsRepositoryIT : BaseIT() {
     @Test
     fun `persist, retrieve, update and delete one game day date with many player statistics`() {
         // given
+        val interval = LocalDateInterval(LocalDate.MIN, LocalDate.MAX)
         val processedGameDay = ProcessedGameDay(
             gameDayId = UUID.randomUUID(),
             amateurSoccerGroupId = UUID.randomUUID(),
@@ -74,11 +77,17 @@ class JpaPlayerStatisticsRepositoryIT : BaseIT() {
 
         // when
         playerStatisticsRepository.persist(processedGameDay)
-        val playersStatistics = playerStatisticsRepository.findBy(processedGameDay.amateurSoccerGroupId)
+        val playersStatistics = playerStatisticsRepository.findBy(processedGameDay.amateurSoccerGroupId, interval)
         playerStatisticsRepository.persist(processedGameDayToUpdate)
-        val updatedPlayersStatistics = playerStatisticsRepository.findBy(processedGameDay.amateurSoccerGroupId)
+        val updatedPlayersStatistics = playerStatisticsRepository.findBy(
+            processedGameDay.amateurSoccerGroupId,
+            interval
+        )
         playerStatisticsRepository.delete(processedGameDay.gameDayId)
-        val playersStatisticsAfterDeletion = playerStatisticsRepository.findBy(processedGameDay.amateurSoccerGroupId)
+        val playersStatisticsAfterDeletion = playerStatisticsRepository.findBy(
+            processedGameDay.amateurSoccerGroupId,
+            interval
+        )
 
         // then
         assertThat(playersStatistics)

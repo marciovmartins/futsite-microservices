@@ -6,10 +6,12 @@ import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatisticsRe
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayersStatistics
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.defaultProcessedGameDay
 import com.github.marciovmartins.futsitev3.asm.ranking.infrastructure.FakePlayerStatisticsRepository
+import com.github.marciovmartins.futsitev3.asm.shared.domain.LocalDateInterval
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 import java.util.UUID
 
 class UpdatePlayerStaticTest {
@@ -24,6 +26,8 @@ class UpdatePlayerStaticTest {
         val player2: UUID = UUID.randomUUID()
         val player3: UUID = UUID.randomUUID()
         val player4: UUID = UUID.randomUUID()
+
+        val interval = LocalDateInterval(LocalDate.MIN, LocalDate.MAX)
 
         val processedGameDay = defaultProcessedGameDay(player1, player2, player3, player4)
         playerStatisticRepository.persist(processedGameDay)
@@ -40,9 +44,12 @@ class UpdatePlayerStaticTest {
         every { gameDayRepository.findBy(processedGameDay.gameDayId) } returns processedGameDay.copy(playersStatistics = expectedPlayersStatistics)
 
         // when
-        val originalPlayersStatistics = playerStatisticRepository.findBy(processedGameDay.amateurSoccerGroupId)
+        val originalPlayersStatistics = playerStatisticRepository.findBy(
+            processedGameDay.amateurSoccerGroupId,
+            interval
+        )
         updatePlayerStatistic.with(processedGameDay.gameDayId)
-        val updatedPlayersStatistics = playerStatisticRepository.findBy(processedGameDay.amateurSoccerGroupId)
+        val updatedPlayersStatistics = playerStatisticRepository.findBy(processedGameDay.amateurSoccerGroupId, interval)
 
         // then
         assertThat(updatedPlayersStatistics)

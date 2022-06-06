@@ -4,6 +4,7 @@ import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatisticsRepository
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayersStatistics
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.ProcessedGameDay
+import com.github.marciovmartins.futsitev3.asm.shared.domain.LocalDateInterval
 import java.util.UUID
 
 private val emptyPlayerStatistic = { playerId: UUID -> PlayerStatistic(playerId, 0, 0, 0, 0, 0, 0) }
@@ -16,8 +17,10 @@ class FakePlayerStatisticsRepository : PlayerStatisticsRepository {
         rows[processedGameDay.gameDayId] = (processedGameDay)
     }
 
-    override fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics {
-        val collection = rows.filterValues { it.amateurSoccerGroupId == amateurSoccerGroupId }.values.toSet()
+    override fun findBy(amateurSoccerGroupId: UUID, interval: LocalDateInterval): PlayersStatistics {
+        val collection = rows.filterValues {
+            it.amateurSoccerGroupId == amateurSoccerGroupId && interval.contains(it.date)
+        }.values.toSet()
         if (collection.isEmpty()) return PlayersStatistics(0, emptySet())
 
         val playersStatistics = collection.map { it.playersStatistics }.reduce(FakePlayerStatisticsRepository::add)

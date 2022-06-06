@@ -5,10 +5,12 @@ import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayersStatistics
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.defaultProcessedGameDay
 import com.github.marciovmartins.futsitev3.asm.ranking.infrastructure.FakePlayerStatisticsRepository
+import com.github.marciovmartins.futsitev3.asm.shared.domain.LocalDateInterval
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 import java.util.UUID
 
 class GetPlayerStatisticTest {
@@ -23,6 +25,8 @@ class GetPlayerStatisticTest {
         val player2: UUID = UUID.randomUUID()
         val player3: UUID = UUID.randomUUID()
         val player4: UUID = UUID.randomUUID()
+
+        val interval = LocalDateInterval(LocalDate.MIN, LocalDate.MAX)
 
         val processedGameDay = defaultProcessedGameDay(player1, player2, player3, player4)
         every { gameDayRepository.findBy(processedGameDay.gameDayId) } returns processedGameDay
@@ -39,7 +43,7 @@ class GetPlayerStatisticTest {
 
         // when
         getPlayerStatistic.from(processedGameDay.gameDayId)
-        val playersStatistics = playerStatisticsRepository.findBy(processedGameDay.amateurSoccerGroupId)
+        val playersStatistics = playerStatisticsRepository.findBy(processedGameDay.amateurSoccerGroupId, interval)
 
         // then
         assertThat(playersStatistics).isEqualTo(expectedPlayersStatistics)

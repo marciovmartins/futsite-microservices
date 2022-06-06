@@ -11,7 +11,7 @@ import java.util.UUID
 @Service
 class CalculateRanking(private val playerStatisticsRepository: PlayerStatisticsRepository) {
     fun with(amateurSoccerGroupId: UUID, interval: LocalDateInterval, pointsCriterion: PointCriteriaDTO): RankingDTO {
-        val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId)
+        val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId, interval)
         val ranking = playersStatistics.calculateRanking(pointsCriterion.toDomain())
         return ranking.toDTO()
     }

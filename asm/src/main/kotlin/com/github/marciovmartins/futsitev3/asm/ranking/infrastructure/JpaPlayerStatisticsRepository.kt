@@ -4,6 +4,7 @@ import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatisticsRepository
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayersStatistics
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.ProcessedGameDay
+import com.github.marciovmartins.futsitev3.asm.shared.domain.LocalDateInterval
 import org.hibernate.annotations.SQLInsert
 import org.hibernate.annotations.Type
 import org.springframework.data.jpa.repository.Query
@@ -45,7 +46,7 @@ class JpaPlayerStatisticsRepository(
         playerStatisticDAO.saveAll(playerStatisticEntities)
     }
 
-    override fun findBy(amateurSoccerGroupId: UUID): PlayersStatistics {
+    override fun findBy(amateurSoccerGroupId: UUID, interval: LocalDateInterval): PlayersStatistics {
         val matches = matchesDAO.findNumberOfMatchesByAmateurSoccerGroupId(amateurSoccerGroupId) ?: 0
         val items = playerStatisticDAO.findByAmateurSoccerGroupId(amateurSoccerGroupId)
         return PlayersStatistics(matches = matches.toInt(), items = items)
