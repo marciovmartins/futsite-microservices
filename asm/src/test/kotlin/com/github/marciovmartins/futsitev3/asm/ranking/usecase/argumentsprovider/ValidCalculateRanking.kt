@@ -186,6 +186,24 @@ object ValidCalculateRanking : ArgumentsProvider {
                 PlayerRankingDTO(player5, null, null, 2, 2, 0, 2, 0, 2, 2, 0),
             ),
         ),
+        argument(
+            testDescription = "with interval",
+            interval = LocalDateInterval(may2nd2021, may4th2021),
+            processedGameDays = setOf(
+                may1st2021ProcessedGameDay,
+                may2nd2021ProcessedGameDay,
+                may3rd2021ProcessedGameDay,
+                may4th2021ProcessedGameDay,
+                may5th2021ProcessedGameDay,
+            ),
+            expectedPlayersRanking = setOf(
+                PlayerRankingDTO(player1, 1, "1,800 006 1003", 9, 5, 2, 3, 0, 6, 3, 3),
+                PlayerRankingDTO(player3, 1, "1,800 006 1003", 9, 5, 2, 3, 0, 6, 3, 3),
+                PlayerRankingDTO(player4, 3, "1,000 000 1000", 3, 3, 0, 3, 0, 3, 3, 0),
+                PlayerRankingDTO(player5, 3, "1,000 000 1000", 2, 2, 0, 2, 0, 2, 2, 0),
+                PlayerRankingDTO(player2, 5, "0,600 000 0997", 3, 5, 0, 3, 2, 3, 6, -3),
+            ),
+        )
     )
 }
 
@@ -246,6 +264,8 @@ private val player5 = UUID.randomUUID()
 val may1st2021: LocalDate = LocalDate.of(2021, 5, 1)
 val may2nd2021: LocalDate = LocalDate.of(2021, 5, 2)
 val may3rd2021: LocalDate = LocalDate.of(2021, 5, 3)
+val may4th2021: LocalDate = LocalDate.of(2021, 5, 4)
+val may5th2021: LocalDate = LocalDate.of(2021, 5, 5)
 
 private val may1st2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
     ProcessedGameDay(
@@ -293,6 +313,40 @@ private val may3rd2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
                 PlayerStatistic(player2, 2, 0, 2, 0, 2, 2),
                 PlayerStatistic(player3, 2, 0, 2, 0, 2, 2),
                 PlayerStatistic(player5, 2, 0, 2, 0, 2, 2),
+            ),
+        ),
+    )
+}
+
+private val may4th2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
+    ProcessedGameDay(
+        gameDayId = UUID.randomUUID(),
+        amateurSoccerGroupId = amateurSoccerGroupId,
+        date = may4th2021,
+        playersStatistics = PlayersStatistics(
+            matches = 2,
+            items = setOf(
+                PlayerStatistic(player1, 1, 0, 1, 0, 1, 1),
+                PlayerStatistic(player2, 1, 0, 1, 0, 1, 1),
+                PlayerStatistic(player3, 1, 0, 1, 0, 1, 1),
+                PlayerStatistic(player4, 1, 0, 1, 0, 1, 1),
+            ),
+        ),
+    )
+}
+
+private val may5th2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
+    ProcessedGameDay(
+        gameDayId = UUID.randomUUID(),
+        amateurSoccerGroupId = amateurSoccerGroupId,
+        date = may5th2021,
+        playersStatistics = PlayersStatistics(
+            matches = 2,
+            items = setOf(
+                PlayerStatistic(player1, 1, 1, 0, 0, 2, 1),
+                PlayerStatistic(player2, 1, 0, 0, 0, 1, 2),
+                PlayerStatistic(player3, 1, 0, 0, 0, 1, 2),
+                PlayerStatistic(player5, 1, 1, 0, 0, 2, 1),
             ),
         ),
     )
