@@ -4,12 +4,13 @@ import com.github.marciovmartins.futsitev3.asm.ranking.domain.Percentage
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatisticsRepository
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PointCriteria
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.Ranking
+import com.github.marciovmartins.futsitev3.asm.shared.domain.LocalDateInterval
 import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
 class CalculateRanking(private val playerStatisticsRepository: PlayerStatisticsRepository) {
-    fun with(amateurSoccerGroupId: UUID, pointsCriterion: PointCriteriaDTO): RankingDTO {
+    fun with(amateurSoccerGroupId: UUID, interval: LocalDateInterval, pointsCriterion: PointCriteriaDTO): RankingDTO {
         val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId)
         val ranking = playersStatistics.calculateRanking(pointsCriterion.toDomain())
         return ranking.toDTO()

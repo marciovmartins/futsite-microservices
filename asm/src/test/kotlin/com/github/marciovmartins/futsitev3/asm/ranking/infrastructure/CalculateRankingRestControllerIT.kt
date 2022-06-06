@@ -36,6 +36,7 @@ class CalculateRankingRestControllerIT : BaseIT() {
         every {
             calculateRanking.with(
                 amateurSoccerGroupId,
+                any(),
                 rankingCriteriaDTO.pointsCriterion.let {
                     PointCriteriaDTO(
                         victories = it.victories,
@@ -99,6 +100,7 @@ class CalculateRankingRestControllerIT : BaseIT() {
         every {
             calculateRanking.with(
                 amateurSoccerGroupId,
+                any(),
                 rankingCriteriaDTO.pointsCriterion.let {
                     PointCriteriaDTO(
                         victories = it.victories,

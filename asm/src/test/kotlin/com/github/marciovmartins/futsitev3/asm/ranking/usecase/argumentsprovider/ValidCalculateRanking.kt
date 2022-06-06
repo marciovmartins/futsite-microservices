@@ -8,6 +8,7 @@ import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PercentageType
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PlayerRankingDTO
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PointCriteriaDTO
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.RankingDTO
+import com.github.marciovmartins.futsitev3.asm.shared.domain.LocalDateInterval
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
@@ -191,6 +192,7 @@ object ValidCalculateRanking : ArgumentsProvider {
 private fun argument(
     testDescription: String,
     amateurSoccerGroupId: UUID = UUID.randomUUID(),
+    interval: LocalDateInterval = LocalDateInterval(LocalDate.MIN, LocalDate.MAX),
     processedGameDays: Set<(UUID) -> ProcessedGameDay> = setOf(
         may1st2021ProcessedGameDay,
         may2nd2021ProcessedGameDay,
@@ -210,6 +212,7 @@ private fun argument(
 ) = Arguments.of(
     testDescription,
     amateurSoccerGroupId,
+    interval,
     processedGameDays.map { it(amateurSoccerGroupId) }.toSet(),
     matches,
     pointsCriteria,
