@@ -2,6 +2,7 @@ package com.github.marciovmartins.futsitev3.asm.ranking.infrastructure
 
 import com.github.marciovmartins.futsitev3.asm.BaseIT
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.CalculateRanking
+import com.github.marciovmartins.futsitev3.asm.ranking.usecase.DateIntervalDTO
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PercentageDTO
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PercentageType
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PlayerRankingDTO
@@ -11,6 +12,7 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 import java.util.UUID
 
 class CalculateRankingRestControllerIT : BaseIT() {
@@ -21,8 +23,13 @@ class CalculateRankingRestControllerIT : BaseIT() {
     fun `with ok 200`() {
         // given
         val amateurSoccerGroupId = UUID.randomUUID()
+        val interval = TestRankingCriteriaDTO.TestLocalDateInterval(
+            from = LocalDate.now(),
+            to = LocalDate.now(),
+        )
         val rankingCriteriaDTO = TestRankingCriteriaDTO(
             amateurSoccerGroupId = amateurSoccerGroupId,
+            interval = interval,
             pointsCriterion = TestRankingCriteriaDTO.PointsCriterionDTO(victories = 3, draws = 1, defeats = 0)
         )
         val expectedRankingDTO = RankingDTO(
@@ -36,7 +43,7 @@ class CalculateRankingRestControllerIT : BaseIT() {
         every {
             calculateRanking.with(
                 amateurSoccerGroupId,
-                any(),
+                DateIntervalDTO(interval.from, interval.to),
                 rankingCriteriaDTO.pointsCriterion.let {
                     PointCriteriaDTO(
                         victories = it.victories,
@@ -96,11 +103,15 @@ class CalculateRankingRestControllerIT : BaseIT() {
     fun `with internal server error 5xx`() {
         // given
         val amateurSoccerGroupId = UUID.randomUUID()
-        val rankingCriteriaDTO = TestRankingCriteriaDTO(amateurSoccerGroupId = amateurSoccerGroupId)
+        val dateInterval = TestRankingCriteriaDTO.TestLocalDateInterval(LocalDate.now(), LocalDate.now())
+        val rankingCriteriaDTO = TestRankingCriteriaDTO(
+            amateurSoccerGroupId = amateurSoccerGroupId,
+            interval = dateInterval
+        )
         every {
             calculateRanking.with(
                 amateurSoccerGroupId,
-                any(),
+                DateIntervalDTO(dateInterval.from, dateInterval.to),
                 rankingCriteriaDTO.pointsCriterion.let {
                     PointCriteriaDTO(
                         victories = it.victories,

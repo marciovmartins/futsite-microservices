@@ -6,12 +6,13 @@ import com.github.marciovmartins.futsitev3.asm.ranking.domain.PointCriteria
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.Ranking
 import com.github.marciovmartins.futsitev3.asm.shared.domain.LocalDateInterval
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 import java.util.UUID
 
 @Service
 class CalculateRanking(private val playerStatisticsRepository: PlayerStatisticsRepository) {
-    fun with(amateurSoccerGroupId: UUID, interval: LocalDateInterval, pointsCriterion: PointCriteriaDTO): RankingDTO {
-        val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId, interval)
+    fun with(amateurSoccerGroupId: UUID, interval: DateIntervalDTO, pointsCriterion: PointCriteriaDTO): RankingDTO {
+        val playersStatistics = playerStatisticsRepository.findBy(amateurSoccerGroupId, interval.toDomain())
         val ranking = playersStatistics.calculateRanking(pointsCriterion.toDomain())
         return ranking.toDTO()
     }
@@ -33,6 +34,11 @@ data class PlayerRankingDTO(
     val goalsInFavor: Long,
     val goalsAgainst: Long,
     val goalsBalance: Long,
+)
+
+data class DateIntervalDTO(
+    val from: LocalDate,
+    val to: LocalDate,
 )
 
 data class PointCriteriaDTO(
@@ -80,6 +86,11 @@ private fun Ranking.toDTO() = RankingDTO(
             )
         }
         .toSet()
+)
+
+private fun DateIntervalDTO.toDomain() = LocalDateInterval(
+    beginInclusive = this.from,
+    endInclusive = this.to,
 )
 
 private fun PointCriteriaDTO.toDomain() = PointCriteria(

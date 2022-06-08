@@ -3,7 +3,6 @@ package com.github.marciovmartins.futsitev3.asm.ranking.usecase
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.ProcessedGameDay
 import com.github.marciovmartins.futsitev3.asm.ranking.infrastructure.FakePlayerStatisticsRepository
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.argumentsprovider.ValidCalculateRanking
-import com.github.marciovmartins.futsitev3.asm.shared.domain.LocalDateInterval
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
@@ -15,7 +14,7 @@ class CalculateRankingTest {
     fun `with different parameters`(
         @Suppress("UNUSED_PARAMETER") testDescription: String,
         amateurSoccerGroupId: UUID,
-        interval: LocalDateInterval,
+        interval: DateIntervalDTO,
         processedGameDays: Set<ProcessedGameDay>,
         matches: Int,
         pointsCriteria: PointCriteriaDTO,

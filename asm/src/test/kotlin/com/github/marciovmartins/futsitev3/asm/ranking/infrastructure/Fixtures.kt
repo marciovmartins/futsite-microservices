@@ -1,11 +1,18 @@
 package com.github.marciovmartins.futsitev3.asm.ranking.infrastructure
 
+import java.time.LocalDate
 import java.util.UUID
 
 data class TestRankingCriteriaDTO(
     val amateurSoccerGroupId: UUID,
+    val interval: TestLocalDateInterval,
     val pointsCriterion: PointsCriterionDTO = PointsCriterionDTO()
 ) {
+    data class TestLocalDateInterval(
+        val from: LocalDate,
+        val to: LocalDate,
+    )
+
     data class PointsCriterionDTO(
         val victories: Long = 3,
         val draws: Long = 1,

@@ -17,12 +17,12 @@ import com.github.marciovmartins.futsitev3.asm.ranking.domain.player2
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.player3
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.player4
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.player5
+import com.github.marciovmartins.futsitev3.asm.ranking.usecase.DateIntervalDTO
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PercentageDTO
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PercentageType
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PlayerRankingDTO
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PointCriteriaDTO
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.RankingDTO
-import com.github.marciovmartins.futsitev3.asm.shared.domain.LocalDateInterval
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
@@ -202,7 +202,7 @@ object ValidCalculateRanking : ArgumentsProvider {
         ),
         argument(
             testDescription = "with interval",
-            interval = LocalDateInterval(may2nd2021, may4th2021),
+            interval = DateIntervalDTO(may2nd2021, may4th2021),
             processedGameDays = setOf(
                 may1st2021ProcessedGameDay,
                 may2nd2021ProcessedGameDay,
@@ -224,7 +224,7 @@ object ValidCalculateRanking : ArgumentsProvider {
 private fun argument(
     testDescription: String,
     amateurSoccerGroupId: UUID = UUID.randomUUID(),
-    interval: LocalDateInterval = LocalDateInterval(LocalDate.MIN, LocalDate.MAX),
+    interval: DateIntervalDTO = DateIntervalDTO(LocalDate.MIN, LocalDate.MAX),
     processedGameDays: Set<(UUID) -> ProcessedGameDay> = setOf(
         may1st2021ProcessedGameDay,
         may2nd2021ProcessedGameDay,
