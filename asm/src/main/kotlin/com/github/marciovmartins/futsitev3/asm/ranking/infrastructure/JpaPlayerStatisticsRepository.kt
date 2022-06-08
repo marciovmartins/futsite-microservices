@@ -47,8 +47,16 @@ class JpaPlayerStatisticsRepository(
     }
 
     override fun findBy(amateurSoccerGroupId: UUID, interval: LocalDateInterval): PlayersStatistics {
-        val matches = matchesDAO.findNumberOfMatchesByAmateurSoccerGroupId(amateurSoccerGroupId) ?: 0
-        val items = playerStatisticDAO.findByAmateurSoccerGroupId(amateurSoccerGroupId)
+        val matches = matchesDAO.findNumberOfMatchesByAmateurSoccerGroupIdAndGameDayDateBetween(
+            amateurSoccerGroupId,
+            interval.beginInclusive,
+            interval.endInclusive
+        ) ?: 0
+        val items = playerStatisticDAO.findByAmateurSoccerGroupIdAndGameDayBetween(
+            amateurSoccerGroupId,
+            interval.beginInclusive,
+            interval.endInclusive
+        )
         return PlayersStatistics(matches = matches.toInt(), items = items)
     }
 
@@ -64,10 +72,15 @@ class JpaPlayerStatisticsRepository(
             SELECT SUM(matches)
             FROM ranking_matches
             WHERE amateurSoccerGroupId = :amateurSoccerGroupId
+                AND (gameDayDate BETWEEN :dateStart AND :dateEnd)
             GROUP BY amateurSoccerGroupId
         """
         )
-        fun findNumberOfMatchesByAmateurSoccerGroupId(@Param("amateurSoccerGroupId") amateurSoccerGroupId: UUID): Long?
+        fun findNumberOfMatchesByAmateurSoccerGroupIdAndGameDayDateBetween(
+            @Param("amateurSoccerGroupId") amateurSoccerGroupId: UUID,
+            @Param("dateStart") dateStart: LocalDate,
+            @Param("dateEnd") dateEnd: LocalDate
+        ): Long?
 
         fun deleteByGameDayId(gameDayId: UUID)
     }
@@ -122,10 +135,15 @@ class JpaPlayerStatisticsRepository(
                 )
             FROM ranking_players_statistics
             WHERE amateurSoccerGroupId = :amateurSoccerGroupId
+                AND (gameDayDate BETWEEN :dateStart AND :dateEnd)
             GROUP BY playerId
         """
         )
-        fun findByAmateurSoccerGroupId(@Param("amateurSoccerGroupId") amateurSoccerGroupId: UUID): Set<PlayerStatistic>
+        fun findByAmateurSoccerGroupIdAndGameDayBetween(
+            @Param("amateurSoccerGroupId") amateurSoccerGroupId: UUID,
+            @Param("dateStart") dateStart: LocalDate,
+            @Param("dateEnd") dateEnd: LocalDate
+        ): Set<PlayerStatistic>
 
         fun deleteByGameDayId(gameDayId: UUID)
     }

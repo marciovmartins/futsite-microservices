@@ -86,3 +86,100 @@ fun defaultGameDay(
 )
 
 val emptyPlayersStatistics = PlayersStatistics(matches = 0, items = emptySet())
+
+val player1: UUID = UUID.randomUUID()
+val player2: UUID = UUID.randomUUID()
+val player3: UUID = UUID.randomUUID()
+val player4: UUID = UUID.randomUUID()
+val player5: UUID = UUID.randomUUID()
+
+val may1st2021: LocalDate = LocalDate.of(2021, 5, 1)
+val may2nd2021: LocalDate = LocalDate.of(2021, 5, 2)
+val may3rd2021: LocalDate = LocalDate.of(2021, 5, 3)
+val may4th2021: LocalDate = LocalDate.of(2021, 5, 4)
+val may5th2021: LocalDate = LocalDate.of(2021, 5, 5)
+
+val may1st2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
+    ProcessedGameDay(
+        gameDayId = UUID.randomUUID(),
+        amateurSoccerGroupId = amateurSoccerGroupId,
+        date = may1st2021,
+        playersStatistics = PlayersStatistics(
+            matches = 2,
+            items = setOf(
+                PlayerStatistic(player1, 2, 1, 1, 0, 4, 1),
+                PlayerStatistic(player2, 2, 1, 1, 0, 4, 1),
+                PlayerStatistic(player3, 2, 0, 1, 1, 1, 4),
+                PlayerStatistic(player4, 2, 0, 1, 1, 1, 4),
+            ),
+        ),
+    )
+}
+
+val may2nd2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
+    ProcessedGameDay(
+        gameDayId = UUID.randomUUID(),
+        amateurSoccerGroupId = amateurSoccerGroupId,
+        date = may2nd2021,
+        playersStatistics = PlayersStatistics(
+            matches = 2,
+            items = setOf(
+                PlayerStatistic(player1, 2, 2, 0, 0, 3, 0),
+                PlayerStatistic(player2, 2, 0, 0, 2, 0, 3),
+                PlayerStatistic(player3, 2, 2, 0, 0, 3, 0),
+                PlayerStatistic(player4, 2, 0, 2, 0, 2, 2),
+            ),
+        ),
+    )
+}
+
+val may3rd2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
+    ProcessedGameDay(
+        gameDayId = UUID.randomUUID(),
+        amateurSoccerGroupId = amateurSoccerGroupId,
+        date = may3rd2021,
+        playersStatistics = PlayersStatistics(
+            matches = 2,
+            items = setOf(
+                PlayerStatistic(player1, 2, 0, 2, 0, 2, 2),
+                PlayerStatistic(player2, 2, 0, 2, 0, 2, 2),
+                PlayerStatistic(player3, 2, 0, 2, 0, 2, 2),
+                PlayerStatistic(player5, 2, 0, 2, 0, 2, 2),
+            ),
+        ),
+    )
+}
+
+val may4th2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
+    ProcessedGameDay(
+        gameDayId = UUID.randomUUID(),
+        amateurSoccerGroupId = amateurSoccerGroupId,
+        date = may4th2021,
+        playersStatistics = PlayersStatistics(
+            matches = 2,
+            items = setOf(
+                PlayerStatistic(player1, 1, 0, 1, 0, 1, 1),
+                PlayerStatistic(player2, 1, 0, 1, 0, 1, 1),
+                PlayerStatistic(player3, 1, 0, 1, 0, 1, 1),
+                PlayerStatistic(player4, 1, 0, 1, 0, 1, 1),
+            ),
+        ),
+    )
+}
+
+val may5th2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
+    ProcessedGameDay(
+        gameDayId = UUID.randomUUID(),
+        amateurSoccerGroupId = amateurSoccerGroupId,
+        date = may5th2021,
+        playersStatistics = PlayersStatistics(
+            matches = 2,
+            items = setOf(
+                PlayerStatistic(player1, 1, 1, 0, 0, 2, 1),
+                PlayerStatistic(player2, 1, 0, 0, 0, 1, 2),
+                PlayerStatistic(player3, 1, 0, 0, 0, 1, 2),
+                PlayerStatistic(player5, 1, 1, 0, 0, 2, 1),
+            ),
+        ),
+    )
+}

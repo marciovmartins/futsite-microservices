@@ -3,6 +3,20 @@ package com.github.marciovmartins.futsitev3.asm.ranking.usecase.argumentsprovide
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayerStatistic
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.PlayersStatistics
 import com.github.marciovmartins.futsitev3.asm.ranking.domain.ProcessedGameDay
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.may1st2021
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.may1st2021ProcessedGameDay
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.may2nd2021
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.may2nd2021ProcessedGameDay
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.may3rd2021
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.may3rd2021ProcessedGameDay
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.may4th2021
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.may4th2021ProcessedGameDay
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.may5th2021ProcessedGameDay
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.player1
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.player2
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.player3
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.player4
+import com.github.marciovmartins.futsitev3.asm.ranking.domain.player5
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PercentageDTO
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PercentageType
 import com.github.marciovmartins.futsitev3.asm.ranking.usecase.PlayerRankingDTO
@@ -254,100 +268,3 @@ private fun processedGameDaysArgument(
 ): Set<(UUID) -> ProcessedGameDay> = playersStatisticsByDate.map {
     processedGameDayArgument(date = it.first, playersStatistics = it.second)
 }.toSet()
-
-private val player1 = UUID.randomUUID()
-private val player2 = UUID.randomUUID()
-private val player3 = UUID.randomUUID()
-private val player4 = UUID.randomUUID()
-private val player5 = UUID.randomUUID()
-
-val may1st2021: LocalDate = LocalDate.of(2021, 5, 1)
-val may2nd2021: LocalDate = LocalDate.of(2021, 5, 2)
-val may3rd2021: LocalDate = LocalDate.of(2021, 5, 3)
-val may4th2021: LocalDate = LocalDate.of(2021, 5, 4)
-val may5th2021: LocalDate = LocalDate.of(2021, 5, 5)
-
-private val may1st2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
-    ProcessedGameDay(
-        gameDayId = UUID.randomUUID(),
-        amateurSoccerGroupId = amateurSoccerGroupId,
-        date = may1st2021,
-        playersStatistics = PlayersStatistics(
-            matches = 2,
-            items = setOf(
-                PlayerStatistic(player1, 2, 1, 1, 0, 4, 1),
-                PlayerStatistic(player2, 2, 1, 1, 0, 4, 1),
-                PlayerStatistic(player3, 2, 0, 1, 1, 1, 4),
-                PlayerStatistic(player4, 2, 0, 1, 1, 1, 4),
-            ),
-        ),
-    )
-}
-
-private val may2nd2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
-    ProcessedGameDay(
-        gameDayId = UUID.randomUUID(),
-        amateurSoccerGroupId = amateurSoccerGroupId,
-        date = may2nd2021,
-        playersStatistics = PlayersStatistics(
-            matches = 2,
-            items = setOf(
-                PlayerStatistic(player1, 2, 2, 0, 0, 3, 0),
-                PlayerStatistic(player2, 2, 0, 0, 2, 0, 3),
-                PlayerStatistic(player3, 2, 2, 0, 0, 3, 0),
-                PlayerStatistic(player4, 2, 0, 2, 0, 2, 2),
-            ),
-        ),
-    )
-}
-
-private val may3rd2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
-    ProcessedGameDay(
-        gameDayId = UUID.randomUUID(),
-        amateurSoccerGroupId = amateurSoccerGroupId,
-        date = may3rd2021,
-        playersStatistics = PlayersStatistics(
-            matches = 2,
-            items = setOf(
-                PlayerStatistic(player1, 2, 0, 2, 0, 2, 2),
-                PlayerStatistic(player2, 2, 0, 2, 0, 2, 2),
-                PlayerStatistic(player3, 2, 0, 2, 0, 2, 2),
-                PlayerStatistic(player5, 2, 0, 2, 0, 2, 2),
-            ),
-        ),
-    )
-}
-
-private val may4th2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
-    ProcessedGameDay(
-        gameDayId = UUID.randomUUID(),
-        amateurSoccerGroupId = amateurSoccerGroupId,
-        date = may4th2021,
-        playersStatistics = PlayersStatistics(
-            matches = 2,
-            items = setOf(
-                PlayerStatistic(player1, 1, 0, 1, 0, 1, 1),
-                PlayerStatistic(player2, 1, 0, 1, 0, 1, 1),
-                PlayerStatistic(player3, 1, 0, 1, 0, 1, 1),
-                PlayerStatistic(player4, 1, 0, 1, 0, 1, 1),
-            ),
-        ),
-    )
-}
-
-private val may5th2021ProcessedGameDay = { amateurSoccerGroupId: UUID ->
-    ProcessedGameDay(
-        gameDayId = UUID.randomUUID(),
-        amateurSoccerGroupId = amateurSoccerGroupId,
-        date = may5th2021,
-        playersStatistics = PlayersStatistics(
-            matches = 2,
-            items = setOf(
-                PlayerStatistic(player1, 1, 1, 0, 0, 2, 1),
-                PlayerStatistic(player2, 1, 0, 0, 0, 1, 2),
-                PlayerStatistic(player3, 1, 0, 0, 0, 1, 2),
-                PlayerStatistic(player5, 1, 1, 0, 0, 2, 1),
-            ),
-        ),
-    )
-}
