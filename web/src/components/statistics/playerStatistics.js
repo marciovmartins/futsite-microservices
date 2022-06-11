@@ -16,7 +16,8 @@ export function PlayerStatistics() {
                 to: today
             },
             ranking: {
-                playersRanking: []
+                playersRanking: [],
+                minimumMatches: 0
             },
             pointsCriterion: {
                 victories: 3,
@@ -36,6 +37,8 @@ export function PlayerStatistics() {
 
     return <main>
         <h1>Player Statistics</h1>
+
+        The number of matches must be greater than: {state.data.ranking.minimumMatches}
 
         <table className="table">
             <thead>
@@ -197,7 +200,8 @@ function calculateStatistics(state) {
         body: JSON.stringify(requestBody)
     }).then(response => response.json())
         .then(json => ({
-            playersRanking: json.playersRanking
+            playersRanking: json.playersRanking,
+            minimumMatches: json.minimumMatches,
         }));
 }
 
