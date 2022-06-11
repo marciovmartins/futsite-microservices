@@ -38,7 +38,8 @@ class CalculateRankingRestControllerIT : BaseIT() {
                 PlayerRankingDTO(player2, 1, "3,000 003 1005", 3, 1, 1, 0, 0, 8, 3, 5),
                 PlayerRankingDTO(player3, 3, "0,000 000 0995", 0, 1, 0, 0, 1, 3, 8, -5),
                 PlayerRankingDTO(player4, 3, "0,000 000 0995", 0, 1, 0, 0, 1, 3, 8, -5),
-            )
+            ),
+            minimumMatches = 0.1,
         )
         every {
             calculateRanking.with(

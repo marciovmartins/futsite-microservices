@@ -11,9 +11,14 @@ data class PlayersStatistics(
     private val totalOfPlayers = items.count().toDouble()
 
     fun calculateRanking(pointsCriteria: PointCriteria): Ranking {
+        val minimumMatches = when (pointsCriteria.percentage.type) {
+            Percentage.Type.BY_TOTAL -> matches * (pointsCriteria.percentage.value * 0.01)
+            Percentage.Type.BY_AVERAGE -> (sumOfAllPlayerMatches / totalOfPlayers) * (pointsCriteria.percentage.value * 0.01)
+        }
+
         var last: PlayerRanking? = null
         val playersRanking = items.asSequence()
-            .map { PlayerRankingStatistics(it, totalMatches, sumOfAllPlayerMatches, totalOfPlayers, pointsCriteria) }
+            .map { PlayerRankingStatistics(it, totalMatches, minimumMatches, pointsCriteria) }
             .toList()
             .sortedByDescending { playerStatistic -> playerStatistic.classification }
             .mapIndexed { index, entry ->
@@ -27,7 +32,7 @@ data class PlayersStatistics(
                 last!!
             }.toSet()
             .let(::PlayersRanking)
-        return Ranking(playersRanking)
+        return Ranking(playersRanking, minimumMatches)
     }
 
     private fun getPosition(lastPlayerRanking: PlayerRanking?, classification: String?, index: Int): Long? =
@@ -40,33 +45,22 @@ data class PlayersStatistics(
     private data class PlayerRankingStatistics(
         val playerStatistic: PlayerStatistic,
         private val matches: Double,
-        private val sumOfAllPlayerMatches: Double,
-        private val totalOfPlayers: Double,
+        private val minimumMatches: Double,
         private val pointCriteria: PointCriteria,
     ) {
         private val victoryPoints = playerStatistic.victories * pointCriteria.victories
         private val drawPoints = playerStatistic.draws * pointCriteria.draws
         private val defeatPoints = playerStatistic.defeats * pointCriteria.defeats
-        private val sumOfAllPlayerMatchesByTotalOfPlayers = sumOfAllPlayerMatches / totalOfPlayers
 
         val points = victoryPoints + drawPoints + defeatPoints
 
-        val classification: String? = if (isRanked()) {
+        val classification: String? = if (playerStatistic.matches >= minimumMatches) {
             "%.3f %03d %04d".format(
                 points.toFloat().div(playerStatistic.matches),
                 playerStatistic.victories * pointCriteria.victories,
                 1000 + (playerStatistic.goalsInFavor - playerStatistic.goalsAgainst)
             )
         } else null
-
-        private fun isRanked(): Boolean {
-            return when (pointCriteria.percentage.type) {
-                Percentage.Type.BY_TOTAL ->
-                    playerStatistic.matches >= matches * (pointCriteria.percentage.value * 0.01)
-                Percentage.Type.BY_AVERAGE ->
-                    playerStatistic.matches.toDouble() >= sumOfAllPlayerMatchesByTotalOfPlayers * (pointCriteria.percentage.value * 0.01)
-            }
-        }
     }
 }
 

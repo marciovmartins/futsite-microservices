@@ -20,6 +20,7 @@ class CalculateRanking(private val playerStatisticsRepository: PlayerStatisticsR
 
 data class RankingDTO(
     val playersRanking: Set<PlayerRankingDTO>,
+    val minimumMatches: Double,
 )
 
 data class PlayerRankingDTO(
@@ -85,7 +86,8 @@ private fun Ranking.toDTO() = RankingDTO(
                 goalsBalance = it.statistics.goalsBalance,
             )
         }
-        .toSet()
+        .toSet(),
+    minimumMatches = this.minimumMatches,
 )
 
 private fun DateIntervalDTO.toDomain() = LocalDateInterval(

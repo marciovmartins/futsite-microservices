@@ -33,10 +33,10 @@ import java.util.stream.Stream
 object ValidCalculateRanking : ArgumentsProvider {
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> = Stream.of(
         argument(
-            testDescription = "with different parameters",
+            testDescription = "with empty processed game days",
             processedGameDays = emptySet(),
-            matches = 0,
             expectedPlayersRanking = emptySet(),
+            minimumMatches = 0.0,
         ),
         argument(
             testDescription = "with one game day with one match",
@@ -53,13 +53,13 @@ object ValidCalculateRanking : ArgumentsProvider {
                     ),
                 ),
             ),
-            matches = 1,
             expectedPlayersRanking = setOf(
                 PlayerRankingDTO(player1, 1, "3,000 003 1005", 3, 1, 1, 0, 0, 8, 3, 5),
                 PlayerRankingDTO(player2, 1, "3,000 003 1005", 3, 1, 1, 0, 0, 8, 3, 5),
                 PlayerRankingDTO(player3, 3, "0,000 000 0995", 0, 1, 0, 0, 1, 3, 8, -5),
                 PlayerRankingDTO(player4, 3, "0,000 000 0995", 0, 1, 0, 0, 1, 3, 8, -5),
             ),
+            minimumMatches = 0.001,
         ),
         argument(
             testDescription = "with many game days with one match each",
@@ -100,7 +100,6 @@ object ValidCalculateRanking : ArgumentsProvider {
                     ),
                 )
             ),
-            matches = 3,
             expectedPlayersRanking = setOf(
                 PlayerRankingDTO(player1, 1, "2,333 006 1008", 7, 3, 2, 1, 0, 20, 12, 8),
                 PlayerRankingDTO(player2, 2, "1,333 003 1002", 4, 3, 1, 1, 1, 17, 15, 2),
@@ -108,10 +107,10 @@ object ValidCalculateRanking : ArgumentsProvider {
                 PlayerRankingDTO(player5, 4, "1,000 000 1000", 1, 1, 0, 1, 0, 5, 5, 0),
                 PlayerRankingDTO(player4, 5, "0,000 000 0992", 0, 2, 0, 0, 2, 7, 15, -8),
             ),
+            minimumMatches = 0.003,
         ),
         argument(
             testDescription = "with many default game days with many default match each",
-            matches = 3,
             expectedPlayersRanking = setOf(
                 PlayerRankingDTO(player1, 1, "2,000 009 1006", 12, 6, 3, 3, 0, 9, 3, 6),
                 PlayerRankingDTO(player3, 2, "1,500 006 1000", 9, 6, 2, 3, 1, 6, 6, 0),
@@ -126,7 +125,7 @@ object ValidCalculateRanking : ArgumentsProvider {
                 victories = 4,
                 draws = 2,
                 defeats = 1,
-                percentage = PercentageDTO(value = 0.1, type = PercentageType.BY_TOTAL)
+                percentage = PercentageDTO(value = 0.1, type = PercentageType.BY_TOTAL),
             ),
             expectedPlayersRanking = setOf(
                 PlayerRankingDTO(player1, 1, "3,000 012 1006", 18, 6, 3, 3, 0, 9, 3, 6),
@@ -142,7 +141,7 @@ object ValidCalculateRanking : ArgumentsProvider {
                 victories = 3,
                 draws = 1,
                 defeats = 0,
-                percentage = PercentageDTO(value = 100.0, type = PercentageType.BY_TOTAL)
+                percentage = PercentageDTO(value = 100.0, type = PercentageType.BY_TOTAL),
             ),
             expectedPlayersRanking = setOf(
                 PlayerRankingDTO(player1, 1, "2,000 009 1006", 12, 6, 3, 3, 0, 9, 3, 6),
@@ -151,6 +150,7 @@ object ValidCalculateRanking : ArgumentsProvider {
                 PlayerRankingDTO(player5, null, null, 2, 2, 0, 2, 0, 2, 2, 0),
                 PlayerRankingDTO(player4, null, null, 3, 4, 0, 3, 1, 3, 6, -3),
             ),
+            minimumMatches = 6.0,
         ),
         argument(
             testDescription = "with 80% of the total matches",
@@ -167,6 +167,7 @@ object ValidCalculateRanking : ArgumentsProvider {
                 PlayerRankingDTO(player5, null, null, 2, 2, 0, 2, 0, 2, 2, 0),
                 PlayerRankingDTO(player4, null, null, 3, 4, 0, 3, 1, 3, 6, -3),
             ),
+            minimumMatches = 4.8,
         ),
         argument(
             testDescription = "with 100% of the average of all matches by total of players",
@@ -183,6 +184,7 @@ object ValidCalculateRanking : ArgumentsProvider {
                 PlayerRankingDTO(player5, null, null, 2, 2, 0, 2, 0, 2, 2, 0),
                 PlayerRankingDTO(player4, null, null, 3, 4, 0, 3, 1, 3, 6, -3),
             ),
+            minimumMatches = 4.8,
         ),
         argument(
             testDescription = "with 80% of the average of all matches by total of players",
@@ -199,6 +201,7 @@ object ValidCalculateRanking : ArgumentsProvider {
                 PlayerRankingDTO(player4, 4, "0,750 000 0997", 3, 4, 0, 3, 1, 3, 6, -3),
                 PlayerRankingDTO(player5, null, null, 2, 2, 0, 2, 0, 2, 2, 0),
             ),
+            minimumMatches = 3.84,
         ),
         argument(
             testDescription = "with interval",
@@ -230,7 +233,6 @@ private fun argument(
         may2nd2021ProcessedGameDay,
         may3rd2021ProcessedGameDay,
     ),
-    matches: Int = 6,
     pointsCriteria: PointCriteriaDTO = PointCriteriaDTO(
         victories = 3,
         draws = 1,
@@ -241,14 +243,14 @@ private fun argument(
         )
     ),
     expectedPlayersRanking: Set<PlayerRankingDTO>,
+    minimumMatches: Double = 0.006
 ) = Arguments.of(
     testDescription,
     amateurSoccerGroupId,
     interval,
     processedGameDays.map { it(amateurSoccerGroupId) }.toSet(),
-    matches,
     pointsCriteria,
-    RankingDTO(expectedPlayersRanking)
+    RankingDTO(expectedPlayersRanking, minimumMatches)
 )
 
 private fun processedGameDayArgument(

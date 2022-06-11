@@ -16,7 +16,6 @@ class CalculateRankingTest {
         amateurSoccerGroupId: UUID,
         interval: DateIntervalDTO,
         processedGameDays: Set<ProcessedGameDay>,
-        matches: Int,
         pointsCriteria: PointCriteriaDTO,
         expectedRanking: RankingDTO
     ) {
