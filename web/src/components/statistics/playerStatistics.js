@@ -7,9 +7,14 @@ const asmStatisticsPlayersHref = "http://localhost:8080/statistics/players";
 const userDataPlayersDaysHref = "http://localhost:8081/players";
 
 export function PlayerStatistics() {
+    let today = convertDate(new Date().toLocaleDateString());
     let [state, setState] = useState({
         data: {
             amateurSoccerGroupId: sessionStorage.getItem("amateurSoccerGroupId"),
+            interval: {
+                from: today,
+                to: today
+            },
             ranking: {
                 playersRanking: []
             },
@@ -68,6 +73,30 @@ export function PlayerStatistics() {
         </table>
 
         <form onSubmit={(event) => handleSubmit(event, state, setState)}>
+            <div className="row mb-3">
+                <label htmlFor="player-statistics-interval-from" className="col-sm-2 col-form-label">Interval</label>
+                <div className="col-sm-3">
+                    <input name="interval.from"
+                           type="date"
+                           value={state.data.interval.from}
+                           required
+                           id="player-statistics-interval-from"
+                           className="form-control"
+                           onChange={(event) => handleInputChange(event, state, setState)}
+                    />
+                </div>
+                <div className="col-sm-3">
+                    <input name="interval.to"
+                           type="date"
+                           value={state.data.interval.to}
+                           required
+                           id="player-statistics-interval-to"
+                           className="form-control"
+                           onChange={(event) => handleInputChange(event, state, setState)}
+                    />
+                </div>
+            </div>
+
             <div className="row mb-3">
                 <label htmlFor="player-statistics-victories" className="col-sm-2 col-form-label">Victories</label>
                 <div className="col-sm-1">
@@ -155,6 +184,10 @@ const calculateRanking = (state, setState) => {
 function calculateStatistics(state) {
     let requestBody = {
         amateurSoccerGroupId: state.data.amateurSoccerGroupId,
+        interval: {
+            from: convertDate(state.data.interval.from),
+            to: convertDate(state.data.interval.to)
+        },
         pointsCriterion: state.data.pointsCriterion
     }
     return fetch(asmStatisticsPlayersHref, {
@@ -200,4 +233,12 @@ const handleInputChange = (event, state, setState) => {
     let currentState = {...state};
     setNestedKey(currentState, name.split('.'), value);
     setState(currentState);
+}
+
+function convertDate(humanDate) {
+    let parsedDate = new Date(humanDate)
+    let mm = (parsedDate.getMonth() + 1).toString().padStart(2, '0')
+    let dd = parsedDate.getDate().toString().padStart(2, '0')
+    let yyyy = parsedDate.getFullYear();
+    return yyyy + '-' + mm + '-' + dd;
 }
