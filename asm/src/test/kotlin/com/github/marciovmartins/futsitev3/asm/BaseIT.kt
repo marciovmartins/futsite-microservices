@@ -2,7 +2,7 @@ package com.github.marciovmartins.futsitev3.asm
 
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.hateoas.MediaTypes
 import org.springframework.hateoas.client.Traverson
 import org.springframework.http.HttpHeaders

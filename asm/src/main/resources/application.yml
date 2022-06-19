@@ -1,8 +1,4 @@
 spring:
-  datasource:
-    url: ${APP_SPRING_DATASOURCE_URL}
-    username: ${APP_SPRING_DATASOURCE_USERNAME}
-    password: ${APP_SPRING_DATASOURCE_PASSWORD}
   jpa:
     database: "mysql"
     show-sql: false
@@ -18,6 +14,3 @@ server:
   servlet:
     encoding:
       force: true
-
-asm-gameday:
-  baseUrl: ${ASM_GAMEDAY_BASE_URL}
