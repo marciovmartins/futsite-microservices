@@ -1,4 +1,4 @@
-# Learning How to Create a Good Microservice Ecosystem
+# :soccer: Learning How to Create a Good Microservice Ecosystem
 
 [<img src="doc/icons/gitlab-color.svg" width="25px"/>](https://about.gitlab.com/)
 [<img src="doc/icons/kotlin-color.svg" width="25px"/>](https://kotlinlang.org/)
@@ -21,15 +21,15 @@
 
 ---
 
-## Index
+## :arrow\_heading\_up:Index
 
-- [Index](#index)
-- [About](#about)
-- [ADR - Architecture Decision Record](#adr---architecture-decision-record)
+- [:arrow\_heading\_up: Index](#arrowheadingupindex)
+- [:green\_book: About](#greenbook-about)
+- [:brain: ADR - Architecture Decision Record](#brain-adr---architecture-decision-record)
 
 ---
 
-## About
+## :green\_book: About
 
 Started in October 2022, the project has the goal to study and apply different technics using Microservices approach.
 
@@ -50,7 +50,7 @@ Using [Domain-Drive Design - DDD](https://martinfowler.com/bliki/DomainDrivenDes
 
 Learned [React.js](https://react.dev/) and [Jest](https://jestjs.io/)
 
-## ADR - Architecture Decision Record
+## :brain: ADR - Architecture Decision Record
 
 - [001: Project Definition and Initial Deploy](doc/arch/ADR-001-Project-definition-and-initial-deploy.md)
 - [002: Initial architecture setup with Spring Boot HATEOAS](doc/arch/ADR-002-Initial-architecture-setup-with-spring-boot-hateoas.md)
