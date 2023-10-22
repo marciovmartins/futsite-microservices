@@ -1,4 +1,4 @@
-# Learning How to Create a Good Modular Monolith
+# Learning How to Create a Good Microservice Ecosystem
 
 [<img src="doc/icons/gitlab-color.svg" width="25px"/>](https://about.gitlab.com/)
 [<img src="doc/icons/kotlin-color.svg" width="25px"/>](https://kotlinlang.org/)
@@ -39,7 +39,7 @@ setup Spring Boot and the gitlab pipeline pointing to my personal kubernetes clu
 Created 2 microservices: 
 - ASM: Amateur Soccer Mgmt (complex domain using onion architecture)
 - User-Data (simple domain using [one layer](https://spring.io/projects/spring-data-rest))
-- Web
+- Web (React.js)
 
 Using [Swagger/OpenApi](https://swagger.io/) to generate resource documentation,
 [Spring HATEOAS](https://spring.io/projects/spring-hateoas) and
